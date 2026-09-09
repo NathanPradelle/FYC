@@ -1,0 +1,61 @@
+{
+  "generated_at": "2026-09-09T10:49:47.037081+00:00",
+  "flask_head": "d73fa1cdcbd8b1465c151db8924ba58b1dd14e35",
+  "python_version": "3.14.4",
+  "fenetre_jours": 90,
+  "n_commits_etiquetes": 2902,
+  "seuils_pre_enregistres": {
+    "M1_pearson_max": 0.5,
+    "M2_auc_churn_max_abs": 0.644,
+    "M2bis_ratio_facteur_max": 0.9,
+    "M2bis_garde_fou_base_delta_max": 0.03,
+    "garde_fou_part_risque_min": 0.05
+  },
+  "garde_fou": {
+    "part_risque_v2": 0.1272,
+    "pass": true
+  },
+  "M1_correlation_churn_fix": {
+    "v1": {
+      "pearson": 0.9098595011527486,
+      "spearman": 0.7268428080597864
+    },
+    "v2": {
+      "pearson": 0.810005295483464,
+      "spearman": 0.795041744399893
+    },
+    "pass": false
+  },
+  "M2_auc_churn_seul": {
+    "v1": {
+      "mean": 0.7881,
+      "std": 0.0102
+    },
+    "v2": {
+      "mean": 0.6786,
+      "std": 0.0426
+    },
+    "pass": false
+  },
+  "M2bis_ratio_churn_base": {
+    "auc_base_v1": {
+      "mean": 0.7843,
+      "std": 0.0205
+    },
+    "auc_base_v2": {
+      "mean": 0.8018,
+      "std": 0.0336
+    },
+    "ratio_v1": 1.0049,
+    "ratio_v2": 0.8464,
+    "base_delta_v1_moins_v2": -0.0175,
+    "ratio_pass": true,
+    "garde_fou_base_pass": true,
+    "pass": true
+  },
+  "M3_taux_bascule_diagnostic": {
+    "flip_rate_global": 0.387,
+    "flip_rate_parmi_positifs_v1": 0.7562,
+    "flip_rate_parmi_positifs_v1_fort_churn_q4": 0.8222
+  }
+}

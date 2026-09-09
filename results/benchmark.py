@@ -1,14 +1,18 @@
 """Recalcule tous les chiffres de la Partie 4 du notebook (comparaison des jeux de
-features) et les ecrit dans results/results.json, avec la date, les versions des
-librairies et le hash du HEAD du depot Flask analyse.
+features) et les ecrit dans results/results.json (label_v1) ou results/results_v2.json
+(label_v2), avec la date, les versions des librairies et le hash du HEAD du depot
+Flask analyse.
 
 But : plus aucun chiffre en dur dans le markdown du notebook. Chaque resultat est
 date et rattache a un etat de donnees identifiable, pour que l'ecart constate entre
 le narratif du notebook et une execution reelle (2026-09-09, cf. CLAUDE.md §5/§7) ne
 puisse plus se reproduire silencieusement.
 
-Usage : python results/benchmark.py   (depuis la racine du repo, venv active)
+Usage :
+  python results/benchmark.py             # label_v1 (fichier), ecrit results.json
+  python results/benchmark.py --label v2  # label_v2 (ligne, git blame), ecrit results_v2.json
 """
+import argparse
 import json
 import platform
 import sys
@@ -30,12 +34,25 @@ FENETRE_JOURS = 90
 
 
 def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--label", choices=["v1", "v2"], default="v1",
+                         help="v1 = SZZ fichier (defaut) ; v2 = SZZ ligne via git blame")
+    args = parser.parse_args()
+
     print("Extraction des commits...")
     commits = git_extract.extraire_commits(REPO_DIR)
     flask_head = git_extract.get_head(REPO_DIR)
     print(f"{len(commits)} commits, HEAD={flask_head}")
 
-    fix_par_fichier, est_risque = labeling.label_commits(commits, fenetre_jours=FENETRE_JOURS)
+    if args.label == "v1":
+        label_version = "v1_fichier_szz_simplifie"
+        fix_index, est_risque = labeling.label_commits(commits, fenetre_jours=FENETRE_JOURS)
+    else:
+        label_version = "v2_ligne_szz_blame"
+        print("Calcul du SZZ ligne (git blame -w -M -C sur les commits de fix)...")
+        _blame_par_commit, fix_index, est_risque = labeling.label_commits_v2(
+            commits, REPO_DIR, fenetre_jours=FENETRE_JOURS,
+        )
 
     print("Construction des features BASE...")
     base = features.build_base_features(commits, est_risque)
@@ -76,7 +93,7 @@ def main():
         print(f"  CV AUC = {cv_mean:.3f} +- {cv_std:.3f} | temporel = {temporal:.3f}")
 
     diagnostics = {
-        "churn_fix_correlation": features.churn_fix_correlation(commits, fix_par_fichier),
+        "churn_fix_correlation": features.churn_fix_correlation(commits, fix_index),
         "baseline_majority_accuracy": evaluate.baseline_majority_accuracy(base),
         "n_commits_total": len(commits),
         "n_commits_etiquetes": len(base),
@@ -87,7 +104,7 @@ def main():
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "flask_head": flask_head,
         "flask_commit_count": len(commits),
-        "label_version": "v1_fichier_szz_simplifie",
+        "label_version": label_version,
         "fenetre_jours": FENETRE_JOURS,
         "versions": {
             "python": platform.python_version(),
@@ -100,7 +117,8 @@ def main():
         "diagnostics": diagnostics,
     }
 
-    out_path = Path(__file__).resolve().parent / "results.json"
+    out_name = "results.json" if args.label == "v1" else "results_v2.json"
+    out_path = Path(__file__).resolve().parent / out_name
     out_path.write_text(json.dumps(output, indent=2, ensure_ascii=False))
     print(f"\nEcrit dans {out_path}")
 

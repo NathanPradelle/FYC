@@ -156,6 +156,39 @@ commit qui touche du code déjà complexe/volumineux*.
   7 j → 23,0 % ; 30 j → 38,7 % ; 90 j → 51,2 % ; 180 j → 59,8 % ; 365 j → 68,1 % ; 3650 j → 86,9 %
   de commits étiquetés risqués. Confirme que 90 j est un choix arbitraire qui pèse lourd sur tout
   le reste — **c'est le maillon faible identifié comme priorité n°1** (Chantier 1).
+- **⚠️ MIXTE — SZZ ligne (`label_v2`, `git blame -w -M -C`) réduit-il la circularité churn/label ?**
+  Mesuré le 2026-09-09 via `results/chantier1_protocol.py` (protocole M1/M2/M2bis/M3 pré-enregistré,
+  seuils fixés avant implémentation — voir §8 Chantier 1). Résultat brut dans
+  `results/chantier1_diagnostic.json`. **Les 4 mesures ne s'accordent pas — à dire tel quel, pas
+  à trancher artificiellement :**
+  - Garde-fou : `part_risque(v2)` = 12,7 % (> seuil 5 %) — mesures interprétables, pas d'abandon.
+  - **M1 (corrélation fichier) — ÉCHEC** du seuil pré-enregistré (r_v2 < 0,5) : r_v2 = **0,810**
+    Pearson (baisse depuis 0,910, mais insuffisante), Spearman monte même à 0,795 (depuis 0,727).
+  - **M2 (AUC absolue churn seul) — ÉCHEC** du seuil (< 0,644) : AUC(churn seul, v2) = **0,679**
+    (depuis 0,788) — proche du seuil sans le franchir.
+  - **M2bis (ratio churn/BASE, la mesure décisive contrôlée) — RÉUSSITE** claire : ratio
+    1,005 → **0,846** (seuil ≤ 0,904), et le garde-fou associé passe aussi (AUC(BASE) **monte**
+    légèrement sous v2, 0,784 → 0,802 — la tâche n'est pas devenue plus dure globalement, donc la
+    chute relative de churn n'est pas un artefact de difficulté).
+  - **M3 (diagnostic) — corrobore fortement** : parmi les commits étiquetés `1` sous `label_v1`,
+    **75,6 %** basculent à `0` sous `label_v2` (82,2 % sur le dernier quartile de churn) — beaucoup
+    de l'ancien positif était bien de la contamination par popularité de fichier.
+  - **Corroboration indépendante, tableau complet des features sous `label_v2`**
+    (`results/results_v2.json`) : `BASE` seul = 0,802 ; `BASE+churn` = 0,807 (**+0,005**, contre
+    +0,070 sous v1) ; `code seul` = **0,599** (depuis 0,746) ; `BASE+code` = 0,809 (+0,007, contre
+    +0,056 sous v1) ; `TOUT` = 0,807 (ne bat même pas `BASE+code` seul). Sous label_v2, churn et
+    code s'effondrent en absolu et n'ajoutent presque rien à BASE — signal net et cohérent avec
+    M2bis/M3, indépendant du désaccord M1/M2.
+  - **Lecture honnête** : la circularité baisse nettement **au niveau prédictif** (ce qui compte
+    pour le modèle — M2bis, M3, tableau complet), mais **pas au niveau de la statistique agrégée
+    par fichier** (M1) — plausible car M1 mesure une propriété différente (densité totale
+    d'événements de blame par fichier, qui reste liée à la taille/centralité du fichier) plutôt que
+    la contamination commit-par-commit que le modèle exploitait sous v1. Ne pas annoncer "la
+    circularité a disparu" sans cette nuance — les deux affirmations sont vraies et se complètent :
+    circularité prédictive fortement réduite, circularité structurelle du fichier persistante.
+  - **Décision non prise unilatéralement — en attente d'arbitrage** : adopter `label_v2` comme
+    label par défaut des chantiers suivants, avec cette réserve documentée, ou creuser encore M1
+    avant de trancher.
 
 ## 7. Pièges connus et limites assumées
 
@@ -284,6 +317,18 @@ implémentation) :
      aussi trompeur. Choix documenté ici pour être challengé en soutenance.
    - Toutes ces mesures (M1, M2, M2bis, M3, garde-fou) doivent être ajoutées à
      `results/benchmark.py` (paramétrer par `label_version`), pas calculées à la main.
+
+   **RÉSULTAT (2026-09-09)** — implémenté (`fyc/labeling.py::label_commits_v2`, SZZ ligne via
+   `git blame -w -M -C`, même détection de fix et même fenêtre que v1 pour isoler la granularité) et
+   mesuré via `results/chantier1_protocol.py` (reproductible, seuils pré-enregistrés, sortie dans
+   `results/chantier1_diagnostic.json`). **Verdict détaillé en §6** (mixte, pas de clôture
+   artificielle) : garde-fou passé (part_risque=12,7 %), M2bis (mesure décisive) et M3 passent
+   nettement, M1 et M2 (absolus) échouent de peu. Tableau complet des features sous label_v2 dans
+   `results/results_v2.json` — corrobore M2bis indépendamment (churn et code s'effondrent en
+   absolu, BASE tient). **Détection de fix plus stricte (`#\d+`, exclusion `typo|docs|changelog`)
+   PAS encore traitée** — seule la granularité a été isolée et testée, comme le protocole
+   l'exigeait. Reste à faire pour compléter le Chantier 1. **`label_v1` reste le label par défaut
+   en attendant l'arbitrage sur l'adoption de `label_v2`** (voir §6 pour la décision en attente).
 2. **Chantier 2 — industrialiser l'analyse de code** au-delà de radon (Ruff, Bandit, Lizard,
    Semgrep). Une démo Ruff existe déjà (cellule 56, 5 fichiers) mais n'est pas intégrée au pipeline
    de features.
@@ -387,3 +432,28 @@ implémentation) :
   points corrigés et le protocole recollé.
 - **Reste à faire** : implémenter le Chantier 1 (SZZ ligne via `git blame -w -M -C`, détection de
   fix plus stricte) en suivant le protocole M1/M2/M2bis/M3 amendé.
+
+### 2026-09-09 — Session 2 (fin) — Chantier 1 : SZZ ligne implémenté et mesuré
+- `fyc/labeling.py::label_commits_v2` (+ `blame_line_fixes`, `make_est_risque_v2`) : SZZ vrai,
+  granularité ligne, via `git blame -w -M -C` sur le parent de chaque commit de fix. Testé sur un
+  sous-échantillon (20 fix) avant l'échelle complète, un cas vérifié à la main (ligne exacte, hash
+  de commit exact). Coût mesuré : 15,3 s pour les 1069 commits de fix (14,3 ms/fix) — largement
+  praticable, pas besoin d'échantillonnage.
+- `fyc/git_extract.py` : ajout `diff_raw` et `blame_porcelain` (plomberie git, cohérent avec le
+  rôle du module).
+- `results/benchmark.py` : paramétré par `--label {v1,v2}`, écrit `results.json` ou
+  `results_v2.json`. Non-régression vérifiée sur v1 (chiffres identiques au run précédent).
+- `results/chantier1_protocol.py` (nouveau) : calcule M1/M2/M2bis/M3 + garde-fou avec les seuils
+  pré-enregistrés en dur dans le script (pas dans le markdown), écrit
+  `results/chantier1_diagnostic.json`.
+- **Résultat mesuré, verdict mixte, détaillé en §6** : garde-fou passé (part_risque=12,7 %) ; M2bis
+  (mesure de contrôle, décisive) et M3 passent nettement ; M1 (corrélation fichier) et M2 (AUC
+  absolue) échouent de peu. Tableau complet des features sous label_v2 corrobore M2bis
+  indépendamment (churn seul 0,788→0,679 et n'ajoute que +0,005 à BASE, contre +0,070 sous v1 ;
+  code seul 0,746→0,599). Je n'ai pas arbitré ce résultat mixte moi-même — présenté tel quel, en
+  attente de lecture par l'utilisateur.
+- Notebook ré-exécuté (0 erreur, 58 cellules) après chaque changement de `fyc`/`benchmark.py` pour
+  vérifier l'absence de régression.
+- **Reste à faire** : arbitrage sur l'adoption de `label_v2` (§6) ; volet "détection de fix plus
+  stricte" du Chantier 1 (pas encore traité, la granularité seule a été isolée pour le protocole) ;
+  commit de cet état.

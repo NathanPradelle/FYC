@@ -54,6 +54,32 @@ def get_parents(repo_dir):
     return parents
 
 
+def diff_raw(repo_dir, old_rev, new_rev):
+    """Diff unifie, zero contexte, espaces ignores -- pour reperer les lignes
+    supprimees/modifiees par un commit par rapport a son parent (SZZ ligne)."""
+    return subprocess.run(
+        ["git", "-C", repo_dir, "diff", "--no-color", "--ignore-all-space", "-U0",
+         old_rev, new_rev],
+        capture_output=True, text=True, encoding="utf-8", errors="replace", check=True,
+    ).stdout
+
+
+def blame_porcelain(repo_dir, rev, path, ranges):
+    """git blame --porcelain sur `path` a l'etat `rev`, restreint a `ranges`
+    (liste de (start, end), 1-indexe inclusif). -w -M -C : ignore les espaces,
+    detecte les deplacements/copies de code -- evite d'attribuer une ligne a un
+    commit de pur reformatage/renommage (cf. CLAUDE.md, protocole Chantier 1).
+    Retourne None si le fichier n'existe pas a `rev` (renommage non suivi, etc.)."""
+    cmd = ["git", "-C", repo_dir, "blame", "-w", "-M", "-C", "--porcelain"]
+    for start, end in ranges:
+        cmd += ["-L", f"{start},{end}"]
+    cmd += [rev, "--", path]
+    r = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8", errors="replace")
+    if r.returncode != 0:
+        return None
+    return r.stdout
+
+
 def cat_file_batch(repo_dir, specs):
     """Recupere en un seul processus le contenu de plusieurs objets Git.
 

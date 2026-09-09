@@ -1,0 +1,159 @@
+{
+  "generated_at": "2026-09-09T10:48:39.176961+00:00",
+  "flask_head": "d73fa1cdcbd8b1465c151db8924ba58b1dd14e35",
+  "flask_commit_count": 5557,
+  "label_version": "v2_ligne_szz_blame",
+  "fenetre_jours": 90,
+  "versions": {
+    "python": "3.14.4",
+    "pandas": "3.0.5",
+    "numpy": "2.5.3",
+    "scikit-learn": "1.9.0",
+    "radon": "6.0.1"
+  },
+  "feature_sets": {
+    "BASE": {
+      "cols": [
+        "hour",
+        "weekend",
+        "n_files",
+        "lines_added",
+        "lines_deleted",
+        "author_experience",
+        "avg_authors_per_file",
+        "total_churn",
+        "msg_len",
+        "touches_tests"
+      ],
+      "cv_auc_mean": 0.8018,
+      "cv_auc_std": 0.0336,
+      "temporal_split_auc": 0.7716
+    },
+    "BASE+is_night": {
+      "cols": [
+        "hour",
+        "weekend",
+        "n_files",
+        "lines_added",
+        "lines_deleted",
+        "author_experience",
+        "avg_authors_per_file",
+        "total_churn",
+        "msg_len",
+        "touches_tests",
+        "is_night"
+      ],
+      "cv_auc_mean": 0.8025,
+      "cv_auc_std": 0.0319,
+      "temporal_split_auc": 0.7598
+    },
+    "BASE+churn": {
+      "cols": [
+        "hour",
+        "weekend",
+        "n_files",
+        "lines_added",
+        "lines_deleted",
+        "author_experience",
+        "avg_authors_per_file",
+        "total_churn",
+        "msg_len",
+        "touches_tests",
+        "file_commits_max",
+        "file_commits_avg",
+        "file_age_days_avg"
+      ],
+      "cv_auc_mean": 0.8066,
+      "cv_auc_std": 0.0368,
+      "temporal_split_auc": 0.7656
+    },
+    "BASE+code": {
+      "cols": [
+        "hour",
+        "weekend",
+        "n_files",
+        "lines_added",
+        "lines_deleted",
+        "author_experience",
+        "avg_authors_per_file",
+        "total_churn",
+        "msg_len",
+        "touches_tests",
+        "cc_tot_avg",
+        "cc_max_avg",
+        "mi_avg",
+        "loc_avg",
+        "comment_ratio",
+        "delta_cc",
+        "touches_py",
+        "code_parse_ok"
+      ],
+      "cv_auc_mean": 0.8087,
+      "cv_auc_std": 0.0341,
+      "temporal_split_auc": 0.7664
+    },
+    "code_only": {
+      "cols": [
+        "cc_tot_avg",
+        "cc_max_avg",
+        "mi_avg",
+        "loc_avg",
+        "comment_ratio",
+        "delta_cc",
+        "touches_py",
+        "code_parse_ok"
+      ],
+      "cv_auc_mean": 0.5987,
+      "cv_auc_std": 0.0242,
+      "temporal_split_auc": 0.5496
+    },
+    "churn_only": {
+      "cols": [
+        "file_commits_max",
+        "file_commits_avg",
+        "file_age_days_avg"
+      ],
+      "cv_auc_mean": 0.6786,
+      "cv_auc_std": 0.0426,
+      "temporal_split_auc": 0.6382
+    },
+    "all": {
+      "cols": [
+        "hour",
+        "weekend",
+        "n_files",
+        "lines_added",
+        "lines_deleted",
+        "author_experience",
+        "avg_authors_per_file",
+        "total_churn",
+        "msg_len",
+        "touches_tests",
+        "file_commits_max",
+        "file_commits_avg",
+        "file_age_days_avg",
+        "cc_tot_avg",
+        "cc_max_avg",
+        "mi_avg",
+        "loc_avg",
+        "comment_ratio",
+        "delta_cc",
+        "touches_py",
+        "code_parse_ok"
+      ],
+      "cv_auc_mean": 0.8067,
+      "cv_auc_std": 0.0405,
+      "temporal_split_auc": 0.7666
+    }
+  },
+  "diagnostics": {
+    "churn_fix_correlation": {
+      "pearson": 0.810005295483464,
+      "spearman": 0.795041744399893
+    },
+    "baseline_majority_accuracy": 0.8726333907056799,
+    "n_commits_total": 5557,
+    "n_commits_etiquetes": 2902,
+    "part_risque": 0.1272
+  }
+}

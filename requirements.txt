@@ -1,3 +1,9 @@
+# Python 3.14.4 -- FIGE, pas un detail. Les features issues de radon dependent du taux
+# d'echec de parsing radon, qui varie avec la version de l'interpreteur (mesure : 49.8%
+# de has_py==0 sous 3.14.4 contre 54.5% sous 3.12.3 sur le meme depot Flask -- voir
+# CLAUDE.md §7). Toute comparaison de resultats de code metrics doit se faire a version
+# de Python fixee ; results/results.json l'enregistre automatiquement (champ versions.python).
+
 # Coeur du pipeline (extraction Git, features, modele)
 pandas==3.0.5
 numpy==2.5.3

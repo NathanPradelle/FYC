@@ -58,6 +58,7 @@ def main():
         "BASE+churn": features.BASE_COLS + features.CHURN_COLS,
         "BASE+code": features.BASE_COLS + features.CODE_COLS,
         "code_only": features.CODE_COLS,
+        "churn_only": features.CHURN_COLS,
         "all": features.BASE_COLS + features.CHURN_COLS + features.CODE_COLS,
     }
 

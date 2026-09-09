@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-09T10:08:50.000635+00:00",
+  "generated_at": "2026-09-09T10:34:19.194191+00:00",
   "flask_head": "d73fa1cdcbd8b1465c151db8924ba58b1dd14e35",
   "flask_commit_count": 5557,
   "label_version": "v1_fichier_szz_simplifie",
@@ -85,11 +85,12 @@
         "loc_avg",
         "comment_ratio",
         "delta_cc",
-        "has_py"
+        "touches_py",
+        "code_parse_ok"
       ],
-      "cv_auc_mean": 0.8358,
-      "cv_auc_std": 0.0127,
-      "temporal_split_auc": 0.8236
+      "cv_auc_mean": 0.8403,
+      "cv_auc_std": 0.0159,
+      "temporal_split_auc": 0.8183
     },
     "code_only": {
       "cols": [
@@ -99,11 +100,22 @@
         "loc_avg",
         "comment_ratio",
         "delta_cc",
-        "has_py"
+        "touches_py",
+        "code_parse_ok"
       ],
-      "cv_auc_mean": 0.7374,
-      "cv_auc_std": 0.0071,
-      "temporal_split_auc": 0.7743
+      "cv_auc_mean": 0.7462,
+      "cv_auc_std": 0.0096,
+      "temporal_split_auc": 0.7783
+    },
+    "churn_only": {
+      "cols": [
+        "file_commits_max",
+        "file_commits_avg",
+        "file_age_days_avg"
+      ],
+      "cv_auc_mean": 0.7881,
+      "cv_auc_std": 0.0102,
+      "temporal_split_auc": 0.7466
     },
     "all": {
       "cols": [
@@ -126,11 +138,12 @@
         "loc_avg",
         "comment_ratio",
         "delta_cc",
-        "has_py"
+        "touches_py",
+        "code_parse_ok"
       ],
-      "cv_auc_mean": 0.8735,
-      "cv_auc_std": 0.0143,
-      "temporal_split_auc": 0.8029
+      "cv_auc_mean": 0.8732,
+      "cv_auc_std": 0.0139,
+      "temporal_split_auc": 0.7959
     }
   },
   "diagnostics": {

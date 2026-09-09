@@ -17,7 +17,7 @@ BASE_COLS = ["hour", "weekend", "n_files", "lines_added", "lines_deleted",
              "touches_tests"]
 CHURN_COLS = ["file_commits_max", "file_commits_avg", "file_age_days_avg"]
 CODE_COLS = ["cc_tot_avg", "cc_max_avg", "mi_avg", "loc_avg", "comment_ratio", "delta_cc",
-             "has_py"]
+             "touches_py", "code_parse_ok"]
 
 
 def _commits_etiquetables(commits, est_risque):
@@ -136,16 +136,25 @@ def build_code_features(commits, est_risque, repo_dir, max_py_par_commit=5):
     Recupere les versions via `git cat-file --batch` en un seul processus
     (cf. fyc.git_extract.cat_file_batch) : un `git show` par fichier serait
     inutilisable a cette echelle (dizaines de minutes).
+
+    Un echec de parsing radon (courant sur du code d'epoque Python 2 dans
+    l'historique Flask, cf. CLAUDE.md §7) ne doit jamais ressembler a du code
+    sain : les metriques numeriques sont NaN quand aucun fichier n'a pu etre
+    mesure, pas 0.0/100.0. `touches_py` et `code_parse_ok` distinguent
+    explicitement "aucun .py touche" de ".py touche mais illisible par radon" --
+    les deux etaient confondus dans l'ancien `has_py`.
     """
     parents = git_extract.get_parents(repo_dir)
 
     besoins, specs = [], []
     indices = []
+    touches_py = {}
     for i, c in enumerate(commits):
         if est_risque(c) is None or not c["files"]:
             continue
         indices.append(i)
         pyfiles = [f for f in c["files"] if f.endswith(".py")][:max_py_par_commit]
+        touches_py[i] = bool(pyfiles)
         par = parents.get(c["hash"], [])
         for f in pyfiles:
             besoins.append((i, f, "after"))
@@ -173,20 +182,30 @@ def build_code_features(commits, est_risque, repo_dir, max_py_par_commit=5):
     rows = []
     for i in indices:
         m = agg.get(i, {})
+        parse_ok = bool(m.get("cc_tot"))
 
-        def moy(k, d=0.0, m=m):
+        def moy(k, m=m):
             v = m.get(k) or []
-            return float(np.mean(v)) if v else d
+            return float(np.mean(v)) if v else np.nan
 
-        loc = moy("loc")
-        rows.append({
-            "cc_tot_avg": moy("cc_tot"),
-            "cc_max_avg": moy("cc_max"),
-            "mi_avg": moy("mi", 100.0),
-            "loc_avg": loc,
-            "comment_ratio": moy("comments") / loc if loc > 0 else 0.0,
-            "delta_cc": moy("d_cc"),
-            "has_py": int(bool(m.get("cc_tot"))),
-        })
+        if parse_ok:
+            loc = moy("loc")
+            comments = moy("comments")
+            row = {
+                "cc_tot_avg": moy("cc_tot"),
+                "cc_max_avg": moy("cc_max"),
+                "mi_avg": moy("mi"),
+                "loc_avg": loc,
+                "comment_ratio": (comments / loc) if loc and loc > 0 else np.nan,
+                "delta_cc": moy("d_cc"),
+            }
+        else:
+            row = {
+                "cc_tot_avg": np.nan, "cc_max_avg": np.nan, "mi_avg": np.nan,
+                "loc_avg": np.nan, "comment_ratio": np.nan, "delta_cc": np.nan,
+            }
+        row["touches_py"] = int(touches_py[i])
+        row["code_parse_ok"] = int(parse_ok)
+        rows.append(row)
 
     return pd.DataFrame(rows)

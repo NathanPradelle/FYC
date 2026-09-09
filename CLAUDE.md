@@ -19,7 +19,11 @@ Dépôt étudié : [pallets/flask](https://github.com/pallets/flask) (Python, ~5
 ## 2. État de l'environnement
 
 - WSL2 (Ubuntu). Travail dans le filesystem Linux (`~/dev/FYC`), jamais `/mnt/c/`.
-- venv Python **3.14.4** dans `.venv/` (déjà présent au démarrage de ce projet).
+- venv Python **3.14.4** dans `.venv/` (déjà présent au démarrage de ce projet). **Version figée
+  volontairement, pas un détail** : les features issues de radon dépendent du taux d'échec de
+  parsing sur du code d'époque Python 2 dans l'historique Flask, qui varie avec la version de
+  l'interpréteur (voir §7 points 7-8). `results/results.json` enregistre automatiquement la
+  version de Python utilisée à chaque run (`versions.python`).
 - Dépendances figées dans `requirements.txt` (créé le 2026-09-09). Cœur : pandas 3.0.5, numpy
   2.5.3, scikit-learn 1.9.0, matplotlib 3.11.1, seaborn 0.13.2. Analyse de code : radon 6.0.1,
   ruff 0.16.6 (**installés le 2026-09-09** — absents du venv initial, nécessaires aux cellules 49
@@ -167,26 +171,63 @@ commit qui touche du code déjà complexe/volumineux*.
    piège n°1. Un vrai SZZ (git blame) la réduirait mais demande un chantier dédié (Chantier 1).
 6. **Biais de fin d'historique** : les commits des ~90 derniers jours ne peuvent presque pas être
    étiquetés risqués (pas assez de futur pour observer un fix). Non corrigé.
-7. **Écart de reproductibilité radon** (voir §5) : les chiffres de la narration Partie 4.3/4.4 du
-   notebook ne sont pas reproduits à l'identique dans cet environnement. **Cause non expliquée** —
-   vérifié et éliminé le 2026-09-09 (timebox 15 min, cf. journal session 2) : l'état du clone Flask
-   n'est pas en cause (5557 commits, HEAD `d73fa1cdcbd8b1465c151db8924ba58b1dd14e35`, identique à la
-   référence). **Candidats restants, non vérifiés :** versions scikit-learn/numpy au moment de la
-   rédaction du narratif (inconnues, non documentées à l'époque) ; divergence possible entre le
-   code actuellement dans les cellules 49-53 et celui qui a produit les chiffres cités dans le
-   markdown (le TP a pu être édité après la mesure de référence) ; le cap arbitraire de 5 fichiers
-   `.py` par commit dans la cellule radon (jugé peu probable — déterministe sur un état de dépôt
-   identique, sauf si le code différait). **Décision : on n'investigue pas plus loin maintenant**
-   (le Chantier 1 va changer le label et invalider ces chiffres de toute façon). Le vrai correctif
-   structurel est `results/benchmark.py` (§3/§8) : plus aucun chiffre en dur dans le markdown, tout
-   résultat daté et rattaché à un état de données identifiable (hash HEAD Flask, versions des libs).
-8. **Un seul dépôt (Flask)** étudié à ce stade — aucune validation externe (Chantier 6).
-9. **Cellules markdown encore à chiffres en dur, en dehors du tableau bilan** (traité le
+7. **Écart de reproductibilité radon — RÉSOLU, cause identifiée (2026-09-09). C'est un résultat
+   du projet, pas un incident.** Les features issues de radon dépendent de la version de
+   l'interpréteur Python, via le taux d'échec de parsing sur du code d'époque Python 2 présent
+   dans l'historique Flask. **Mesure comparative** (même clone Flask, même code, deux environnements) :
+   `has_py == 0` sur 49,8 % des commits étiquetés sous Python 3.14.4, contre **54,5 % sous Python
+   3.12.3** — soit 137 commits de couverture code en plus sous 3.14.4, largement suffisant pour
+   expliquer l'écart mesuré sur `BASE+code` (+0.016) et `code seul` (+0.046).
+   **Conséquence : les chiffres mesurés dans cet environnement (Python 3.14.4) sont mieux fondés
+   que le narratif d'origine (moindre couverture) et servent désormais de référence.** Python
+   3.14.4 est figé dans `requirements.txt` pour cette raison précise. `results/results.json`
+   enregistre automatiquement la version de Python utilisée (`versions.python`) pour que ce genre
+   d'écart soit traçable pour toute reproduction future — **c'est un vrai point de reproductibilité
+   à présenter en soutenance**, pas une anecdote de debug.
+
+   **Leçon méthodologique sur l'instrumentation** (piège à ne pas refaire) : ne jamais comparer un
+   taux d'échec brut instrumenté derrière un cache entre deux mesures — mon compteur et celui de
+   l'encadrant n'avaient pas le même dénominateur (le mien comptait before+after, le sien after
+   seul ; le cache de `_metriques_radon` rend le nombre d'appels bruts ininterprétable d'une
+   instrumentation à l'autre). La bonne mesure, insensible au cache, est **`has_py == 0`** (même
+   dénominateur des deux côtés : nombre de commits étiquetés).
+
+   **Ancien texte (session 2, pour mémoire — ne pas effacer l'historique) :** l'écart avait été
+   documenté comme "non expliqué, candidats non vérifiés (version Python, divergence de code, cap
+   5 fichiers)" après avoir éliminé l'aléa, sklearn/numpy et l'état du clone. C'était la bonne
+   décision d'investigation (l'écart était bien localisé sur radon), mais la clôture était
+   prématurée : la localisation de l'écart sur une seule famille de features aurait dû être lue
+   comme un signal exploitable, pas comme une raison d'arrêter.
+
+8. **Défaut de conception révélé pendant le diagnostic — CORRIGÉ (2026-09-09).** Les échecs de
+   parsing radon recevaient des valeurs par défaut qui ressemblaient à du code sain (`mi_avg=100.0`
+   = « parfaitement maintenable », complexités à 0) : un échec d'analyse était encodé comme le
+   meilleur code possible du dataset. `has_py` conflatait en plus deux situations différentes
+   (« pas de `.py` touché », 1358 commits, 46,8 % — normal) et (« `.py` touché mais illisible par
+   radon », 88 commits, 3,0 % — le vrai problème).
+   **Correctif appliqué** dans `fyc/features.py::build_code_features` : les 6 métriques numériques
+   (`cc_tot_avg`, `cc_max_avg`, `mi_avg`, `loc_avg`, `comment_ratio`, `delta_cc`) sont `NaN` quand
+   aucun fichier du commit n'a pu être mesuré, plus deux features booléennes explicites
+   `touches_py` et `code_parse_ok` remplaçant l'ancien `has_py` ambigu. `RandomForestClassifier`
+   (scikit-learn 1.9.0) gère nativement les NaN — vérifié directement avant d'appliquer le
+   correctif à l'échelle du pipeline.
+   **Effet mesuré, isolé** (avant → après correctif, même run sinon, CV 5 plis) :
+   - `BASE + code` : 0.836 ± 0.013 → **0.840 ± 0.016** (CV), 0.824 → 0.818 (temporel)
+   - `code seul` : 0.737 ± 0.007 → **0.746 ± 0.010** (CV), 0.774 → 0.778 (temporel)
+   - `TOUT` : 0.874 ± 0.014 → 0.873 ± 0.014 (CV), 0.803 → 0.796 (temporel)
+   **Lecture** : gain net petit mais positif sur les deux jeux contenant les features de code en
+   CV (+0.004 et +0.009), signe que les 88 commits en échec silencieux portaient un vrai signal
+   dilué par le remplissage trompeur — pas juste du bruit. Effet mixte sur le split temporel
+   (léger recul), à ne pas sur-interpréter vu la faible ampleur. **Ces nouveaux chiffres (0.840 /
+   0.746) sont désormais la référence courante, dans `results/results.json`.**
+
+9. **Un seul dépôt (Flask)** étudié à ce stade — aucune validation externe (Chantier 6).
+10. **Cellules markdown encore à chiffres en dur, en dehors du tableau bilan** (traité le
    2026-09-09) : cellule 27 (accuracy/précision/rappel/AUC Partie 3), cellule 31 (importances par
    permutation du modèle BASE), cellule 41 (répartition horaire, AUC `is_night` seule, gain en
    permutation), cellule 44/45 (tableau intermédiaire Piste B — `churn seul`, avant l'entrée des
-   features de code). **Décision assumée** : pas de correction maintenant — mêmes arguments qu'au
-   point 7 (le Chantier 1 va changer le label et invalider ces chiffres). Zéro exception a été
+   features de code). **Décision assumée** : pas de correction maintenant — mêmes arguments qu'aux
+   points 7-8 (le Chantier 1 va changer le label et invalider ces chiffres). Zéro exception a été
    faite : cette liste doit être reprise avant la restitution finale (Chantier 7), pas oubliée.
 
 ## 8. Prochaines étapes priorisées
@@ -198,23 +239,51 @@ implémentation) :
    de fix plus stricte (exiger `#\d+`, exclure `typo|docs|changelog`), granularité ligne via
    `git blame` (vrai SZZ).
 
-   **Protocole de mesure pré-enregistré (2026-09-09, avant toute implémentation)** pour juger si
-   le passage à la granularité ligne réduit effectivement la circularité churn/label :
+   **Protocole de mesure pré-enregistré — v2, amendé le 2026-09-09 suite revue (3 corrections
+   bloquantes intégrées), avant toute implémentation** pour juger si le passage à la granularité
+   ligne réduit effectivement la circularité churn/label :
    - Comparer `label_v1` (fichier, actuel) à `label_v2` (ligne, `git blame`) sur le même état de
      données (même HEAD Flask, même fenêtre 90 j, pour isoler l'effet de la seule granularité).
+   - **Chiffres de référence certifiés AVANT implémentation de `label_v2`** (recalculés le
+     2026-09-09 via `fyc.evaluate.cv_auc`, post-correctif NaN §7 point 8, dans `results.json`) :
+     AUC(BASE, v1) = 0,7843 ± 0,0205 ; AUC(churn seul, v1) = 0,7881 ± 0,0102 ; corrélation
+     churn/fix (v1) = 0,910 (Pearson) / 0,727 (Spearman).
    - **M1** — reproduire `churn_fix_correlation` sous `label_v2` (n_fix redéfini comme « nb de fois
      où une ligne du fichier est blâmée par un fix », pas « nb de fix qui ont un jour touché le
-     fichier »). Seuil pré-enregistré : circularité réduite seulement si r_v2 < 0,5 (r_v1 = 0,91).
-   - **M2** (décisif) — `cv_auc(CHURN seul)` sous `label_v2`, comparé à 0,788 (`label_v1`, cellule
-     44 du run initial — à recalculer avec `fyc.evaluate.cv_auc` pour un chiffre certifié). Lift
-     actuel au-dessus du hasard : 0,288. Seuil pré-enregistré : circularité réduite si le lift sous
-     `label_v2` est inférieur à sa moitié, soit AUC(churn seul, v2) < 0,644.
+     fichier »). Seuil pré-enregistré : circularité réduite seulement si r_v2 < 0,5 (r_v1 = 0,910).
+   - **M2** (décisif, fonctionnel) — `cv_auc(CHURN seul)` sous `label_v2`, comparé à 0,7881
+     (`label_v1`, chiffre certifié ci-dessus). Seuil absolu pré-enregistré : AUC(churn seul, v2) <
+     0,644 (lift sous label_v2 inférieur à la moitié du lift actuel au-dessus du hasard, 0,2881).
+   - **M2bis — condition de contrôle, ajoutée suite revue (bloquant sans elle).** L'AUC absolue de
+     churn seul ne suffit pas : si `label_v2` rend la tâche plus dure pour *tout le monde*, une
+     baisse de l'AUC de churn ne prouve rien sur la circularité. Mesurer donc **aussi**
+     `cv_auc(BASE seul)` sous `label_v2`, et suivre le **ratio** r = AUC(churn seul) / AUC(BASE
+     seul), pas l'AUC absolue de churn isolée.
+     - r_v1 = 0,7881 / 0,7843 = **1,0048** (certifié — churn seul égale à peu près tout le pouvoir
+       prédictif des 10 features BASE combinées : c'est le symptôme de circularité déjà mesuré).
+     - **Seuil pré-enregistré** : circularité considérée comme réduite seulement si **r_v2 ≤ 0,90
+       × r_v1 = 0,9044** ET **AUC(BASE, v2) ne chute pas de plus de 0,03 par rapport à AUC(BASE,
+       v1) = 0,7843** (si BASE s'effondre autant que churn, on ne peut rien conclure — c'est un
+       signe que `label_v2` rend juste la tâche plus dure, pas que la circularité a baissé).
    - **M3** (diagnostic, pas une preuve) — taux de bascule des labels `1→0` entre `label_v1` et
      `label_v2`, en particulier sur les commits touchant des fichiers à fort churn.
-   - **Garde-fou** : si `part_risque` sous `label_v2` tombe sous ~5 %, les comparaisons AUC
-     deviennent bruitées — le dire explicitement plutôt que conclure sur un chiffre instable.
-   - Toutes ces mesures doivent être ajoutées à `results/benchmark.py` (paramétrer par
-     `label_version`), pas calculées à la main.
+   - **Garde-fou et RÈGLE D'ABANDON pré-enregistrée, ajoutée suite revue (bloquant sans elle)** :
+     si `part_risque` sous `label_v2` tombe sous ~5 %, les comparaisons AUC deviennent bruitées.
+     Décision fixée maintenant, pas après avoir vu le chiffre : (a) ne pas conclure sur M1/M2/M2bis
+     — chiffres trop instables ; (b) documenter comme résultat négatif en §6, daté ; (c) tester en
+     **expérience séparée**, non mélangée à la comparaison principale, un élargissement de fenêtre
+     (ex. 180 j) *uniquement* pour vérifier si le problème vient de la fenêtre ou de la granularité
+     — mais ne jamais adopter ce nouveau réglage comme label par défaut sans repasser par
+     M1/M2/M2bis sous cette fenêtre ; (d) `label_v1` reste le label par défaut des chantiers
+     suivants tant que `label_v2` n'a pas franchi ce plancher.
+   - **Hygiène `git blame`, ajoutée suite revue (bloquant sans elle)** : utiliser au minimum
+     `git blame -w` (ignorer les changements d'espaces) et `-M -C` (détecter déplacements et
+     copies). Sans ces options, `git blame` attribue une ligne à son dernier modificateur — un
+     commit de reformatage, renommage ou déplacement de code volerait la responsabilité au vrai
+     auteur du défaut, remplaçant la circularité fichier/label par un biais d'attribution tout
+     aussi trompeur. Choix documenté ici pour être challengé en soutenance.
+   - Toutes ces mesures (M1, M2, M2bis, M3, garde-fou) doivent être ajoutées à
+     `results/benchmark.py` (paramétrer par `label_version`), pas calculées à la main.
 2. **Chantier 2 — industrialiser l'analyse de code** au-delà de radon (Ruff, Bandit, Lizard,
    Semgrep). Une démo Ruff existe déjà (cellule 56, 5 fichiers) mais n'est pas intégrée au pipeline
    de features.
@@ -263,3 +332,58 @@ implémentation) :
   Chantier 1 — valider un pipeline dont le label est mauvais n'apprend rien.
 - **Reste à faire** : implémenter le Chantier 1 (assainir l'étiquetage) en suivant le protocole
   M1/M2/M3 ci-dessus.
+
+### 2026-09-09 — Session 2 (suite) — correction : clôture prématurée
+- Erreur signalée : j'avais classé l'écart radon comme "non expliqué, on passe" alors que mes
+  propres mesures montraient un signal exploitable — l'écart est **localisé** sur les jeux de
+  features contenant radon (BASE, is_night, churn, corrélation 0.91 coïncident tous à ±0.002 près
+  avec la référence). Ça élimine les causes générales (aléa, sklearn/numpy, clone) et pointe vers
+  quelque chose de spécifique au calcul radon. Je n'avais pas tiré cette conclusion. Corrigé.
+- Confirmé par l'encadrant : la référence (0.820/0.691) a été produite avec radon 6.0.1 — la
+  version n'est donc **pas** la cause (l'hypothèse de session 1 était non seulement non testée,
+  mais fausse une fois testée).
+- Diagnostic instrumenté (hypothèse version Python, 3.14.4 ici vs 3.12.3 référence) : voir §7
+  point 7 pour les 4 chiffres et le verdict (consistant mais pas prouvé).
+- Défaut de conception documenté (échecs de parsing radon masqués par des valeurs par défaut) —
+  voir §7 point 7. Correctif proposé, pas implémenté, en attente d'accord.
+- Commit `c7dd597` : refactor complet (fyc/, results/benchmark.py, CLAUDE.md, requirements.txt) —
+  point de retour explicite avant le Chantier 1, comme demandé.
+- Correction de process reçue : ne pas écrire "question ouverte : aucune" quand un écart reste
+  non expliqué — un écart non expliqué EST une question ouverte, même documenté.
+- **Reste à faire** : décider si on installe Python 3.12.3 pour trancher l'hypothèse (pas fait,
+  pas dans le timebox accordé) ; décider du correctif `touches_py`/`code_parse_ok` ; puis
+  Chantier 1 après validation du protocole M1/M2/M3 (recollé intégralement en réponse, pas encore
+  validé par l'utilisateur).
+
+### 2026-09-09 — Session 2 (suite) — diagnostic tranché, écart clos, protocole amendé
+- L'encadrant a mesuré côté référence (Python 3.12.3, même clone, même code) : `has_py == 0` sur
+  1583/2902 (54,5 %), contre 1446/2902 (49,8 %) ici — 137 commits de couverture code en plus sous
+  3.14.4. **Hypothèse Python confirmée, suffisante pour expliquer l'écart.** Version de radon déjà
+  écartée précédemment (identique des deux côtés). §7 fermé (points 7-8), plus "non résolu".
+- **Correction méthodologique reçue et retenue** : ne pas comparer des taux d'échec bruts
+  instrumentés derrière un cache entre deux environnements (dénominateurs différents, non
+  comparables) — comparer `has_py == 0` à la place (même dénominateur, insensible au cache).
+- **Conséquence actée** : mes chiffres (Python 3.14.4, meilleure couverture) deviennent la
+  référence du projet, pas ceux du narratif d'origine. Cellule 54 du notebook corrigée en
+  conséquence (ne dit plus "candidats non tranchés").
+- Python 3.14.4 explicitement figé et justifié dans `requirements.txt` et §2 (pas un détail
+  d'environnement — un point de reproductibilité qui affecte les résultats).
+- **Correctif `touches_py`/`code_parse_ok` implémenté** (validé, arbitrage reçu) : `fyc/features.py`
+  remplace les défauts trompeurs (`mi_avg=100.0`, complexités à 0 sur échec de parsing) par `NaN`
+  sur les 6 métriques numériques, plus deux booléens explicites remplaçant l'ancien `has_py`
+  ambigu. `RandomForestClassifier` (sklearn 1.9.0) vérifié pour gérer nativement les NaN avant
+  d'appliquer à l'échelle. Effet isolé mesuré : `BASE+code` 0.836→0.840 (CV), `code seul`
+  0.737→0.746 (CV) — petit gain positif net, signe que les 88 commits en échec silencieux
+  portaient un vrai signal. Détail en §7 point 8.
+- **Protocole M1/M2/M3 amendé** avec les 3 corrections bloquantes reçues : (1) condition de
+  contrôle M2bis — ratio churn/BASE plutôt que l'AUC absolue de churn seul, pour ne pas confondre
+  "tâche plus dure" et "circularité réduite" ; chiffres de référence certifiés maintenant
+  (r_v1 = 1,0048, seuil r_v2 ≤ 0,9044) ; (2) hygiène `git blame -w -M -C` documentée pour éviter de
+  remplacer la circularité fichier/label par un biais d'attribution (reformatage/renommage/déplacement) ;
+  (3) règle d'abandon pré-enregistrée si `part_risque(v2) < 5%` (ne pas conclure, documenter comme
+  résultat négatif, tester l'élargissement de fenêtre en expérience séparée, garder `label_v1` par
+  défaut). Recopié intégralement dans la réponse à l'utilisateur, comme demandé.
+- **Feu vert reçu pour démarrer le Chantier 1** sans validation supplémentaire, une fois ces trois
+  points corrigés et le protocole recollé.
+- **Reste à faire** : implémenter le Chantier 1 (SZZ ligne via `git blame -w -M -C`, détection de
+  fix plus stricte) en suivant le protocole M1/M2/M2bis/M3 amendé.

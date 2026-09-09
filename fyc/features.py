@@ -1,0 +1,192 @@
+"""Construction des jeux de features. Porte les cellules 22, 40, 43, 49-51 du notebook.
+
+Chaque fonction filtre les commits sur (est_risque(c) is not None and len(c["files"]) > 0)
+et retourne un DataFrame dans cet ordre : les quatre familles (BASE, is_night, churn, code)
+produisent donc des DataFrames alignes ligne a ligne, pret a etre concatenes.
+"""
+from collections import defaultdict
+from datetime import datetime, timezone
+
+import numpy as np
+import pandas as pd
+
+from . import git_extract
+
+BASE_COLS = ["hour", "weekend", "n_files", "lines_added", "lines_deleted",
+             "author_experience", "avg_authors_per_file", "total_churn", "msg_len",
+             "touches_tests"]
+CHURN_COLS = ["file_commits_max", "file_commits_avg", "file_age_days_avg"]
+CODE_COLS = ["cc_tot_avg", "cc_max_avg", "mi_avg", "loc_avg", "comment_ratio", "delta_cc",
+             "has_py"]
+
+
+def _commits_etiquetables(commits, est_risque):
+    """Filtre + label, dans l'ordre chronologique (meme filtre partout pour l'alignement)."""
+    for c in commits:
+        label = est_risque(c)
+        if label is not None and len(c["files"]) > 0:
+            yield c, label
+
+
+def build_base_features(commits, est_risque):
+    author_xp = defaultdict(int)
+    file_authors = defaultdict(set)
+    lignes = []
+
+    for commit in commits:
+        label = est_risque(commit)
+        n_files = len(commit["files"])
+        if label is not None and n_files > 0:
+            dt = datetime.fromtimestamp(commit["ts"], tz=timezone.utc)
+            ownership = sum(len(file_authors[f]) for f in commit["files"]) / n_files
+            lignes.append({
+                "hour": dt.hour,
+                "weekend": int(dt.weekday() >= 5),
+                "n_files": n_files,
+                "lines_added": commit["add"],
+                "lines_deleted": commit["del"],
+                "author_experience": author_xp[commit["author"]],
+                "avg_authors_per_file": ownership,
+                "total_churn": commit["add"] + commit["del"],
+                "msg_len": len(commit["msg"]),
+                "touches_tests": int(any("test" in f.lower() for f in commit["files"])),
+                "risky": label,
+            })
+        author_xp[commit["author"]] += 1
+        for f in commit["files"]:
+            file_authors[f].add(commit["author"])
+
+    return pd.DataFrame(lignes)
+
+
+def build_is_night(base_df):
+    """Derive de la colonne `hour` de BASE : pas besoin d'une seconde boucle sur `commits`."""
+    return ((base_df["hour"] >= 22) | (base_df["hour"] < 6)).astype(int).rename("is_night")
+
+
+def build_churn_features(commits, est_risque):
+    file_commits = defaultdict(int)
+    file_first_ts = {}
+    rows = []
+
+    for commit in commits:
+        label = est_risque(commit)
+        n = len(commit["files"])
+        if label is not None and n > 0:
+            hist = [file_commits[f] for f in commit["files"]]
+            ages = [(commit["ts"] - file_first_ts[f]) / 86400
+                    for f in commit["files"] if f in file_first_ts]
+            rows.append({
+                "file_commits_max": max(hist),
+                "file_commits_avg": float(np.mean(hist)),
+                "file_age_days_avg": float(np.mean(ages)) if ages else 0.0,
+            })
+        for f in commit["files"]:
+            file_commits[f] += 1
+            file_first_ts.setdefault(f, commit["ts"])
+
+    return pd.DataFrame(rows)
+
+
+def churn_fix_correlation(commits, fix_par_fichier):
+    """Diagnostic de circularite (cellule 46) : correlation commits/fix par fichier."""
+    nb_commits_f = defaultdict(int)
+    for c in commits:
+        for f in c["files"]:
+            nb_commits_f[f] += 1
+
+    diag = pd.DataFrame([
+        {"n_commits": nb_commits_f[f], "n_fix": len(fix_par_fichier.get(f, []))}
+        for f in nb_commits_f
+    ])
+    return {
+        "pearson": float(diag["n_commits"].corr(diag["n_fix"])),
+        "spearman": float(diag["n_commits"].corr(diag["n_fix"], method="spearman")),
+    }
+
+
+_RADON_CACHE = {}
+
+
+def _metriques_radon(src):
+    if src is None:
+        return None
+    key = hash(src)
+    if key in _RADON_CACHE:
+        return _RADON_CACHE[key]
+    from radon.complexity import cc_visit
+    from radon.metrics import mi_visit
+    from radon.raw import analyze
+    try:
+        blocs = cc_visit(src)
+        res = {"cc_tot": sum(b.complexity for b in blocs),
+               "cc_max": max((b.complexity for b in blocs), default=0),
+               "mi": mi_visit(src, multi=True),
+               "loc": analyze(src).loc,
+               "comments": analyze(src).comments}
+    except Exception:
+        res = None
+    _RADON_CACHE[key] = res
+    return res
+
+
+def build_code_features(commits, est_risque, repo_dir, max_py_par_commit=5):
+    """Metriques radon sur les versions avant/apres de chaque fichier .py touche.
+
+    Recupere les versions via `git cat-file --batch` en un seul processus
+    (cf. fyc.git_extract.cat_file_batch) : un `git show` par fichier serait
+    inutilisable a cette echelle (dizaines de minutes).
+    """
+    parents = git_extract.get_parents(repo_dir)
+
+    besoins, specs = [], []
+    indices = []
+    for i, c in enumerate(commits):
+        if est_risque(c) is None or not c["files"]:
+            continue
+        indices.append(i)
+        pyfiles = [f for f in c["files"] if f.endswith(".py")][:max_py_par_commit]
+        par = parents.get(c["hash"], [])
+        for f in pyfiles:
+            besoins.append((i, f, "after"))
+            specs.append(f'{c["hash"]}:{f}')
+            if par:
+                besoins.append((i, f, "before"))
+                specs.append(f'{par[0]}:{f}')
+
+    raw_contents = git_extract.cat_file_batch(repo_dir, specs)
+    contents = {besoins[k]: raw_contents[k] for k in range(len(besoins))}
+
+    agg = defaultdict(lambda: defaultdict(list))
+    for (i, f, quand), src in contents.items():
+        if quand != "after":
+            continue
+        ma = _metriques_radon(src)
+        if not ma:
+            continue
+        for k_ in ("cc_tot", "cc_max", "mi", "loc", "comments"):
+            agg[i][k_].append(ma[k_])
+        mb = _metriques_radon(contents.get((i, f, "before")))
+        if mb:
+            agg[i]["d_cc"].append(ma["cc_tot"] - mb["cc_tot"])
+
+    rows = []
+    for i in indices:
+        m = agg.get(i, {})
+
+        def moy(k, d=0.0, m=m):
+            v = m.get(k) or []
+            return float(np.mean(v)) if v else d
+
+        loc = moy("loc")
+        rows.append({
+            "cc_tot_avg": moy("cc_tot"),
+            "cc_max_avg": moy("cc_max"),
+            "mi_avg": moy("mi", 100.0),
+            "loc_avg": loc,
+            "comment_ratio": moy("comments") / loc if loc > 0 else 0.0,
+            "delta_cc": moy("d_cc"),
+            "has_py": int(bool(m.get("cc_tot"))),
+        })
+
+    return pd.DataFrame(rows)

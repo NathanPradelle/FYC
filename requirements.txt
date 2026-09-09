@@ -1,0 +1,17 @@
+# Coeur du pipeline (extraction Git, features, modele)
+pandas==3.0.5
+numpy==2.5.3
+scikit-learn==1.9.0
+scipy==1.18.1
+matplotlib==3.11.1
+seaborn==0.13.2
+
+# Analyse de code (Partie 4, Piste C / Chantier 2)
+radon==6.0.1
+ruff==0.16.6
+
+# Execution du notebook
+jupyterlab==4.6.3
+ipykernel==7.3.0
+nbconvert==7.17.1
+nbformat==5.11.1

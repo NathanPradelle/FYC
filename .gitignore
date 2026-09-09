@@ -1,0 +1,7 @@
+flask/
+.venv/
+__pycache__/
+.ipynb_checkpoints/
+*.csv
+*.png
+*Zone.Identifier

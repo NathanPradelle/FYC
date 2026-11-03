@@ -32,11 +32,19 @@ from fyc import evaluate, features, git_extract, labeling
 REPO_DIR = str(REPO_ROOT / "flask")
 FENETRE_JOURS = 90
 
+# Detection de fix assainie (Chantier 1, 2e volet, mesuree le 2026-09-09 via
+# results/chantier1_fix_detection.py) : exclut typo/docs/changelog (candidat B).
+# L'exigence de reference d'issue (#123) fait tomber part_risque sous le plancher
+# de 5% deja etabli pour la granularite -- resultats non fiables a cette taille de
+# classe, donc PAS adoptee malgre une AUC brute plus haute (cf. CLAUDE.md §6).
+FIX_PREDICATE = labeling.make_fix_predicate(exclude_re=labeling.EXCLUDE_RE)
+
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--label", choices=["v1", "v2"], default="v1",
-                         help="v1 = SZZ fichier (defaut) ; v2 = SZZ ligne via git blame")
+    parser.add_argument("--label", choices=["v1", "v2"], default="v2",
+                         help="v1 = SZZ fichier ; v2 = SZZ ligne via git blame (defaut, adopte"
+                              " le 2026-09-09, cf. CLAUDE.md §4/§6)")
     args = parser.parse_args()
 
     print("Extraction des commits...")
@@ -46,12 +54,14 @@ def main():
 
     if args.label == "v1":
         label_version = "v1_fichier_szz_simplifie"
-        fix_index, est_risque = labeling.label_commits(commits, fenetre_jours=FENETRE_JOURS)
+        fix_index, est_risque = labeling.label_commits(
+            commits, fenetre_jours=FENETRE_JOURS, fix_predicate=FIX_PREDICATE,
+        )
     else:
         label_version = "v2_ligne_szz_blame"
         print("Calcul du SZZ ligne (git blame -w -M -C sur les commits de fix)...")
         _blame_par_commit, fix_index, est_risque = labeling.label_commits_v2(
-            commits, REPO_DIR, fenetre_jours=FENETRE_JOURS,
+            commits, REPO_DIR, fenetre_jours=FENETRE_JOURS, fix_predicate=FIX_PREDICATE,
         )
 
     print("Construction des features BASE...")

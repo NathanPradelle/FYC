@@ -69,11 +69,19 @@ notebook au fur et à mesure des chantiers, cf. §8).
 
 ## 4. Décisions de conception
 
-- **Étiquetage SZZ simplifié, granularité fichier, fenêtre 90 jours.** *Pourquoi :* fenêtre courte
-  pour éviter que le label dégénère en « popularité du fichier » (voir §6, analyse de sensibilité) ;
-  90 j retenu comme compromis donnant ~51 % de positifs (classe équilibrée). *Limite assumée :*
-  granularité fichier plutôt que ligne, ce qui est la cause directe de la circularité churn/label
-  mesurée en §5.
+- **Étiquetage SZZ simplifié, granularité fichier, fenêtre 90 jours — SUPERSÉDÉ (2026-09-09).**
+  *Pourquoi à l'origine :* fenêtre courte pour éviter que le label dégénère en « popularité du
+  fichier » (voir §6, analyse de sensibilité) ; 90 j retenu comme compromis donnant ~51 % de
+  positifs (classe équilibrée). *Limite assumée :* granularité fichier plutôt que ligne, cause
+  directe de la circularité churn/label mesurée en §5. **Remplacé par `label_v2` (SZZ ligne via
+  `git blame -w -M -C`) comme label par défaut** — voir décision ci-dessous et §6. `label_v1` reste
+  dans le code (`fyc.labeling.label_commits`) pour comparaison, mais n'est plus le défaut.
+- **`label_v2` (SZZ ligne, `git blame -w -M -C`) adopté comme label par défaut.** *Pourquoi :*
+  protocole de mesure pré-enregistré (§8, Chantier 1) — 3 mesures sur 4 (dont la mesure décisive
+  contrôlée pour la difficulté de la tâche) montrent une réduction nette de la circularité
+  prédictive, avec marge. *Réserve assumée, pas résolue :* la corrélation agrégée par fichier
+  (M1) ne baisse pas sous le seuil visé — propriété différente de la circularité qui comptait pour
+  le modèle, mais à garder en tête en soutenance (§6).
 - **RandomForest plutôt que régression logistique.** *Pourquoi :* gain mesuré et non supposé —
   AUC 0.775 (forêt) vs 0.671 (logistique) sur le même split, l'écart justifie le choix (relations
   non linéaires, ex. risque vs nombre de fichiers).
@@ -186,9 +194,37 @@ commit qui touche du code déjà complexe/volumineux*.
     la contamination commit-par-commit que le modèle exploitait sous v1. Ne pas annoncer "la
     circularité a disparu" sans cette nuance — les deux affirmations sont vraies et se complètent :
     circularité prédictive fortement réduite, circularité structurelle du fichier persistante.
-  - **Décision non prise unilatéralement — en attente d'arbitrage** : adopter `label_v2` comme
-    label par défaut des chantiers suivants, avec cette réserve documentée, ou creuser encore M1
-    avant de trancher.
+  - **Décision arbitrée (2026-09-09, par l'utilisateur) : `label_v2` ADOPTÉ comme label par défaut**
+    des chantiers suivants. Raisonnement : 3 mesures sur 4 (M2bis — la mesure décisive, contrôlée
+    pour la difficulté de la tâche — M3, et la corroboration indépendante du tableau complet)
+    convergent avec une marge confortable, pas de justesse. Le seul signal dissonant (M1) mesure
+    une propriété différente de ce qui compte pour le modèle (densité de blame agrégée par fichier,
+    mécaniquement liée à la taille/activité du fichier, plutôt que la contamination commit-par-
+    commit que le modèle exploitait sous v1) — creuser davantage ce point précis aurait un
+    rendement décroissant face aux chantiers restants. **La réserve M1 reste documentée ci-dessus,
+    pas effacée** : la circularité baisse au niveau prédictif, pas au niveau de la statistique de
+    fichier agrégée, et ces deux affirmations coexistent en soutenance.
+- **✅ Validée, partiellement — Une détection de fix plus stricte réduit encore le bruit du label.**
+  Mesuré le 2026-09-09 (`results/chantier1_fix_detection.py`), 4 candidats sous `label_v2` adopté,
+  même fenêtre 90j :
+
+  | Candidat | n fix | part_risque | AUC(BASE) | AUC(tout) | corr. churn/fix |
+  |---|---|---|---|---|---|
+  | A. `FIX_RE` seul (ancien défaut) | 1069 | 12,7 % | 0,802 | 0,807 | 0,810 |
+  | **B. + exclusion `typo\|docs\|changelog` (ADOPTÉ)** | **732** | **9,7 %** | **0,787** | **0,805** | **0,789** |
+  | C. + référence d'issue `#\d+` exigée | 320 | 3,9 % | 0,824 | 0,851 | 0,751 |
+  | D. exclusion + référence d'issue | 237 | 3,1 % | 0,822 | 0,861 | 0,705 |
+
+  **Décision : candidat B adopté** comme détection de fix par défaut (`results/benchmark.py`,
+  `fyc.labeling.make_fix_predicate(exclude_re=EXCLUDE_RE)`). **C et D rejetés malgré une AUC brute
+  plus haute** — `part_risque` tombe sous le plancher de 5 % déjà établi comme garde-fou
+  d'interprétabilité pour le protocole de granularité (§8) : même règle appliquée ici par
+  cohérence, pas une exception. Avec ~3-4 % de positifs, les écarts-types d'AUC explosent
+  (jusqu'à ± 0,042) et le gain apparent n'est pas distinguable du bruit d'échantillonnage sur une
+  classe aussi réduite. **Ce n'est pas une preuve que C/D sont de mauvaises pistes** — seulement
+  qu'elles ne sont pas validables avec cette méthode de validation croisée à cet effectif ; à
+  reconsidérer si le projet élargit son jeu de données (Chantier 6) ou change de métrique
+  d'évaluation (precision/recall à seuil fixe, moins sensible au déséquilibre que l'AUC).
 
 ## 7. Pièges connus et limites assumées
 
@@ -199,7 +235,11 @@ commit qui touche du code déjà complexe/volumineux*.
 3. **Biais d'importance par impureté** (`feature_importances_` surévalue `msg_len`, `hour`) —
    toujours contre-vérifier avec `permutation_importance`.
 4. **Étiquetage par mots-clés lexical** (`FIX_RE`) : capture « fix typo » (pas un bug), rate les
-   fix bien rédigés sans le mot « fix ». Cause probable de bruit dans le label, pas encore quantifiée.
+   fix bien rédigés sans le mot « fix ». **Quantifié et partiellement corrigé le 2026-09-09** —
+   voir §6 (hypothèse sur la détection de fix stricte) et §8 Chantier 1 : exclusion
+   `typo|docs|changelog` adoptée (candidat B), exigence de référence d'issue mesurée mais rejetée
+   (classe positive trop petite). La seconde moitié du piège (fix bien rédigés sans mot-clé, donc
+   des faux négatifs) reste non quantifiée et non corrigée — limite assumée.
 5. **Granularité fichier, pas ligne** pour le label SZZ — cause structurelle de la circularité du
    piège n°1. Un vrai SZZ (git blame) la réduirait mais demande un chantier dédié (Chantier 1).
 6. **Biais de fin d'historique** : les commits des ~90 derniers jours ne peuvent presque pas être
@@ -262,6 +302,16 @@ commit qui touche du code déjà complexe/volumineux*.
    features de code). **Décision assumée** : pas de correction maintenant — mêmes arguments qu'aux
    points 7-8 (le Chantier 1 va changer le label et invalider ces chiffres). Zéro exception a été
    faite : cette liste doit être reprise avant la restitution finale (Chantier 7), pas oubliée.
+11. **Divergence notebook/`fyc` introduite le 2026-09-09, assumée.** Les cellules 49-53 (Partie 4.3,
+   code inline du TP original) utilisent encore l'ancien remplissage par défaut sur échec de
+   parsing radon (`mi_avg=100.0`, `has_py`) et le `FIX_RE` brut — elles n'ont **pas** été mises à
+   jour avec le correctif NaN (§7 point 8) ni la détection de fix assainie (§6, candidat B). Seul
+   le tableau dynamique de la cellule 52 (chargé depuis `results/benchmark.py` via `fyc/`) reflète
+   l'état courant du pipeline. Les cellules 49-53 restent la démonstration pédagogique **originale**
+   du TP, explicitement signalée comme telle dans une note ajoutée à la cellule 52. **Risque** : un
+   lecteur qui ne lit pas cette note peut croire que cellule 53 (« Modèle final ») produit les
+   mêmes chiffres que `results/results_v2.json` — ce n'est plus le cas. À corriger au Chantier 7
+   (porter les correctifs dans les cellules inline, ou les faire appeler `fyc` directement).
 
 ## 8. Prochaines étapes priorisées
 
@@ -327,8 +377,15 @@ implémentation) :
    `results/results_v2.json` — corrobore M2bis indépendamment (churn et code s'effondrent en
    absolu, BASE tient). **Détection de fix plus stricte (`#\d+`, exclusion `typo|docs|changelog`)
    PAS encore traitée** — seule la granularité a été isolée et testée, comme le protocole
-   l'exigeait. Reste à faire pour compléter le Chantier 1. **`label_v1` reste le label par défaut
-   en attendant l'arbitrage sur l'adoption de `label_v2`** (voir §6 pour la décision en attente).
+   l'exigeait. **Arbitrage rendu (2026-09-09) : `label_v2` ADOPTÉ comme label par défaut** (voir §4
+   et §6 pour le raisonnement et la réserve M1 conservée). **Détection de fix stricte traitée
+   (2026-09-09)** — 4 candidats mesurés (§6), candidat B (exclusion `typo|docs|changelog`) adopté
+   dans `results/benchmark.py` ; candidats avec référence d'issue exigée mesurés mais rejetés
+   (classe positive sous le plancher de 5 %, §6). **Chantier 1 CLOS** sur son périmètre défini
+   (granularité + détection de fix), avec deux réserves documentées et non résolues : M1 (§6) et la
+   divergence notebook/`fyc` introduite en cours de route (§7 point 11) — les deux renvoient à un
+   chantier ultérieur (respectivement : plus d'investigation si utile, Chantier 7 pour la
+   divergence).
 2. **Chantier 2 — industrialiser l'analyse de code** au-delà de radon (Ruff, Bandit, Lizard,
    Semgrep). Une démo Ruff existe déjà (cellule 56, 5 fichiers) mais n'est pas intégrée au pipeline
    de features.
@@ -457,3 +514,33 @@ implémentation) :
 - **Reste à faire** : arbitrage sur l'adoption de `label_v2` (§6) ; volet "détection de fix plus
   stricte" du Chantier 1 (pas encore traité, la granularité seule a été isolée pour le protocole) ;
   commit de cet état.
+
+### 2026-09-09 — Session 3 — arbitrage, détection de fix stricte, clôture du Chantier 1
+- Arbitrage tranché (par moi, sur consigne explicite de l'utilisateur : « fait ce qui est le plus
+  pertinent entre les deux ») : **`label_v2` adopté** comme label par défaut. Raisonnement détaillé
+  en §6 — 3 mesures sur 4 convergent avec marge confortable, le seul dissonant (M1) mesure une
+  propriété différente de ce qui compte pour le modèle. Réserve M1 conservée, pas effacée.
+- `fyc/labeling.py` : ajout de `make_fix_predicate` (exclusion + référence d'issue, composables),
+  `tag_fixes` accepte maintenant un `fix_predicate` en plus de `fix_re` (rétrocompatible).
+  Nettoyage au passage : paramètre `fix_re` mort retiré de `blame_line_fixes` (jamais utilisé,
+  s'appuyait déjà sur `is_fix` pré-tagué).
+- `results/chantier1_fix_detection.py` (nouveau) : 4 candidats mesurés sous label_v2 (déjà adopté),
+  même méthode que le protocole précédent (comparer, pas supposer). Résultat détaillé en §6.
+  **Décision : candidat B (exclusion typo/docs/changelog) adopté**, candidats avec référence
+  d'issue exigée **rejetés** malgré une AUC brute plus haute — appliqué la même règle de garde-fou
+  à 5 % de positifs que pour la granularité, par cohérence, pas par exception.
+- `results/benchmark.py` : `FIX_PREDICATE` (candidat B) appliqué par défaut aux deux labels ;
+  `--label` par défaut passé de `v1` à `v2` (le nouveau défaut du projet). `results.json` et
+  `results_v2.json` régénérés avec la détection assainie.
+- **Problème découvert en cours de route, documenté plutôt que caché** (§7 point 11) : les cellules
+  49-53 du notebook (code inline du TP original, Partie 4.3) n'ont pas été mises à jour avec le
+  correctif NaN ni la détection de fix assainie — elles divergent maintenant de `fyc`/`results.json`.
+  Corrigé le label trompeur "BASE (Partie 3)" (cellule 52) qui prétendait une équivalence qui
+  n'existe plus ; ajouté une note explicite de divergence dans la même cellule plutôt que de
+  silencieusement laisser le lecteur croire que tout le notebook est à jour. Correction complète
+  reportée au Chantier 7 (porter les correctifs dans les cellules inline).
+- Notebook ré-exécuté après chaque changement, 0 erreur sur 58 cellules à chaque fois.
+- **Chantier 1 CLOS** sur son périmètre défini (granularité + détection de fix). Deux réserves
+  documentées et non résolues (M1, divergence notebook/fyc), explicitement pas effacées.
+- **Reste à faire** : commit de cet état ; proposer un plan pour le Chantier 2 (industrialiser
+  l'analyse de code) avant de l'implémenter, comme le veut la règle de collaboration du projet.

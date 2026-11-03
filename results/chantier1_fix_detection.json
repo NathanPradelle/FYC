@@ -1,0 +1,116 @@
+{
+  "generated_at": "2026-11-03T18:02:32.577942+00:00",
+  "flask_head": "d73fa1cdcbd8b1465c151db8924ba58b1dd14e35",
+  "label_version": "v2_ligne_szz_blame",
+  "fenetre_jours": 90,
+  "candidats": {
+    "A_baseline": {
+      "n_fix_commits": 1069,
+      "n_commits_etiquetes": 2902,
+      "part_risque": 0.1272,
+      "auc": {
+        "BASE": {
+          "mean": 0.8018,
+          "std": 0.0336
+        },
+        "BASE+churn": {
+          "mean": 0.8066,
+          "std": 0.0368
+        },
+        "BASE+code": {
+          "mean": 0.8087,
+          "std": 0.0341
+        },
+        "all": {
+          "mean": 0.8067,
+          "std": 0.0405
+        }
+      },
+      "churn_fix_correlation": {
+        "pearson": 0.810005295483464,
+        "spearman": 0.795041744399893
+      }
+    },
+    "B_exclude_typo_docs_changelog": {
+      "n_fix_commits": 732,
+      "n_commits_etiquetes": 3198,
+      "part_risque": 0.0969,
+      "auc": {
+        "BASE": {
+          "mean": 0.7867,
+          "std": 0.028
+        },
+        "BASE+churn": {
+          "mean": 0.7992,
+          "std": 0.0307
+        },
+        "BASE+code": {
+          "mean": 0.7913,
+          "std": 0.0324
+        },
+        "all": {
+          "mean": 0.8046,
+          "std": 0.0303
+        }
+      },
+      "churn_fix_correlation": {
+        "pearson": 0.7889451200328315,
+        "spearman": 0.758374768020415
+      }
+    },
+    "C_issue_ref_requise": {
+      "n_fix_commits": 320,
+      "n_commits_etiquetes": 3647,
+      "part_risque": 0.0392,
+      "auc": {
+        "BASE": {
+          "mean": 0.8236,
+          "std": 0.0174
+        },
+        "BASE+churn": {
+          "mean": 0.8379,
+          "std": 0.0247
+        },
+        "BASE+code": {
+          "mean": 0.8352,
+          "std": 0.033
+        },
+        "all": {
+          "mean": 0.8507,
+          "std": 0.0311
+        }
+      },
+      "churn_fix_correlation": {
+        "pearson": 0.7509656812235359,
+        "spearman": 0.677693206685902
+      }
+    },
+    "D_exclude_et_issue_ref": {
+      "n_fix_commits": 237,
+      "n_commits_etiquetes": 3689,
+      "part_risque": 0.0306,
+      "auc": {
+        "BASE": {
+          "mean": 0.8222,
+          "std": 0.0412
+        },
+        "BASE+churn": {
+          "mean": 0.853,
+          "std": 0.0422
+        },
+        "BASE+code": {
+          "mean": 0.8427,
+          "std": 0.034
+        },
+        "all": {
+          "mean": 0.8614,
+          "std": 0.0268
+        }
+      },
+      "churn_fix_correlation": {
+        "pearson": 0.7050168989137988,
+        "spearman": 0.5826723956110667
+      }
+    }
+  }
+}

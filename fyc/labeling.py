@@ -15,15 +15,42 @@ from . import git_extract
 
 FIX_RE = re.compile(r"\b(fix|bug|regression|crash|error|fail)\w*\b", re.I)
 
+# Detection de fix plus stricte (Chantier 1, 2e volet) : EXCLUDE_RE ecarte les
+# faux positifs lexicaux les plus frequents (fix de typo/docs/changelog, pas un
+# bug) ; ISSUE_REF_RE exige une reference d'issue GitHub comme signal de
+# serieux. Candidats mesures dans results/chantier1_fix_detection.py -- aucun
+# n'est applique par defaut sans mesure (cf. CLAUDE.md §6).
+EXCLUDE_RE = re.compile(r"\b(typo|docs?|changelog)\b", re.I)
+ISSUE_REF_RE = re.compile(r"#\d+")
+
 _HUNK_RE = re.compile(r"^@@ -(\d+)(?:,(\d+))?\s\+\d+(?:,\d+)?\s@@")
 _OLD_PATH_RE = re.compile(r"^--- (?:a/(.+)|/dev/null)$")
 _BLAME_HEADER_RE = re.compile(r"^([0-9a-f]{40}) \d+ \d+(?: \d+)?$")
 
 
-def tag_fixes(commits, fix_re=FIX_RE):
-    """Ajoute `is_fix` (bool) a chaque commit, en place. Retourne `commits`."""
+def make_fix_predicate(fix_re=FIX_RE, exclude_re=None, require_issue_ref=False):
+    """Construit un predicat message -> bool pour tag_fixes : fix_re doit
+    matcher, exclude_re (si fourni) ne doit pas matcher, et require_issue_ref
+    (si vrai) exige une reference #123."""
+    def predicate(msg):
+        if not fix_re.search(msg):
+            return False
+        if exclude_re is not None and exclude_re.search(msg):
+            return False
+        if require_issue_ref and not ISSUE_REF_RE.search(msg):
+            return False
+        return True
+    return predicate
+
+
+def tag_fixes(commits, fix_re=FIX_RE, fix_predicate=None):
+    """Ajoute `is_fix` (bool) a chaque commit, en place. Retourne `commits`.
+
+    `fix_predicate(msg) -> bool`, si fourni, remplace `fix_re.search` (cf.
+    make_fix_predicate pour une detection plus stricte que le FIX_RE simple)."""
+    predicate = fix_predicate or (lambda msg: bool(fix_re.search(msg)))
     for c in commits:
-        c["is_fix"] = bool(fix_re.search(c["msg"]))
+        c["is_fix"] = bool(predicate(c["msg"]))
     return commits
 
 
@@ -59,12 +86,12 @@ def make_est_risque(fix_par_fichier, fenetre_jours=90):
     return est_risque
 
 
-def label_commits(commits, fenetre_jours=90, fix_re=FIX_RE):
+def label_commits(commits, fenetre_jours=90, fix_re=FIX_RE, fix_predicate=None):
     """Orchestration complete : tag_fixes + build_fix_index + make_est_risque.
 
     Mutate `commits` (ajoute is_fix) et retourne (fix_par_fichier, est_risque).
     """
-    tag_fixes(commits, fix_re=fix_re)
+    tag_fixes(commits, fix_re=fix_re, fix_predicate=fix_predicate)
     fix_par_fichier = build_fix_index(commits)
     est_risque = make_est_risque(fix_par_fichier, fenetre_jours=fenetre_jours)
     return fix_par_fichier, est_risque
@@ -106,7 +133,7 @@ def _parse_blame_commits(porcelain_text):
     return hashes
 
 
-def blame_line_fixes(commits, repo_dir, fix_re=FIX_RE):
+def blame_line_fixes(commits, repo_dir):
     """SZZ vrai (granularite ligne) : pour chaque commit de fix, identifie via
     `git blame -w -M -C` les commits qui ont introduit les lignes corrigees.
 
@@ -179,11 +206,11 @@ def make_est_risque_v2(blame_par_commit, fenetre_jours=90):
     return est_risque
 
 
-def label_commits_v2(commits, repo_dir, fenetre_jours=90, fix_re=FIX_RE):
+def label_commits_v2(commits, repo_dir, fenetre_jours=90, fix_re=FIX_RE, fix_predicate=None):
     """Orchestration complete du label_v2 (SZZ ligne). Mutate `commits` (ajoute
     is_fix, partage avec v1) et retourne (blame_par_commit, blame_par_fichier,
     est_risque_v2)."""
-    tag_fixes(commits, fix_re=fix_re)
-    blame_par_commit, blame_par_fichier = blame_line_fixes(commits, repo_dir, fix_re=fix_re)
+    tag_fixes(commits, fix_re=fix_re, fix_predicate=fix_predicate)
+    blame_par_commit, blame_par_fichier = blame_line_fixes(commits, repo_dir)
     est_risque = make_est_risque_v2(blame_par_commit, fenetre_jours=fenetre_jours)
     return blame_par_commit, blame_par_fichier, est_risque

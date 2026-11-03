@@ -37,19 +37,29 @@ Dépôt étudié : [pallets/flask](https://github.com/pallets/flask) (Python, ~5
 
 - **`fyc/`** — modules réutilisables, extraits du notebook le 2026-09-09 (squelette minimal,
   seulement ce que le Chantier 1 va réellement utiliser) :
-  - `git_extract.py` : `extraire_commits`, `get_head`, `get_parents`, `cat_file_batch`.
-  - `labeling.py` : SZZ simplifié — `FIX_RE`, `tag_fixes`, `build_fix_index`, `make_est_risque`,
-    `label_commits`. **Interface pensée pour rester stable** quand le Chantier 1 changera
-    l'implémentation (détection de fix plus stricte, granularité ligne).
+  - `git_extract.py` : `extraire_commits`, `get_head`, `get_parents`, `cat_file_batch`,
+    `diff_raw`, `blame_porcelain` (ajoutés Chantier 1, pour le SZZ ligne).
+  - `labeling.py` : SZZ fichier (v1, legacy) **et** SZZ ligne (v2, défaut — `label_commits_v2`,
+    `blame_line_fixes`, `make_est_risque_v2`, `git blame -w -M -C`). `make_fix_predicate` /
+    `tag_fixes(fix_predicate=...)` pour une détection de fix composable (exclusion de mots-clés,
+    référence d'issue exigée).
   - `features.py` : `build_base_features`, `build_is_night`, `build_churn_features`,
-    `build_code_features` (radon via `git cat-file`), `churn_fix_correlation` (diagnostic de
-    circularité).
+    `build_code_features` (radon via `git cat-file`, NaN sur échec de parsing — §7 point 8),
+    `churn_fix_correlation` (diagnostic de circularité, réutilisé pour M1 du Chantier 1).
+  - `code_lint.py` (Chantier 2, 2026-09-09) : `lint_features` — Ruff + Bandit en un seul passage
+    de matérialisation disque (batch par dossier temporaire), sur les mêmes versions « après »
+    que `build_code_features`. `RUFF_COLS`, `BANDIT_COLS`.
   - `evaluate.py` : `cv_auc`, `temporal_split_auc`, `baseline_majority_accuracy`.
-- **`results/benchmark.py`** — recalcule tous les jeux de features de la Partie 4 et écrit
-  **`results/results.json`** (AUC CV ± std, AUC split temporel, date, hash HEAD Flask, versions des
-  libs). Source unique de vérité pour le tableau comparatif — plus aucun chiffre à recopier à la
-  main dans le notebook pour cette table précise. `python results/benchmark.py` depuis la racine
-  (venv actif) pour régénérer.
+- **`results/benchmark.py`** — recalcule tous les jeux de features (BASE, churn, code radon,
+  lint Ruff/Bandit) et écrit **`results/results.json`** (label v1, legacy) ou
+  **`results/results_v2.json`** (label v2, défaut depuis le 2026-09-09 — `--label v2`, qui est
+  aussi le défaut de l'argument). AUC CV ± std, AUC split temporel, date, hash HEAD Flask, versions
+  des libs, diagnostics de circularité/redondance. Source unique de vérité pour le tableau
+  comparatif — plus aucun chiffre à recopier à la main dans le notebook pour cette table précise.
+  `python results/benchmark.py` depuis la racine (venv actif) pour régénérer.
+- **`results/chantier1_protocol.py`, `chantier1_fix_detection.py`, `chantier2_lint.py`** — scripts
+  de mesure dédiés à un chantier précis (protocole M1/M2/M2bis/M3, comparaison des détections de
+  fix, redondance/circularité de Ruff+Bandit). Chacun écrit son propre `results/*.json` daté.
 - **`cas_pratique_FYC_complete_v2.ipynb`** (58 cellules) — orchestre et raconte. Structure :
 
 - **Partie 1** (cellules 0–13) : clone Flask, extraction `git log --numstat`, DataFrame, exploration.
@@ -95,6 +105,21 @@ notebook au fur et à mesure des chantiers, cf. §8).
   sans serveur, donc utilisable sur des milliers de versions ; SonarQube est un serveur, quelques
   dizaines de secondes par analyse, donc réservé à un échantillon (200–300 commits) ou au flux
   courant — décision **pas encore mise en œuvre**, c'est une piste (§8, Chantier 2).
+- **Ruff + Bandit retenus pour le Chantier 2, Lizard et Semgrep écartés pour l'instant.**
+  *Pourquoi :* Lizard est multi-langages — sans valeur ajoutée sur un dépôt 100 % Python où radon
+  couvre déjà la complexité cyclomatique ; Semgrep demande des règles personnalisées, plus lourd à
+  justifier sans cas d'usage précis identifié. Les deux restent des pistes d'ouverture, pas un
+  chantier fermé — à reconsidérer si le projet s'étend à un dépôt multi-langages (Chantier 6).
+- **Ruff et Bandit batchés par dossier temporaire, pas un `subprocess` par fichier.** *Pourquoi :*
+  même principe que `git cat-file --batch` — mesuré à 100,6 s pour ~3200 commits étiquetés (tout
+  compris : matérialisation disque + un seul appel Ruff + un seul appel Bandit), contre des
+  dizaines de minutes en appelant les deux outils fichier par fichier.
+- **Bandit : normaliser par le nombre de fichiers réellement analysés, pas par le nombre de
+  fichiers récupérés depuis Git.** *Pourquoi :* piège identique à `has_py`/`mi_avg=100.0` (§7
+  point 8) — Bandit échoue silencieusement sur le même code Python 2 que radon, et son JSON
+  contient alors une entrée sans les clés `SEVERITY.*`. Un `.get(cle, 0)` naïf aurait compté ça
+  comme « zéro violation », pas comme un échec — bug réellement rencontré et corrigé en cours de
+  Chantier 2 (voir §7).
 
 ## 5. Résultats mesurés
 
@@ -225,6 +250,34 @@ commit qui touche du code déjà complexe/volumineux*.
   qu'elles ne sont pas validables avec cette méthode de validation croisée à cet effectif ; à
   reconsidérer si le projet élargit son jeu de données (Chantier 6) ou change de métrique
   d'évaluation (precision/recall à seuil fixe, moins sensible au déséquilibre que l'AUC).
+- **⚠️ Validée avec réserve forte — Ruff/Bandit ajoutent un signal réel mais largement redondant
+  avec radon.** Mesuré le 2026-09-09 (`results/chantier2_lint.py`, label_v2 + détection de fix
+  candidat B, run de référence) :
+
+  | Jeu de features | AUC CV | Verdict |
+  |---|---|---|
+  | BASE | 0,787 | référence |
+  | BASE + code (radon) | 0,791 | +0,004 |
+  | BASE + Ruff | **0,798** | +0,011 — meilleur ajout seul que radon |
+  | BASE + Bandit | 0,793 | +0,006 |
+  | BASE + Ruff + Bandit | 0,798 | Bandit n'ajoute rien une fois Ruff présent |
+  | BASE + radon + Ruff + Bandit | 0,796 | **combiner les trois fait moins bien que Ruff seul** |
+  | Ruff + Bandit seuls (sans BASE) | 0,578 | signal faible en isolation |
+  | Tout (BASE+churn+code+Ruff+Bandit) | 0,805 | **identique** à tout sans Ruff/Bandit (0,805) |
+
+  **Diagnostic de redondance/circularité** : corrélation Ruff↔`loc_avg` (radon) = **0,704**,
+  Bandit↔`loc_avg` = 0,431 — Ruff mesure en grande partie « ce fichier est volumineux », déjà
+  capté par radon. Corrélation avec le churn (`file_commits_max`) = 0,198 (Ruff) / 0,057
+  (Bandit) — **pas circulaire** comme l'était le churn (0,91) ou comme pouvait le laisser
+  craindre radon au départ.
+  **Lecture** : Ruff/Bandit ne sont pas un signal illusoire (corrélation au churn faible, gain
+  individuel réel et supérieur à radon), mais leur valeur **marginale une fois combinés à tout le
+  reste est quasi nulle** (0,805 → 0,805) — la redondance avec `loc_avg` explique l'essentiel de
+  ce plafonnement. **Décision : les deux familles sont intégrées à `results/benchmark.py`** (jeu
+  `BASE+lint`, `lint_only`, diagnostics de redondance/circularité dans `results/results_v2.json`)
+  pour qu'on puisse suivre cette redondance dans le temps, mais **ne pas vendre Ruff/Bandit comme
+  un gain net sur le modèle final** — c'est un problème de combinaison (Chantier 5), pas une
+  feature inutile en soi.
 
 ## 7. Pièges connus et limites assumées
 
@@ -312,6 +365,21 @@ commit qui touche du code déjà complexe/volumineux*.
    lecteur qui ne lit pas cette note peut croire que cellule 53 (« Modèle final ») produit les
    mêmes chiffres que `results/results_v2.json` — ce n'est plus le cas. À corriger au Chantier 7
    (porter les correctifs dans les cellules inline, ou les faire appeler `fyc` directement).
+12. **Bandit échoue silencieusement sur le même code Python 2 que radon — même piège que
+   `has_py`/`mi_avg=100.0`, trouvé et corrigé pendant le Chantier 2 (2026-09-09).** Sur un fichier
+   non parsable, l'entrée `metrics` de Bandit existe mais ne contient que `loc`/`nosec`/
+   `skipped_tests`, sans les clés `SEVERITY.*`. Un `.get(cle, 0)` naïf comptait ça comme « zéro
+   violation » — un échec d'analyse redevenait indiscernable d'un fichier sans défaut de sécurité,
+   et diluait la moyenne par fichier. **Corrigé** dans `fyc/code_lint.py::lint_features` : on ne
+   normalise que par le nombre de fichiers où Bandit a réellement produit des métriques de
+   sévérité (`bandit_ok_files`), NaN si aucun n'a réussi. **Leçon méthodologique répétée** : tout
+   outil d'analyse statique externe sur de l'historique Git ancien doit être présumé capable
+   d'échouer silencieusement sur du vieux code — vérifier explicitement, ne jamais faire confiance
+   à un `except`/`.get(..., 0)` qui masque la différence entre « zéro trouvé » et « rien analysé ».
+   Ruff, par contraste, ne fait pas cette erreur : il signale un échec de parsing comme une
+   violation explicite (`code="invalid-syntax"`), pas un silence — donc pas corrigé de la même
+   façon, mais à garder en tête que `ruff_total_avg` inclut ces échecs de syntaxe comme des
+   « violations », ce qui n'est pas strictement la même chose qu'un vrai problème de qualité.
 
 ## 8. Prochaines étapes priorisées
 
@@ -386,9 +454,11 @@ implémentation) :
    divergence notebook/`fyc` introduite en cours de route (§7 point 11) — les deux renvoient à un
    chantier ultérieur (respectivement : plus d'investigation si utile, Chantier 7 pour la
    divergence).
-2. **Chantier 2 — industrialiser l'analyse de code** au-delà de radon (Ruff, Bandit, Lizard,
-   Semgrep). Une démo Ruff existe déjà (cellule 56, 5 fichiers) mais n'est pas intégrée au pipeline
-   de features.
+2. **Chantier 2 — CLOS (2026-09-09).** Ruff + Bandit intégrés (`fyc/code_lint.py`,
+   `results/chantier2_lint.py`), mesurés, documentés en §6 (gain réel mais largement redondant
+   avec radon une fois combiné à tout le reste — pas un échec, un résultat nuancé). Lizard et
+   Semgrep écartés pour ce passage (§4) — restent des pistes d'ouverture pour un dépôt
+   multi-langages (Chantier 6). Bug Bandit trouvé et corrigé en cours de route (§7 point 12).
 3. **Chantier 3 — analyse du diff** (hunks, AST, ratio code/test en lignes).
 4. **Chantier 4 — signaux de processus** via l'API GitHub (reviewers, délai merge, échecs CI).
 5. **Chantier 5 — croisement et combinaison** (stacking, matrice de désaccord entre modèles).
@@ -544,3 +614,35 @@ implémentation) :
   documentées et non résolues (M1, divergence notebook/fyc), explicitement pas effacées.
 - **Reste à faire** : commit de cet état ; proposer un plan pour le Chantier 2 (industrialiser
   l'analyse de code) avant de l'implémenter, comme le veut la règle de collaboration du projet.
+
+### 2026-09-09 — Session 3 (suite) — Chantier 2 : Ruff + Bandit
+- Plan proposé (Ruff + Bandit, Lizard/Semgrep écartés avec justification) puis exécuté sur
+  consigne explicite de l'utilisateur de continuer sans attendre d'autre validation.
+- `fyc/code_lint.py` (nouveau) : `lint_features` — Ruff et Bandit en un seul passage de
+  matérialisation disque, batch par dossier temporaire (mesuré : 100,6 s pour ~3200 commits
+  étiquetés, tout compris).
+- **Bug trouvé et corrigé en cours de route** (pas découvert après coup) : premier test donnait
+  `bandit_total_avg = 0` sur tous les commits. Cause : Bandit écrit une barre de progression sur
+  **stdout** (pas stderr), cassant le parsing JSON — un `except json.JSONDecodeError: return {}`
+  trop permissif avalait l'erreur silencieusement. Corrigé (`-q`) et surtout **l'exception
+  silencieuse retirée** : une sortie non-JSON lève maintenant une erreur explicite plutôt que de
+  se faire passer pour "aucune violation".
+- **Second bug, même famille, trouvé en vérifiant au lieu de supposer** : Bandit échoue
+  silencieusement sur le même vieux code Python 2 que radon — l'entrée `metrics` pour un fichier
+  en échec existe mais sans les clés `SEVERITY.*`. Un `.get(cle, 0)` comptait ça comme zéro.
+  Corrigé par un compte explicite des fichiers réellement analysés (`bandit_ok_files`), NaN sinon.
+  Documenté en §7 point 12 comme leçon méthodologique générale, pas juste un fix ponctuel.
+- Mesuré (`results/chantier2_lint.py`, détail en §6) : Ruff ajoute le meilleur gain individuel des
+  trois familles de code (+0,011 sur BASE, mieux que radon +0,004), non circulaire avec le churn
+  (corrélation 0,20 contre 0,91 pour le churn historique), mais fortement redondant avec `loc_avg`
+  de radon (corrélation 0,70) — combiner les trois familles de code ne bat pas Ruff seul, et
+  n'ajoute rien une fois churn+radon déjà présents (0,805 avec ou sans Ruff/Bandit).
+- Intégré dans `results/benchmark.py` (jeux `BASE+lint`/`lint_only`, diagnostics de redondance et
+  de circularité dans le JSON) plutôt que laissé dans un script isolé — même discipline que pour
+  le Chantier 1 (pas de chiffre qui ne soit pas reproductible et daté).
+- `requirements.txt` : ajout de `bandit==1.9.4`.
+- Notebook ré-exécuté, 0 erreur.
+- **Chantier 2 CLOS** sur le périmètre Ruff+Bandit. Lizard/Semgrep explicitement différés, pas
+  oubliés (§4, §8).
+- **Reste à faire** : commit de cet état ; Chantier 3 (analyse du diff) ou autre, sur arbitrage de
+  l'utilisateur.

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-03T18:08:23.184933+00:00",
+  "generated_at": "2026-11-03T18:33:51.683901+00:00",
   "flask_head": "d73fa1cdcbd8b1465c151db8924ba58b1dd14e35",
   "flask_commit_count": 5557,
   "label_version": "v1_fichier_szz_simplifie",
@@ -92,6 +92,27 @@
       "cv_auc_std": 0.0167,
       "temporal_split_auc": 0.7896
     },
+    "BASE+lint": {
+      "cols": [
+        "hour",
+        "weekend",
+        "n_files",
+        "lines_added",
+        "lines_deleted",
+        "author_experience",
+        "avg_authors_per_file",
+        "total_churn",
+        "msg_len",
+        "touches_tests",
+        "ruff_total_avg",
+        "ruff_security_avg",
+        "bandit_total_avg",
+        "bandit_high_avg"
+      ],
+      "cv_auc_mean": 0.8301,
+      "cv_auc_std": 0.012,
+      "temporal_split_auc": 0.7842
+    },
     "code_only": {
       "cols": [
         "cc_tot_avg",
@@ -117,7 +138,18 @@
       "cv_auc_std": 0.006,
       "temporal_split_auc": 0.7227
     },
-    "all": {
+    "lint_only": {
+      "cols": [
+        "ruff_total_avg",
+        "ruff_security_avg",
+        "bandit_total_avg",
+        "bandit_high_avg"
+      ],
+      "cv_auc_mean": 0.7247,
+      "cv_auc_std": 0.0115,
+      "temporal_split_auc": 0.6515
+    },
+    "all_sans_lint": {
       "cols": [
         "hour",
         "weekend",
@@ -144,6 +176,38 @@
       "cv_auc_mean": 0.8821,
       "cv_auc_std": 0.0164,
       "temporal_split_auc": 0.7752
+    },
+    "all": {
+      "cols": [
+        "hour",
+        "weekend",
+        "n_files",
+        "lines_added",
+        "lines_deleted",
+        "author_experience",
+        "avg_authors_per_file",
+        "total_churn",
+        "msg_len",
+        "touches_tests",
+        "file_commits_max",
+        "file_commits_avg",
+        "file_age_days_avg",
+        "cc_tot_avg",
+        "cc_max_avg",
+        "mi_avg",
+        "loc_avg",
+        "comment_ratio",
+        "delta_cc",
+        "touches_py",
+        "code_parse_ok",
+        "ruff_total_avg",
+        "ruff_security_avg",
+        "bandit_total_avg",
+        "bandit_high_avg"
+      ],
+      "cv_auc_mean": 0.8824,
+      "cv_auc_std": 0.0153,
+      "temporal_split_auc": 0.7704
     }
   },
   "diagnostics": {
@@ -154,6 +218,10 @@
     "baseline_majority_accuracy": 0.5453125,
     "n_commits_total": 5557,
     "n_commits_etiquetes": 3198,
-    "part_risque": 0.4543
+    "part_risque": 0.4543,
+    "ruff_redondance_vs_loc_avg": 0.704,
+    "bandit_redondance_vs_loc_avg": 0.4314,
+    "ruff_circularite_vs_churn": 0.198,
+    "bandit_circularite_vs_churn": 0.0565
   }
 }

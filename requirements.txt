@@ -15,6 +15,7 @@ seaborn==0.13.2
 # Analyse de code (Partie 4, Piste C / Chantier 2)
 radon==6.0.1
 ruff==0.16.6
+bandit==1.9.4
 
 # Execution du notebook
 jupyterlab==4.6.3

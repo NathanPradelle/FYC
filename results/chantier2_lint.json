@@ -1,0 +1,57 @@
+{
+  "generated_at": "2026-11-03T18:24:37.198224+00:00",
+  "flask_head": "d73fa1cdcbd8b1465c151db8924ba58b1dd14e35",
+  "label_version": "v2_ligne_szz_blame",
+  "fix_detection": "candidat_B_exclude_typo_docs_changelog",
+  "n_commits_etiquetes": 3198,
+  "auc": {
+    "BASE": {
+      "mean": 0.7867,
+      "std": 0.028
+    },
+    "BASE+code(radon)": {
+      "mean": 0.7913,
+      "std": 0.0324
+    },
+    "BASE+ruff": {
+      "mean": 0.7979,
+      "std": 0.0346
+    },
+    "BASE+bandit": {
+      "mean": 0.7933,
+      "std": 0.0328
+    },
+    "BASE+ruff+bandit": {
+      "mean": 0.7982,
+      "std": 0.0336
+    },
+    "BASE+radon+ruff+bandit": {
+      "mean": 0.7956,
+      "std": 0.0335
+    },
+    "ruff+bandit_seuls": {
+      "mean": 0.5784,
+      "std": 0.0336
+    },
+    "tout": {
+      "mean": 0.8052,
+      "std": 0.0322
+    }
+  },
+  "redondance_avec_radon": {
+    "ruff_total_vs_loc_avg": 0.704,
+    "bandit_total_vs_loc_avg": 0.4314
+  },
+  "circularite_avec_churn": {
+    "ruff_total_vs_file_commits_max": 0.198,
+    "bandit_total_vs_file_commits_max": 0.0565
+  },
+  "ruff_couverture": {
+    "n_non_nan": 1624,
+    "n_total": 3198
+  },
+  "bandit_couverture": {
+    "n_non_nan": 1543,
+    "n_total": 3198
+  }
+}

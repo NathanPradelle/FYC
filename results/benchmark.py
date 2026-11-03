@@ -27,7 +27,7 @@ import pandas as pd
 import radon
 import sklearn
 
-from fyc import evaluate, features, git_extract, labeling
+from fyc import code_lint, evaluate, features, git_extract, labeling
 
 REPO_DIR = str(REPO_ROOT / "flask")
 FENETRE_JOURS = 90
@@ -71,22 +71,29 @@ def main():
     churn = features.build_churn_features(commits, est_risque)
     print("Construction des features de code (radon, via git cat-file)...")
     code = features.build_code_features(commits, est_risque, REPO_DIR)
+    print("Lancement de Ruff + Bandit (batch, Chantier 2)...")
+    ruff_df, bandit_df = code_lint.lint_features(commits, est_risque, REPO_DIR)
 
-    for name, df in [("churn", churn), ("code", code)]:
+    for name, df in [("churn", churn), ("code", code), ("ruff", ruff_df), ("bandit", bandit_df)]:
         assert len(df) == len(base), f"desynchronisation {name} ({len(df)} != {len(base)})"
 
     full = pd.concat(
-        [base.drop(columns="risky"), is_night, churn, code, base["risky"]], axis=1,
+        [base.drop(columns="risky"), is_night, churn, code, ruff_df, bandit_df, base["risky"]],
+        axis=1,
     )
 
+    LINT = code_lint.RUFF_COLS + code_lint.BANDIT_COLS
     feature_sets = {
         "BASE": features.BASE_COLS,
         "BASE+is_night": features.BASE_COLS + ["is_night"],
         "BASE+churn": features.BASE_COLS + features.CHURN_COLS,
         "BASE+code": features.BASE_COLS + features.CODE_COLS,
+        "BASE+lint": features.BASE_COLS + LINT,
         "code_only": features.CODE_COLS,
         "churn_only": features.CHURN_COLS,
-        "all": features.BASE_COLS + features.CHURN_COLS + features.CODE_COLS,
+        "lint_only": LINT,
+        "all_sans_lint": features.BASE_COLS + features.CHURN_COLS + features.CODE_COLS,
+        "all": features.BASE_COLS + features.CHURN_COLS + features.CODE_COLS + LINT,
     }
 
     results = {}
@@ -108,6 +115,16 @@ def main():
         "n_commits_total": len(commits),
         "n_commits_etiquetes": len(base),
         "part_risque": round(float(base["risky"].mean()), 4),
+        "ruff_redondance_vs_loc_avg": round(float(full["ruff_total_avg"].corr(full["loc_avg"])), 4),
+        "bandit_redondance_vs_loc_avg": round(
+            float(full["bandit_total_avg"].corr(full["loc_avg"])), 4,
+        ),
+        "ruff_circularite_vs_churn": round(
+            float(full["ruff_total_avg"].corr(full["file_commits_max"])), 4,
+        ),
+        "bandit_circularite_vs_churn": round(
+            float(full["bandit_total_avg"].corr(full["file_commits_max"])), 4,
+        ),
     }
 
     output = {

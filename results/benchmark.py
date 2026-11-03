@@ -27,7 +27,7 @@ import pandas as pd
 import radon
 import sklearn
 
-from fyc import code_lint, evaluate, features, git_extract, labeling
+from fyc import code_lint, diff_features, evaluate, features, git_extract, labeling
 
 REPO_DIR = str(REPO_ROOT / "flask")
 FENETRE_JOURS = 90
@@ -73,27 +73,36 @@ def main():
     code = features.build_code_features(commits, est_risque, REPO_DIR)
     print("Lancement de Ruff + Bandit (batch, Chantier 2)...")
     ruff_df, bandit_df = code_lint.lint_features(commits, est_risque, REPO_DIR)
+    print("Construction des features de diff (Chantier 3, jeu curate)...")
+    diff_df = diff_features.build_diff_features(commits, est_risque, REPO_DIR)
 
-    for name, df in [("churn", churn), ("code", code), ("ruff", ruff_df), ("bandit", bandit_df)]:
+    for name, df in [("churn", churn), ("code", code), ("ruff", ruff_df), ("bandit", bandit_df),
+                      ("diff", diff_df)]:
         assert len(df) == len(base), f"desynchronisation {name} ({len(df)} != {len(base)})"
 
     full = pd.concat(
-        [base.drop(columns="risky"), is_night, churn, code, ruff_df, bandit_df, base["risky"]],
+        [base.drop(columns="risky"), is_night, churn, code, ruff_df, bandit_df, diff_df,
+         base["risky"]],
         axis=1,
     )
 
     LINT = code_lint.RUFF_COLS + code_lint.BANDIT_COLS
+    DIFF = diff_features.DIFF_COLS  # jeu curate -- avg_hunk_size/test_line_ratio rejetes (§6)
     feature_sets = {
         "BASE": features.BASE_COLS,
         "BASE+is_night": features.BASE_COLS + ["is_night"],
         "BASE+churn": features.BASE_COLS + features.CHURN_COLS,
         "BASE+code": features.BASE_COLS + features.CODE_COLS,
         "BASE+lint": features.BASE_COLS + LINT,
+        "BASE+diff": features.BASE_COLS + DIFF,
         "code_only": features.CODE_COLS,
         "churn_only": features.CHURN_COLS,
         "lint_only": LINT,
-        "all_sans_lint": features.BASE_COLS + features.CHURN_COLS + features.CODE_COLS,
-        "all": features.BASE_COLS + features.CHURN_COLS + features.CODE_COLS + LINT,
+        "diff_only": DIFF,
+        "all_sans_lint_diff": features.BASE_COLS + features.CHURN_COLS + features.CODE_COLS,
+        "all": (
+            features.BASE_COLS + features.CHURN_COLS + features.CODE_COLS + LINT + DIFF
+        ),
     }
 
     results = {}
@@ -124,6 +133,15 @@ def main():
         ),
         "bandit_circularite_vs_churn": round(
             float(full["bandit_total_avg"].corr(full["file_commits_max"])), 4,
+        ),
+        "n_hunks_redondance_vs_total_churn": round(
+            float(full["n_hunks"].corr(full["total_churn"])), 4,
+        ),
+        "n_hunks_circularite_vs_churn": round(
+            float(full["n_hunks"].corr(full["file_commits_max"])), 4,
+        ),
+        "touches_signature_circularite_vs_churn": round(
+            float(full["touches_signature"].corr(full["file_commits_max"])), 4,
         ),
     }
 

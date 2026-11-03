@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-03T18:29:44.282523+00:00",
+  "generated_at": "2026-11-03T19:05:26.846432+00:00",
   "flask_head": "d73fa1cdcbd8b1465c151db8924ba58b1dd14e35",
   "flask_commit_count": 5557,
   "label_version": "v2_ligne_szz_blame",
@@ -113,6 +113,28 @@
       "cv_auc_std": 0.0336,
       "temporal_split_auc": 0.7251
     },
+    "BASE+diff": {
+      "cols": [
+        "hour",
+        "weekend",
+        "n_files",
+        "lines_added",
+        "lines_deleted",
+        "author_experience",
+        "avg_authors_per_file",
+        "total_churn",
+        "msg_len",
+        "touches_tests",
+        "n_hunks",
+        "sig_added",
+        "sig_removed",
+        "sig_modified",
+        "touches_signature"
+      ],
+      "cv_auc_mean": 0.7924,
+      "cv_auc_std": 0.0392,
+      "temporal_split_auc": 0.718
+    },
     "code_only": {
       "cols": [
         "cc_tot_avg",
@@ -149,7 +171,19 @@
       "cv_auc_std": 0.0336,
       "temporal_split_auc": 0.5061
     },
-    "all_sans_lint": {
+    "diff_only": {
+      "cols": [
+        "n_hunks",
+        "sig_added",
+        "sig_removed",
+        "sig_modified",
+        "touches_signature"
+      ],
+      "cv_auc_mean": 0.5928,
+      "cv_auc_std": 0.0461,
+      "temporal_split_auc": 0.5945
+    },
+    "all_sans_lint_diff": {
       "cols": [
         "hour",
         "weekend",
@@ -203,11 +237,16 @@
         "ruff_total_avg",
         "ruff_security_avg",
         "bandit_total_avg",
-        "bandit_high_avg"
+        "bandit_high_avg",
+        "n_hunks",
+        "sig_added",
+        "sig_removed",
+        "sig_modified",
+        "touches_signature"
       ],
-      "cv_auc_mean": 0.8052,
-      "cv_auc_std": 0.0322,
-      "temporal_split_auc": 0.7455
+      "cv_auc_mean": 0.8066,
+      "cv_auc_std": 0.0306,
+      "temporal_split_auc": 0.7533
     }
   },
   "diagnostics": {
@@ -222,6 +261,9 @@
     "ruff_redondance_vs_loc_avg": 0.704,
     "bandit_redondance_vs_loc_avg": 0.4314,
     "ruff_circularite_vs_churn": 0.198,
-    "bandit_circularite_vs_churn": 0.0565
+    "bandit_circularite_vs_churn": 0.0565,
+    "n_hunks_redondance_vs_total_churn": 0.7407,
+    "n_hunks_circularite_vs_churn": 0.1183,
+    "touches_signature_circularite_vs_churn": 0.0692
   }
 }

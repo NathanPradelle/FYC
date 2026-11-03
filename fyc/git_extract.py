@@ -20,14 +20,19 @@ def extraire_commits(repo_dir):
                 commits.append(cur)
             _, h, author, ts, msg = line.split("|", 4)
             cur = {"hash": h, "author": author, "ts": int(ts),
-                   "msg": msg, "files": [], "add": 0, "del": 0}
+                   "msg": msg, "files": [], "add": 0, "del": 0, "file_stats": []}
         elif line.strip() and cur is not None:
             parts = line.split("\t")
             if len(parts) == 3:
                 a, d, f = parts
+                a_int = int(a) if a.isdigit() else 0
+                d_int = int(d) if d.isdigit() else 0
                 cur["files"].append(f)
-                cur["add"] += int(a) if a.isdigit() else 0
-                cur["del"] += int(d) if d.isdigit() else 0
+                cur["add"] += a_int
+                cur["del"] += d_int
+                # file_stats : detail par fichier (Chantier 3, ratio code/test en lignes).
+                # Ajoute sans casser l'API existante -- add/del/files restent inchanges.
+                cur["file_stats"].append((f, a_int, d_int))
     if cur:
         commits.append(cur)
     commits.reverse()

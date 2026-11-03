@@ -49,9 +49,14 @@ Dépôt étudié : [pallets/flask](https://github.com/pallets/flask) (Python, ~5
   - `code_lint.py` (Chantier 2, 2026-09-09) : `lint_features` — Ruff + Bandit en un seul passage
     de matérialisation disque (batch par dossier temporaire), sur les mêmes versions « après »
     que `build_code_features`. `RUFF_COLS`, `BANDIT_COLS`.
+  - `diff_features.py` (Chantier 3, 2026-09-09) : `build_diff_features` — dispersion du diff
+    (`n_hunks`), changement de signature de fonction via diff d'AST avant/après (`sig_added`,
+    `sig_removed`, `sig_modified`, `touches_signature`). `DIFF_COLS` = jeu **curaté** adopté ;
+    `ALL_COLS` = tout ce qui a été mesuré, y compris `avg_hunk_size` et `test_line_ratio`,
+    **rejetés** (§6) mais gardés dans le code pour la reproductibilité de la mesure négative.
   - `evaluate.py` : `cv_auc`, `temporal_split_auc`, `baseline_majority_accuracy`.
 - **`results/benchmark.py`** — recalcule tous les jeux de features (BASE, churn, code radon,
-  lint Ruff/Bandit) et écrit **`results/results.json`** (label v1, legacy) ou
+  lint Ruff/Bandit, diff) et écrit **`results/results.json`** (label v1, legacy) ou
   **`results/results_v2.json`** (label v2, défaut depuis le 2026-09-09 — `--label v2`, qui est
   aussi le défaut de l'argument). AUC CV ± std, AUC split temporel, date, hash HEAD Flask, versions
   des libs, diagnostics de circularité/redondance. Source unique de vérité pour le tableau
@@ -278,6 +283,33 @@ commit qui touche du code déjà complexe/volumineux*.
   pour qu'on puisse suivre cette redondance dans le temps, mais **ne pas vendre Ruff/Bandit comme
   un gain net sur le modèle final** — c'est un problème de combinaison (Chantier 5), pas une
   feature inutile en soi.
+- **❌ Réfutée — le ratio code/test en lignes bat le binaire `touches_tests`.** Mesuré le
+  2026-09-09 (`results/chantier3_diff.py`), label_v2 + détection B. `test_line_ratio` seul donne
+  **AUC = 0,499** (le hasard), contre **0,621** pour le `touches_tests` binaire déjà présent dans
+  BASE — le raffinement proposé en ouverture du notebook (cellule 57) est **pire** que l'existant,
+  pas meilleur. Cause probable : 80,7 % des valeurs de `test_line_ratio` sont exactement 0 ou 1,
+  et la pondération par la taille totale du commit dilue le signal utile (« a-t-on touché un test
+  du tout ? ») en écrasant les cas où un gros commit majoritairement non-test touche aussi,
+  modestement, un fichier de test — un cas que le binaire capture proprement et que le ratio
+  noie. **Décision : `touches_tests` conservé tel quel, `test_line_ratio` rejeté** — pas supprimé
+  du code (`fyc/diff_features.py`, dans `ALL_COLS` mais pas dans `DIFF_COLS`), pour que ce résultat
+  négatif reste reproductible plutôt que de disparaître silencieusement.
+- **✅ Validée — dispersion du diff (hunks) et changement de signature de fonction (AST
+  avant/après) apportent un signal réel, non circulaire.** Même mesure :
+
+  | Feature | AUC seule | Corrélation churn (`file_commits_max`) | Verdict |
+  |---|---|---|---|
+  | `n_hunks` | 0,661 | 0,118 | adoptée — redondante à 0,74 avec `total_churn` (déjà dans BASE), mais pas circulaire |
+  | `avg_hunk_size` | 0,550 | — | **rejetée** — signal trop faible pour être retenu |
+  | `touches_signature` | 0,666 | 0,069 | adoptée — meilleur signal individuel du Chantier 3, quasi pas circulaire |
+  | `sig_added`/`removed`/`modified` | 0,615–0,627 | — | adoptées (composantes de `touches_signature`) |
+
+  **Résultat combiné** (jeu curaté `DIFF_COLS` = `n_hunks` + les 4 features de signature) :
+  `BASE+diff` = 0,792 (contre 0,787 pour BASE seul, +0,005) ; `tout` (toutes familles) = 0,807
+  contre 0,805 sans diff — petit gain net positif, contrairement à Ruff/Bandit dont la valeur
+  marginale au niveau « tout » était nulle. **La couverture de `touches_signature` est de ~47 %**
+  (NaN pour les commits sans `.py` touché ou dont l'AST avant/après a échoué à parser des deux
+  côtés — même discipline NaN que radon/Bandit, pas de valeur par défaut déguisée).
 
 ## 7. Pièges connus et limites assumées
 
@@ -459,8 +491,21 @@ implémentation) :
    avec radon une fois combiné à tout le reste — pas un échec, un résultat nuancé). Lizard et
    Semgrep écartés pour ce passage (§4) — restent des pistes d'ouverture pour un dépôt
    multi-langages (Chantier 6). Bug Bandit trouvé et corrigé en cours de route (§7 point 12).
-3. **Chantier 3 — analyse du diff** (hunks, AST, ratio code/test en lignes).
-4. **Chantier 4 — signaux de processus** via l'API GitHub (reviewers, délai merge, échecs CI).
+3. **Chantier 3 — CLOS (2026-09-09).** `fyc/diff_features.py` : dispersion du diff (`n_hunks`) et
+   changement de signature de fonction (AST avant/après) adoptés — signal réel, non circulaire,
+   petit gain net positif même combiné à tout le reste (0,807 vs 0,805). Ratio code/test en lignes
+   testé et **rejeté** (pire que le binaire existant, résultat négatif documenté en §6) ;
+   `avg_hunk_size` rejeté (signal trop faible). Intégré dans `results/benchmark.py`.
+4. **Chantier 4 — BLOQUÉ au démarrage (2026-09-09), signaux de processus via l'API GitHub**
+   (reviewers, délai merge, échecs CI). **Constat avant toute mesure, pas après** : pas de `gh`
+   CLI installé, pas de token d'authentification disponible dans cet environnement — l'API
+   GitHub non authentifiée est limitée à **60 requêtes/heure**. Avec ~3200-4700 commits étiquetés
+   et au moins 1-2 appels par commit (trouver la PR associée, puis ses métadonnées), une mesure
+   sur l'ensemble du jeu de données prendrait des dizaines d'heures. **Ce n'est pas une limite
+   contournable par du code** — à arbitrer avec l'utilisateur : (a) fournir un token GitHub
+   personnel (5000 req/h authentifié, rend le chantier faisable à l'échelle) ; (b) se limiter à un
+   échantillon très restreint (~20-30 commits) pour démontrer la méthode sans viser une AUC
+   statistiquement fiable ; (c) reporter le chantier. Pas encore tranché.
 5. **Chantier 5 — croisement et combinaison** (stacking, matrice de désaccord entre modèles).
 6. **Chantier 6 — validation externe** sur un deuxième dépôt.
 7. **Chantier 7 — restitution** (modules `.py`, `README.md`, synthèse soutenance).
@@ -646,3 +691,29 @@ implémentation) :
   oubliés (§4, §8).
 - **Reste à faire** : commit de cet état ; Chantier 3 (analyse du diff) ou autre, sur arbitrage de
   l'utilisateur.
+
+### 2026-09-09 — Session 3 (suite) — Chantier 3, puis blocage identifié au Chantier 4
+- Consigne reçue : « tu peux passer au chantier 3 puis 4 ». Avant de démarrer le 4, vérifié la
+  faisabilité (pas supposé) : pas de `gh` CLI, pas de token GitHub — API limitée à 60 req/h.
+  Chantier 4 bloqué au démarrage, documenté en §8, pas tenté à moitié ni silencieusement ignoré.
+- `fyc/git_extract.py` : `extraire_commits` étendu avec `file_stats` (détail par fichier des
+  lignes ajoutées/supprimées) — ajout additif, `add`/`del`/`files` inchangés, rien de cassé.
+- `fyc/diff_features.py` (nouveau) : `build_diff_features` — dispersion (hunks), ratio code/test
+  en lignes, changement de signature via diff d'AST avant/après. Testé sur 300 commits avant
+  l'échelle complète (7,7 ms/ligne, acceptable), puis sur les ~3200 commits étiquetés (31,8 s).
+  Même discipline NaN que radon/Bandit (un échec AST n'imite pas "pas de fonction").
+- Mesuré feature par feature avant de bundler (`results/chantier3_diff.py`), pas seulement la
+  famille entière — a révélé que le bundle initial masquait un résultat négatif net.
+- **Résultat négatif trouvé et gardé, pas corrigé en douce** : `test_line_ratio` (le raffinement
+  suggéré par le notebook lui-même, cellule 57) donne AUC = 0,499 seul, **pire** que le
+  `touches_tests` binaire existant (0,621) qu'il devait améliorer. Diagnostiqué (80,7 % de valeurs
+  à 0 ou 1, dilution du signal par la taille du commit) et documenté en §6 comme hypothèse
+  réfutée, pas supprimée du code (`ALL_COLS` vs `DIFF_COLS` dans `fyc/diff_features.py`).
+  `avg_hunk_size` rejeté aussi (signal trop faible, 0,550).
+- `n_hunks` et les features de signature de fonction adoptées — signal réel, non circulaire
+  (corrélation churn ≤ 0,12), petit gain net positif même au niveau "tout" (0,805 → 0,807),
+  contrairement à Ruff/Bandit (Chantier 2) dont la valeur marginale y était nulle.
+- Intégré dans `results/benchmark.py` avec le jeu curaté (pas tout ce qui a été mesuré).
+- Notebook ré-exécuté, 0 erreur.
+- **Chantier 3 CLOS.** **Chantier 4 bloqué**, en attente d'arbitrage utilisateur (token GitHub,
+  échantillon restreint, ou report).

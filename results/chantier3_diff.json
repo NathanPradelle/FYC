@@ -1,0 +1,74 @@
+{
+  "generated_at": "2026-11-03T19:00:02.987995+00:00",
+  "flask_head": "d73fa1cdcbd8b1465c151db8924ba58b1dd14e35",
+  "label_version": "v2_ligne_szz_blame",
+  "fix_detection": "candidat_B_exclude_typo_docs_changelog",
+  "n_commits_etiquetes": 3198,
+  "auc": {
+    "BASE": {
+      "mean": 0.7867,
+      "std": 0.028
+    },
+    "BASE+diff (adopte)": {
+      "mean": 0.7924,
+      "std": 0.0392
+    },
+    "BASE+diff (tout mesure)": {
+      "mean": 0.7907,
+      "std": 0.04
+    },
+    "BASE+code(radon)": {
+      "mean": 0.7913,
+      "std": 0.0324
+    },
+    "BASE+code+diff": {
+      "mean": 0.7961,
+      "std": 0.0328
+    },
+    "diff_only (adopte)": {
+      "mean": 0.5928,
+      "std": 0.0461
+    },
+    "n_hunks_seul": {
+      "mean": 0.6609,
+      "std": 0.0381
+    },
+    "avg_hunk_size_seul (rejete)": {
+      "mean": 0.55,
+      "std": 0.0342
+    },
+    "touches_tests_seul": {
+      "mean": 0.6211,
+      "std": 0.0321
+    },
+    "test_line_ratio_seul (rejete)": {
+      "mean": 0.4989,
+      "std": 0.0248
+    },
+    "touches_signature_seul": {
+      "mean": 0.6656,
+      "std": 0.0549
+    },
+    "tout_sans_diff": {
+      "mean": 0.8046,
+      "std": 0.0303
+    },
+    "tout_avec_diff": {
+      "mean": 0.8063,
+      "std": 0.0323
+    }
+  },
+  "redondance": {
+    "n_hunks_vs_total_churn": 0.7407,
+    "avg_hunk_size_vs_total_churn": 0.2105,
+    "test_line_ratio_vs_touches_tests": 0.814
+  },
+  "circularite_avec_churn": {
+    "n_hunks_vs_file_commits_max": 0.1183,
+    "touches_signature_vs_file_commits_max": 0.0692
+  },
+  "couverture_signature": {
+    "n_non_nan": 1507,
+    "n_total": 3198
+  }
+}

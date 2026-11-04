@@ -70,6 +70,15 @@ Dépôt étudié : [pallets/flask](https://github.com/pallets/flask) (Python, ~5
     un masque de couverture pour sous-échantillonner les autres familles aux mêmes lignes si le
     cache GitHub est incomplet (voir `results/chantier4_github.py` et `results/benchmark.py`).
   - `evaluate.py` : `cv_auc`, `temporal_split_auc`, `baseline_majority_accuracy`.
+  - **Chantier 4bis, vague 1 (2026-11-04)** : `pylint_features.py` (`PYLINT_COLS`),
+    `vulture_features.py` (`VULTURE_COLS`, en process, un objet Vulture par commit),
+    `mypy_features.py` (`MYPY_COLS`, un paquet par commit), `jit_kamei.py` (`KAMEI_COLS` : NS, ND,
+    entropie, NDEV, REXP, SEXP), `coupling.py` (`COUPLING_COLS` : fan-in/fan-out par AST sur
+    l'arbre complet de chaque commit). Scripts : `results/chantier4bis_common.py` (chargement +
+    caches `*.pkl` non versionnés), `chantier4bis_wave1.py` → `chantier4bis_wave1.json`,
+    `chantier4bis_combinations.py` → `chantier4bis_grid.json` (grille exhaustive 2048
+    combinaisons, sélection imbriquée, réserve 20 %).
+
 - **`results/benchmark.py`** — recalcule tous les jeux de features (BASE, churn, code radon,
   lint Ruff/Bandit, diff) et écrit **`results/results.json`** (label v1, legacy) ou
   **`results/results_v2.json`** (label v2, défaut depuis le 2026-09-09 — `--label v2`, qui est
@@ -380,6 +389,78 @@ commit qui touche du code déjà complexe/volumineux*.
   `all_sans_lint_diff_process` = 0,882 — sous le label circulaire, ajouter le process au reste
   n'apporte rien net (même lecture que Ruff/Bandit au Chantier 2 : le plafond est déjà saturé par
   le churn). Cohérent avec la préférence déjà actée pour `label_v2`.
+- **⚠️ Vague 1 du Chantier 4bis — aucun des 5 outils ne démontre de gain sur BASE (tous < 1
+  écart-type), signaux individuels réels mais modestes.** Mesuré le 2026-11-04
+  (`results/chantier4bis_wave1.py` → `results/chantier4bis_wave1.json`, label_v2 + détection B,
+  n = 3198, protocole §8 4bis). AUC(BASE) = 0,7867 ; écart-type entre plis ≈ 0,03 → seuil de
+  conclusion du protocole ≈ +0,03 ; **aucun outil ne l'atteint**. Aucun seuil d'abandon
+  déclenché (temps : Pylint 140 s, mypy 72 s, Vulture 34 s, couplage 35 s, Kamei 0,3 s, tous
+  très sous les 15 min ; NaN ≤ 6 % parmi les commits touchant des `.py`).
+
+  | Outil | BASE+outil | Gain | Meilleure(s) feature(s) seule(s) | Redondance / circularité |
+  |---|---|---|---|---|
+  | Pylint | 0,7958 | +0,009 | `pylint_error_avg` 0,638 ; `warning` 0,604 | `total` corrélé 0,86 à Ruff ; `convention` 0,87 à Bandit ; churn ≤ 0,16 |
+  | mypy | 0,7937 | +0,007 | `mypy_total_avg` 0,591 | corrélé 0,64 à `cc_tot_avg` ; churn 0,01 (le plus indépendant) |
+  | Couplage | 0,7897 | +0,003 | `fan_in_avg` 0,653 (**meilleur signal individuel du chantier**) ; `fan_in_max` 0,649 | `fan_in` peu redondant (corr. `loc_avg` −0,20) ; `fan_out_avg` corrélé 0,47 au churn (> plancher 0,3) |
+  | Vulture | 0,7880 | +0,001 | `vulture_imports_avg` 0,635 | `total`/`funcs` corrélés 0,89/0,88 à Ruff et 0,74/0,77 à `loc_avg` = « nombre de définitions » (biais prévu) ; `imports` indépendant de `loc` (0,09) |
+  | Kamei (entropie, NS, ND, NDEV, REXP, SEXP) | 0,7871 | +0,0004 | `nd` 0,631, `ns` 0,625 | **`ndev` corrélé 0,80 au churn = circulaire** ; `entropy`/`entropy_norm` ≈ hasard (0,478/0,510) ; `rexp`/`sexp` ≈ hasard et corrélés 0,90/0,84 à `author_experience` |
+
+  **Lectures à retenir** : (1) l'**entropie du changement**, indicateur phare de la littérature
+  JIT, ne prédit rien ici (AUC seule 0,478–0,510) — résultat négatif, conservé dans le code ;
+  (2) le **fan-in** (combien de fichiers dépendent du module modifié) est le signal individuel le
+  plus fort du chantier et n'est pas redondant avec la taille — mais n'apporte que +0,003 sur BASE
+  une fois combiné ; (3) un AUC « seul » < 0,5 (`rexp` 0,445) est du bruit de CV autour du hasard,
+  pas un signal inversé. **Les AUC seules sont des CV à 1 graine, bruit ≈ ±0,03 : ne comparer
+  que des écarts nettement plus grands.** La combinaison des outils est traitée dans l'entrée
+  suivante (grille exhaustive).
+- **❌ Pas d'amélioration démontrée par la combinaison d'outils — résultat négatif net,
+  avec un enseignement sur le churn.** Mesuré le 2026-11-04 (`results/chantier4bis_combinations.py`
+  → `results/chantier4bis_grid.json`, 2048 AUC stockées ; figures regénérables par
+  `results/chantier4bis_figures.py`), protocole §8 4bis + amendement n°1. Données : 2558 commits
+  (80 % anciens, 10,8 % de positifs) ; réserve de 640 commits (5,2 % de positifs, ≈ 33 positifs).
+  - **Grille exhaustive (2^11 = 2048 combinaisons, CV 5 plis, 100 arbres) :** AUC de 0,7915 (BASE)
+    à 0,8228, médiane 0,8098 ; 99,95 % des combinaisons battent BASE mais seulement 44,8 % de plus
+    d'un écart-type de pli (0,019) — **ajouter presque n'importe quoi aide un peu, rien n'aide
+    beaucoup**. Meilleure AUC par taille : 0,8045 (1 famille : churn), 0,8153 (2), 0,8226 (5),
+    puis **plateau** (0,8186–0,8228 de 6 à 11 familles) : empiler les 11 (0,8204) ne bat pas
+    5 familles.
+  - **Malédiction du gagnant, mesurée :** le top-20 de la grille, re-mesuré sur 5 graines neuves
+    (300 arbres), tombe de 0,8206–0,8228 à **0,8108–0,8156** (−0,010 environ) ; BASE re-mesurée =
+    0,7942. Les 20 meilleures combinaisons sont à ≤ 0,005 les unes des autres après re-mesure :
+    **indiscernables, il n'y a pas « une » meilleure combinaison**. Gain réel plausible de la
+    meilleure vs BASE : ≈ +0,02, sous 1 écart-type externe.
+  - **Gain marginal moyen par famille** (sur toutes les combinaisons qui ne la contiennent pas) :
+    churn **+0,0072** (positif dans 95,5 % des contextes), diff +0,0019, ruff +0,0016, pylint
+    +0,0015, coupling +0,0011, mypy +0,0010, kamei +0,0009, process +0,0007, bandit +0,0006,
+    radon +0,0004, **vulture −0,0008** (dégrade, positif dans 43 % seulement). Les familles de code
+    ajoutent chacune ≤ 0,002 : cohérent avec la redondance mesurée aux Chantiers 2 et 4bis.
+  - **⚠️ Le seul gain régulier vient du churn** — la famille dont la circularité avec le label a
+    été mise en cause au Chantier 1 (r = 0,91 sous v1 ; réserve M1 non résolue sous v2 : r = 0,81).
+    Toutes les meilleures combinaisons le contiennent. À présenter ainsi : le résultat « churn
+    aide » est le plus robuste de la grille **et** le plus suspect ; ne pas en tirer
+    « les outils d'analyse améliorent la prédiction ».
+  - **Sélection pas-à-pas en CV imbriquée (estimation non biaisée de la procédure, 15 plis
+    externes) : AUC = 0,8008 ± 0,0276.** Comparée à BASE re-mesurée (0,7942, plis différents donc
+    comparaison non appariée) : **+0,007, sous le seuil du protocole (1 écart-type ≈ 0,02–0,03) →
+    pas d'amélioration démontrée.** **Instabilité de la sélection** : fréquences de choix sur les
+    15 plis — churn 40 %, process 27 %, ruff 20 %, mypy 13 %, radon/pylint 7 %, **bandit, diff,
+    vulture, kamei, couplage 0 %** ; plusieurs plis choisissent « BASE seule ». La procédure ne
+    converge pas vers une combinaison stable.
+  - **Réserve 20 % (évaluée une seule fois) :** BASE 0,736 [0,659–0,812] ; tout empiler 0,742
+    [0,659–0,816] ; meilleur de la grille 0,739 [0,647–0,817] ; sélection pas-à-pas
+    (churn+pylint) 0,734 [0,643–0,814]. **Les quatre modèles sont indiscernables** (IC à 95 %
+    de ±0,08 avec ≈ 33 positifs). **AUC réserve ≈ 0,74 contre ≈ 0,79–0,81 en CV sur le passé :**
+    on ne peut pas dire si c'est de la dérive temporelle ou du bruit d'une queue à 5 % de
+    positifs (biais de fin d'historique, §7 point 6) — **à ne pas annoncer comme une dégradation
+    établie**, à garder comme question ouverte pour le Chantier 6A (la queue de test y est de
+    30 %, avec garde-fou ≥ 40 positifs).
+  - **Écarts au protocole, à dire :** (1) la sélection finale sur tout le 80 % utilise une CV
+    interne à 5 plis (protocole : 3) ; (2) l'énumération utilise 100 arbres (amendement) ;
+    (3) la comparaison nested vs BASE n'est pas appariée (BASE n'a pas été re-mesurée sur les
+    mêmes 15 plis externes) ; (4) la vague 2 (Semgrep, Sonar, CodeQL, jscpd) et PySZZ ne sont pas
+    faits. **Lecture pour le Chantier 5 :** empiler des familles mesurant la même chose ne donne
+    rien ; le stacking par famille n'a de chance d'aider que si les familles sont réellement
+    complémentaires — ce que la matrice de corrélation du Chantier 4bis ne suggère pas.
 
 ## 7. Pièges connus et limites assumées
 
@@ -482,6 +563,34 @@ commit qui touche du code déjà complexe/volumineux*.
    violation explicite (`code="invalid-syntax"`), pas un silence — donc pas corrigé de la même
    façon, mais à garder en tête que `ruff_total_avg` inclut ces échecs de syntaxe comme des
    « violations », ce qui n'est pas strictement la même chose qu'un vrai problème de qualité.
+13. **mypy, Pylint, couplage, Python 3.14 — quatre pièges trouvés pendant la vague 1 du
+   Chantier 4bis (2026-11-04).**
+   - **mypy : 0 erreur ≠ code propre.** Par défaut mypy n'analyse pas le corps des fonctions non
+     annotées (tout l'historique ancien de Flask). Premier essai : moyenne 0,59 erreur/fichier
+     avec `core == total` — un zéro qui voulait dire « non vérifié », même famille que `has_py` et
+     Bandit (§7 pts 8, 12). Corrigé par `--check-untyped-defs` (moyenne 3,9 sur le même
+     échantillon). À re-vérifier pour tout outil qui a un mode « lenient » par défaut.
+   - **mypy : une erreur bloquante avorte toute l'analyse.** Un `from . import x` sans paquet
+     parent (fichiers aplatis dans un dossier) et un `SyntaxError` isolé font échouer le run entier,
+     pas seulement le fichier fautif. Parades : un paquet à 3 niveaux par commit
+     (`pk<i>/a/b/`) pour que `from ..x` résolve, et pré-filtrage `ast.parse`.
+   - **Pylint : checks désactivés (documentés dans le module) :** `duplicate-code` (les versions
+     de commits différents se « dupliqueraient » entre elles — mesure artificielle),
+     `import-error`/`no-name-in-module`/`relative-beyond-top-level` (fichiers isolés, bruit
+     pur), `invalid-name` (noms de fichiers aplatis). Les échecs de syntaxe (E0001…) sont exclus
+     du numérateur ET du dénominateur ; NaN si aucun fichier analysé.
+   - **Python 3.14 accepte `except A, e:`** (PEP 758, tuple d'exceptions sans parenthèses) :
+     vérifié, `ast.parse` ne lève pas d'erreur sur du Python 2 de la forme `except X, e:` en
+     3.14.4 (mypy `--python-version=3.12` le rejette). Observation **non reliée à une mesure** :
+     cela pourrait contribuer à l'écart de couverture 3.12 / 3.14 du point 7, mais ce n'est
+     **pas testé** ici (il faudrait comparer le taux de parsing avec/sans ce motif) — hypothèse,
+     pas conclusion. Conséquence concrète : sous 3.14, du code Python 2 est parfois analysé
+     comme du Python 3 valide *avec une sémantique différente* (`except A, e` attrape deux
+     classes au lieu de nommer l'exception) — les métriques de ces fichiers sont à prendre avec
+     cette réserve.
+   - **Couplage : fan-in sous-estimé pour les blobs non parsables** (exclus de l'index) —
+     mesuré à **3,8 %** des fichiers d'un arbre en moyenne, donc faible. Vérifié sur un cas : fan-in
+     de `flask.globals` au HEAD = 17 avec l'outil et 17 avec `grep`.
 
 ## 8. Prochaines étapes priorisées
 
@@ -627,8 +736,169 @@ implémentation) :
    5. Seuil d'abandon d'un outil (à fixer avant la mesure) : coût de calcul prohibitif ou
       couverture NaN trop élevée pour être interprétable.
    Ce chantier prépare le Chantier 5 (stacking par famille d'outils, matrice de désaccord).
+
+   **PROTOCOLE PRÉ-ENREGISTRÉ — Chantier 4bis, v1 (rédigé le 2026-11-04, AVANT toute
+   implémentation ; en attente de validation par l'utilisateur).**
+   - **Périmètre en vagues** (le coût décide l'ordre, pas l'intérêt supposé) :
+     - *Vague 1 — pleine échelle (~3200 commits étiquetés), calcul local :* **Pylint**
+       (chronométré d'abord sur 100 commits), **Vulture**, **entropie du changement + indicateurs
+       Kamei manquants** (calcul sur diff/`file_stats` : NS, ND, entropie, LA/LD/LT, NUC, EXP,
+       REXP, SEXP — ceux déjà couverts par BASE/churn ne sont pas recalculés), **couplage
+       fan-in/fan-out** par AST (imports). **mypy** : test de bruit sur 100 commits d'abord.
+     - *Vague 2 — échantillon seulement (200–300 commits), résultats rapportés à part, jamais
+       mélangés au tableau pleine échelle :* **Semgrep** (`p/python`, `p/security-audit`),
+       **SonarQube/SonarCloud**, **CodeQL**, **jscpd**. Objectif : comparer à un outil
+       industriel, pas alimenter le modèle final.
+     - *Hors périmètre :* coverage.py/mutmut, DeepSource/Codacy, modèles neuronaux (cités comme
+       état de l'art uniquement).
+   - **Seuils d'abandon fixés maintenant** : (a) extrapolation > 15 min pour les ~3200 commits →
+     passe en vague 2 (échantillon) ; (b) parmi les commits touchant des `.py`, > 50 % de NaN sur
+     les features de l'outil → abandonné (non interprétable) ; (c) outil dont la meilleure
+     feature a |AUC − 0,5| < 0,02 seule ET corrélation > 0,7 avec une feature déjà présente →
+     rejeté comme redondant/bruit (code gardé, §6 documenté).
+   - **Étape 1 par outil** (avant toute combinaison) : AUC de chaque feature seule, BASE+outil,
+     corrélation avec `loc_avg` (redondance), avec `file_commits_max` (circularité, plancher de
+     vigilance 0,3), et entre outils. NaN et jamais 0 sur échec d'analyse. Jeu curaté dans
+     `DIFF_COLS`-style, rejetés conservés.
+   - **Recherche de combinaison — protocole fixé à l'avance** :
+     - *Unité de sélection = la famille* (BASE, churn, radon, Ruff, Bandit, diff, process + les
+       nouvelles), pas la feature individuelle — limite l'espace de recherche (≈ 10 familles) et
+       donc le surapprentissage de la sélection. BASE est toujours incluse.
+     - *Algorithme :* sélection pas-à-pas ascendante par famille ; une famille n'est ajoutée que
+       si son gain d'AUC en CV interne (3 plis) dépasse **0,01** (≈ 1 écart-type d'un pli
+       interne, pas le 0,03 de la CV externe, trop conservateur pour un seuil de sélection) ;
+       arrêt au premier tour sans ajout. Modèle fixe (RandomForest 300 arbres, hyperparamètres
+       non réglés — régler serait une seconde recherche).
+     - *Estimation honnête :* **CV imbriquée** (externe 5 plis × 3 graines différentes, sélection
+       refaite dans chaque pli externe sur le train seul). Chiffre annoncé = AUC externe moyenne ±
+       écart-type, pas l'AUC de la sélection. La combinaison « finale » = celle sélectionnée sur
+       tout le jeu, annoncée avec la fréquence de sélection de chaque famille sur les 15 plis
+       externes (stabilité de la sélection).
+     - *Réserve temporelle :* le dernier 20 % chronologique est évalué **une seule fois**, à la
+       fin, sur la combinaison finale, comparé à BASE et à « tout empiler » (0,811 sous v2).
+       **Limite assumée dès maintenant :** les familles déjà existantes (churn, radon, Ruff,
+       Bandit, diff, process) ont déjà été vues en CV complète sur ces données lors des chantiers
+       1–4 ; la réserve n'est donc propre que pour les familles nouvelles — à dire tel quel.
+     - *Règle de conclusion :* amélioration affirmée seulement si l'AUC externe de la combinaison
+       dépasse BASE d'**au moins 1 écart-type externe** (~0,02) ; sinon on annonce « pas
+       d'amélioration démontrée ». Comparer aussi à « tout empiler » : si la sélection ne bat pas
+       l'empilement, le dire (c'est le résultat attendu d'après le Chantier 2).
+   - **AMENDEMENT n°1 (2026-11-04, demandé par l'utilisateur, écrit AVANT d'exécuter aucune
+     combinaison) — énumération EXHAUSTIVE des combinaisons, en complément de la sélection
+     imbriquée (qui reste l'estimation de référence).** Raison : illustrer le projet par des
+     statistiques sur de nombreuses combinaisons d'outils, pas seulement la gagnante.
+     - *Espace :* les 11 familles hors BASE (churn, radon, Ruff, Bandit, diff, process, Pylint,
+       Vulture, mypy, Kamei, couplage), BASE toujours incluse → 2^11 = **2048 combinaisons**.
+     - *Données de l'énumération :* uniquement les **80 % chronologiques anciens** ; les 20 %
+       récents restent intacts pour l'évaluation finale unique (sinon on consommerait la réserve
+       temporelle sur 2048 candidats). CV 5 plis, 1 graine, **100 arbres** (coût) — le reste du
+       projet utilise 300 : écart assumé, les ré-évaluations ci-dessous repassent à 300.
+     - *Biais assumé :* le « meilleur sur 2048 » est optimiste (malédiction du gagnant). Parades
+       fixées maintenant : (1) ré-évaluer le top-20 sur **5 graines de CV neuves** (300 arbres) ;
+       (2) évaluer UNE fois sur les 20 % réservés : le meilleur de la grille, la sélection
+       pas-à-pas, « tout empiler », BASE ; (3) l'AUC annoncée comme « meilleure combinaison » est
+       celle de (2), jamais celle de la grille. La CV imbriquée de la sélection pas-à-pas
+       (protocole initial) reste la mesure non biaisée de la *procédure*.
+     - *Statistiques stockées pour l'illustration (toutes, pas seulement le top) :* les 2048 AUC
+       (± écart-type par pli) ; meilleure AUC par nombre de familles ; gain marginal moyen de
+       chaque famille sur toutes les combinaisons qui ne la contiennent pas ; top/bottom 20 ;
+       part de combinaisons battant BASE de plus d'un écart-type. Fichier :
+       `results/chantier4bis_grid.json`.
+   - **Règle de stockage (demandée par l'utilisateur, 2026-11-04) :** tout résultat de ce
+     chantier — positif, négatif ou nul — est écrit dans un JSON daté sous `results/` ET résumé
+     en §6 ; toute décision de méthode (y compris les pièges rencontrés) en §7 ; chaque session
+     dans le journal §9. Les caches `*.pkl` ne sont pas versionnés (recalculables par les
+     scripts) ; les JSON de résultats le sont.
+   - **Validation du label (sous-volet, après les features) :** PySZZ (au moins B-SZZ et MA-SZZ)
+     vs `label_v2` — taux d'accord sur les commits étiquetés. Mesure de robustesse du label, pas
+     un candidat à remplacer `label_v2` sans repasser par le protocole du Chantier 1.
+   - **Livrables :** `fyc/<outil>.py` par outil, `results/chantier4bis_*.py` datés (un par vague +
+     un pour la sélection imbriquée), intégration au `benchmark.py`, §6 mis à jour (positifs ET
+     négatifs), `requirements.txt` mis à jour.
 5. **Chantier 5 — croisement et combinaison** (stacking, matrice de désaccord entre modèles).
 6. **Chantier 6 — validation externe** sur un deuxième dépôt.
+
+   **EXTENSION 6A — Transférabilité inter-dépôts et courbe d'apprentissage (AJOUTÉE le
+   2026-11-04 à la demande de l'utilisateur ; PROTOCOLE v1 VALIDÉ par l'utilisateur le
+   2026-11-04 ; implémentation NON COMMENCÉE — prochaine étape : figer et commiter la liste des
+   dépôts, puis le jeu de familles du 4bis, AVANT toute mesure).**
+   *Origine :* idée de produit/agent « pré-entraîné » branchable sur un dépôt d'entreprise, utile
+   surtout aux petits dépôts où l'entraînement local est impossible (≈30 positifs pour 500
+   commits). *Question de recherche :* **un modèle entraîné sur d'autres dépôts prédit-il les
+   commits à risque d'un dépôt jamais vu, et à partir de combien de commits locaux l'entraînement
+   local fait-il mieux ?** Le produit/agent lui-même est **hors périmètre** (ouverture
+   discutée en soutenance : l'« agent » LLM ne serait que l'interface autour du modèle
+   statistique, qui reste ce que l'on évalue ici). *Bénéfice annexe pour le cours :* un jeu de
+   données multi-dépôts exporté (JSON/pickle — `*.csv` est ignoré par git).
+   - **Dépendance :** utilise le jeu de familles final du Chantier 4bis (figé avant de démarrer).
+   - **Corpus :** 5 à 10 dépôts Python publics. **Règle de sélection fixée avant tout calcul**
+     (liste commitée AVANT la première mesure, aucun dépôt retiré après avoir vu un résultat) :
+     ≥ 2000 commits, ≥ 3 ans d'historique, activité récente, domaines/architectures variés
+     (bibliothèque, framework web, outil CLI, data/ML). Flask peut en faire partie.
+   - **JEU DE FAMILLES FIGÉ (2026-11-04, validé par l'utilisateur) :** BASE + diff (`DIFF_COLS`)
+     + radon + Ruff. **Interprétation que j'ai faite et que je signale** : le churn n'est PAS
+     dans le jeu principal (il est la famille suspecte du Chantier 1 et le seul gain régulier
+     de la grille 4bis) ; il est mesuré en **ablation** `+churn (rang percentile)`, sans coût de
+     données supplémentaire, pour voir si le transfert dépend de lui. Pylint, mypy, Vulture,
+     Kamei, couplage, Bandit, process : exclus (gain nul ou négatif en grille, ou non
+     universels). Chaque feature dépendante de l'échelle existe en deux versions (brute /
+     rang percentile passé seul).
+   - **LISTE DES DÉPÔTS — FIGÉE le 2026-11-04, VALIDÉE par l'utilisateur, commitée AVANT toute
+     mesure du 6A (aucune mesure n'existe à cette date). Toute modification ultérieure doit être
+     datée et justifiée ici, jamais faite en silence.** Nombres de commits lus via
+     l'API GitHub le 2026-11-04 (pas de mémoire) : `pallets/flask` 5566 (référence, domaine :
+     framework web), `psf/requests` 6496 (client HTTP), `pallets/click` 3379 (CLI),
+     `psf/black` 2488 (outil de formatage), `tornadoweb/tornado` 5316 (réseau asynchrone),
+     `pydantic/pydantic` 5918 (validation/typage), `encode/django-rest-framework` 9086 (API
+     REST). **Critère pratique ajouté à ceux du protocole : ≤ 10 000 commits** — les
+     extractions chargent en mémoire toutes les versions de fichiers (7 Go de RAM
+     disponibles) ; conséquence assumée : pas de dépôt data/ML (scikit-learn 34 123 commits,
+     pandas…), donc ce domaine n'est pas couvert, à dire en soutenance. **Réserve (fixée
+     maintenant, utilisée dans cet ordre si un dépôt échoue au critère « ≥ 3 ans d'historique »,
+     vérifié au clonage, ou « activité récente »)** : `python-poetry/poetry` 3900,
+     `fastapi/fastapi` 7991 (nombreux commits de docs/traductions, à surveiller). Écartés :
+     `encode/httpx` (1523 < 2000), `pallets/jinja` (dernier push 2025-06, inactif), tous les
+     dépôts > 10 000 commits (pytest, aiohttp, sphinx, celery, django, mitmproxy, Pillow, pip,
+     scikit-learn). **La sélection est discrétionnaire (un dépôt par domaine, jugé à l'œil) ;
+     la liste est figée AVANT tout résultat pour que ce choix ne puisse pas dépendre des
+     AUC.**
+   - **Étiquetage :** identique à Flask (`label_v2`, fenêtre 90 j, détection de fix B), **sans
+     réglage par dépôt**. Rapporter pour chaque dépôt `part_risque` et la part de commits
+     reconnus « fix » : un dépôt dont les conventions de message cassent la détection (ex.
+     `PROJ-123`, squash merges) est **signalé, pas corrigé en douce** ; garde-fou : dépôt exclu des
+     conclusions si `part_risque` < 5 % ou < 40 positifs dans sa queue de test (§6, règle des 5 %).
+   - **Jeu de features « transférable » :** BASE + diff + radon/Ruff (Python) ; **signaux de
+     process GitHub exclus** (non universels), mesurés à part si disponibles. Les features
+     dépendantes de l'échelle du dépôt (churn, `author_experience`, tailles) sont remplacées par
+     leur **rang percentile dans le dépôt, calculé en fenêtre croissante sur le passé seul**
+     (aucune fuite du futur). Comparaison systématique avec la version brute, pour mesurer ce que
+     coûte/rapporte la normalisation.
+   - **Protocole d'évaluation (leave-one-repo-out) :** pour chaque dépôt cible, queue de test =
+     **30 % chronologiques récents**, jamais utilisés pour entraîner. Trois modèles, mêmes
+     hyperparamètres que le reste du projet (RF 300 arbres, non réglé) :
+     (G) **global seul** : entraîné sur les autres dépôts, restreints aux commits antérieurs à la
+     date de début de la queue de test de la cible (pas de fuite temporelle entre dépôts) ;
+     (L) **local seul** : entraîné sur les `n` premiers commits de la cible ;
+     (G+L) **global + local** : union des deux, sans pondération (pas de réglage de poids).
+     `n ∈ {50, 100, 200, 400, 800, 1600}` (plafonné à 70 % du dépôt).
+   - **Métriques :** AUC avec IC bootstrap ; **Brier et courbe de calibration** (l'AUC est
+     insensible au taux de base, qui varie d'un dépôt à l'autre — or c'est ce qui compte pour un
+     produit) ; précision sur les 10 % de commits les mieux classés.
+   - **Seuils de conclusion pré-enregistrés :**
+     T1 (le transfert existe) : médiane sur les dépôts de AUC(G) ≥ 0,65.
+     T2 (bénéfice au démarrage à froid) : à n = 100, médiane de AUC(G+L) − AUC(L) ≥ 0,05.
+     T3 (point de croisement) : plus petit `n*` tel que AUC(L) ≥ AUC(G+L), rapporté par dépôt
+     et en médiane — pas de seuil, c'est une mesure.
+   - **Règle de résultat négatif :** si T1 échoue, on documente « pas de transfert avec ce jeu de
+     features » en §6 et on teste **une seule** variante de repli fixée maintenant (features Git
+     seules, sans outils Python). Pas d'autre repli ensuite.
+   - **Limites assumées d'avance :** dépôts Python uniquement (les outils de code le sont) ; un
+     modèle global dans un produit réel poserait en plus la question de la confidentialité du
+     code d'entreprise, hors périmètre ; 5–10 dépôts donnent une médiane peu précise, on
+     rapporte les valeurs par dépôt.
+   - **Livrables :** `fyc/` généralisé (le chemin du dépôt est déjà un paramètre partout),
+     `results/chantier6a_*.py` datés + JSON, jeu multi-dépôts exporté, §6 mis à jour (positifs
+     ET négatifs), entrée dans le journal §9.
 7. **Chantier 7 — restitution** (modules `.py`, `README.md`, synthèse soutenance).
 
 ## 9. Journal des sessions
@@ -886,3 +1156,34 @@ implémentation) :
   n'était nécessaire).
 - **Reste à faire** : commit de cet état ; arbitrage de l'utilisateur sur la suite (Chantier 5 —
   croisement/combinaison — ou autre).
+
+### 2026-11-04 — Session 5 — Chantier 4bis (vague 1 + combinaisons) ; extension 6A ajoutée
+- Push GitHub bloqué en début de session : diagnostiqué sans modification de config. Clé SSH
+  correcte et enregistrée (vérifié via l'API publique) ; l'authentification SSH est
+  **intermittente côté GitHub/réseau** (même commande, succès une fois sur deux, indépendamment
+  des options). Contournement : relancer `git push`. Cause exacte non identifiée.
+- **Protocole du Chantier 4bis rédigé AVANT implémentation et validé par l'utilisateur** (§8).
+  Amendement n°1 (à la demande de l'utilisateur, avant toute exécution) : énumération exhaustive
+  des 2048 combinaisons pour illustrer, en complément de la CV imbriquée ; règle de stockage
+  de tous les résultats ajoutée au protocole.
+- Installé `pylint 4.1.3`, `vulture 2.16`, `mypy 2.4.1` (`requirements.txt`). Nouveaux modules :
+  `fyc/pylint_features.py`, `vulture_features.py`, `mypy_features.py`, `jit_kamei.py`,
+  `coupling.py` (§3). Scripts : `chantier4bis_common.py`, `_wave1.py`, `_combinations.py`,
+  `_figures.py`.
+- **Pièges trouvés en vérifiant plutôt qu'en supposant** (§7 point 13) : mypy renvoie 0 sur le
+  code non annoté par défaut (un 0 qui voulait dire « non vérifié ») ; une erreur bloquante mypy
+  avorte tout le run ; Python 3.14 accepte `except A, e:` (PEP 758) — observation non reliée à
+  l'écart de couverture 3.12/3.14, hypothèse non testée. Couplage vérifié contre `grep`
+  (17 = 17 pour `flask.globals`).
+- **Résultats (détail §6) :** vague 1 — aucun outil ne dépasse 1 écart-type sur BASE ; l'entropie
+  du changement ne prédit rien ; le fan-in est le meilleur signal individuel. Grille — plateau dès
+  4-5 familles, malédiction du gagnant de −0,010 mesurée, sélection instable, **quatre modèles
+  indiscernables sur la réserve**. Le seul gain régulier est le churn (suspect, §6).
+- Aucun résultat n'a été retouché après coup ; les écarts au protocole sont listés en §6.
+- **Extension 6A ajoutée au §8** (transférabilité inter-dépôts, courbe d'apprentissage) à la
+  demande de l'utilisateur. **Protocole, jeu de familles et liste de 7 dépôts validés par
+  l'utilisateur et figés dans le commit de cette session, avant toute mesure.** Implémentation
+  non commencée.
+- **Reste à faire :** intégrer les 5 familles dans `results/benchmark.py` (non fait) ; vague 2
+  (échantillon) et PySZZ ; commit de cet état ; valider puis démarrer 6A (nécessite de figer le
+  jeu de familles du 4bis).

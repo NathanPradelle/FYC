@@ -1,0 +1,835 @@
+{
+  "generated_at": "2026-11-04T10:50:24.428252+00:00",
+  "flask_head": "d73fa1cdcbd8b1465c151db8924ba58b1dd14e35",
+  "label": "v2 + detection de fix B, fenetre 90 j",
+  "n": 3198,
+  "auc_base": 0.7867,
+  "outils": {
+    "pylint": {
+      "cols": [
+        "pylint_total_avg",
+        "pylint_error_avg",
+        "pylint_warning_avg",
+        "pylint_refactor_avg",
+        "pylint_convention_avg"
+      ],
+      "temps_s": 140.5,
+      "nan_part_parmi_applicables": {
+        "pylint_total_avg": 0.058,
+        "pylint_error_avg": 0.058,
+        "pylint_warning_avg": 0.058,
+        "pylint_refactor_avg": 0.058,
+        "pylint_convention_avg": 0.058
+      },
+      "auc_seule": {
+        "pylint_total_avg": {
+          "auc": 0.5283,
+          "std": 0.039
+        },
+        "pylint_error_avg": {
+          "auc": 0.6379,
+          "std": 0.0444
+        },
+        "pylint_warning_avg": {
+          "auc": 0.6036,
+          "std": 0.044
+        },
+        "pylint_refactor_avg": {
+          "auc": 0.5788,
+          "std": 0.0284
+        },
+        "pylint_convention_avg": {
+          "auc": 0.5663,
+          "std": 0.0274
+        }
+      },
+      "base_plus_outil": {
+        "auc": 0.7958,
+        "std": 0.0332,
+        "gain_vs_base": 0.0091
+      },
+      "redondance_circularite": {
+        "pylint_total_avg": {
+          "corr_loc_avg": 0.4937,
+          "max_corr_existante": [
+            "ruff_total_avg",
+            0.8591
+          ],
+          "corr_churn_file_commits_max": 0.1155
+        },
+        "pylint_error_avg": {
+          "corr_loc_avg": 0.3083,
+          "max_corr_existante": [
+            "ruff_total_avg",
+            0.5356
+          ],
+          "corr_churn_file_commits_max": -0.0587
+        },
+        "pylint_warning_avg": {
+          "corr_loc_avg": 0.3794,
+          "max_corr_existante": [
+            "bandit_total_avg",
+            0.7255
+          ],
+          "corr_churn_file_commits_max": 0.1565
+        },
+        "pylint_refactor_avg": {
+          "corr_loc_avg": 0.5949,
+          "max_corr_existante": [
+            "mi_avg",
+            0.7085
+          ],
+          "corr_churn_file_commits_max": 0.1637
+        },
+        "pylint_convention_avg": {
+          "corr_loc_avg": 0.4596,
+          "max_corr_existante": [
+            "bandit_total_avg",
+            0.87
+          ],
+          "corr_churn_file_commits_max": 0.0988
+        }
+      },
+      "meilleure_feature_seule": "pylint_error_avg",
+      "circularite_au_dessus_vigilance": [],
+      "seuils_abandon_declenches": []
+    },
+    "vulture": {
+      "cols": [
+        "vulture_total_avg",
+        "vulture_funcs_avg",
+        "vulture_imports_avg"
+      ],
+      "temps_s": 34.4,
+      "nan_part_parmi_applicables": {
+        "vulture_total_avg": 0.058,
+        "vulture_funcs_avg": 0.058,
+        "vulture_imports_avg": 0.058
+      },
+      "auc_seule": {
+        "vulture_total_avg": {
+          "auc": 0.571,
+          "std": 0.0346
+        },
+        "vulture_funcs_avg": {
+          "auc": 0.5661,
+          "std": 0.037
+        },
+        "vulture_imports_avg": {
+          "auc": 0.6353,
+          "std": 0.0402
+        }
+      },
+      "base_plus_outil": {
+        "auc": 0.788,
+        "std": 0.036,
+        "gain_vs_base": 0.0013
+      },
+      "redondance_circularite": {
+        "vulture_total_avg": {
+          "corr_loc_avg": 0.7443,
+          "max_corr_existante": [
+            "ruff_total_avg",
+            0.8903
+          ],
+          "corr_churn_file_commits_max": 0.1698
+        },
+        "vulture_funcs_avg": {
+          "corr_loc_avg": 0.7666,
+          "max_corr_existante": [
+            "ruff_total_avg",
+            0.8835
+          ],
+          "corr_churn_file_commits_max": 0.209
+        },
+        "vulture_imports_avg": {
+          "corr_loc_avg": 0.0895,
+          "max_corr_existante": [
+            "bandit_high_avg",
+            0.5043
+          ],
+          "corr_churn_file_commits_max": -0.1391
+        }
+      },
+      "meilleure_feature_seule": "vulture_imports_avg",
+      "circularite_au_dessus_vigilance": [],
+      "seuils_abandon_declenches": []
+    },
+    "mypy": {
+      "cols": [
+        "mypy_total_avg",
+        "mypy_core_avg"
+      ],
+      "temps_s": 71.9,
+      "nan_part_parmi_applicables": {
+        "mypy_total_avg": 0.058,
+        "mypy_core_avg": 0.058
+      },
+      "auc_seule": {
+        "mypy_total_avg": {
+          "auc": 0.5908,
+          "std": 0.0448
+        },
+        "mypy_core_avg": {
+          "auc": 0.5839,
+          "std": 0.0369
+        }
+      },
+      "base_plus_outil": {
+        "auc": 0.7937,
+        "std": 0.0278,
+        "gain_vs_base": 0.007
+      },
+      "redondance_circularite": {
+        "mypy_total_avg": {
+          "corr_loc_avg": 0.4379,
+          "max_corr_existante": [
+            "cc_tot_avg",
+            0.6362
+          ],
+          "corr_churn_file_commits_max": 0.0085
+        },
+        "mypy_core_avg": {
+          "corr_loc_avg": 0.4328,
+          "max_corr_existante": [
+            "cc_tot_avg",
+            0.6361
+          ],
+          "corr_churn_file_commits_max": 0.0128
+        }
+      },
+      "meilleure_feature_seule": "mypy_total_avg",
+      "circularite_au_dessus_vigilance": [],
+      "seuils_abandon_declenches": []
+    },
+    "kamei": {
+      "cols": [
+        "ns",
+        "nd",
+        "entropy",
+        "entropy_norm",
+        "ndev",
+        "rexp",
+        "sexp"
+      ],
+      "temps_s": 0.3,
+      "nan_part_parmi_applicables": {
+        "ns": 0.0,
+        "nd": 0.0,
+        "entropy": 0.0038,
+        "entropy_norm": 0.0038,
+        "ndev": 0.0,
+        "rexp": 0.0,
+        "sexp": 0.0
+      },
+      "auc_seule": {
+        "ns": {
+          "auc": 0.6251,
+          "std": 0.0454
+        },
+        "nd": {
+          "auc": 0.6313,
+          "std": 0.0447
+        },
+        "entropy": {
+          "auc": 0.4778,
+          "std": 0.0364
+        },
+        "entropy_norm": {
+          "auc": 0.5105,
+          "std": 0.0294
+        },
+        "ndev": {
+          "auc": 0.5528,
+          "std": 0.0127
+        },
+        "rexp": {
+          "auc": 0.4451,
+          "std": 0.0399
+        },
+        "sexp": {
+          "auc": 0.5204,
+          "std": 0.0364
+        }
+      },
+      "base_plus_outil": {
+        "auc": 0.7871,
+        "std": 0.0295,
+        "gain_vs_base": 0.0004
+      },
+      "redondance_circularite": {
+        "ns": {
+          "corr_loc_avg": 0.0679,
+          "max_corr_existante": [
+            "n_files",
+            0.5121
+          ],
+          "corr_churn_file_commits_max": 0.4663
+        },
+        "nd": {
+          "corr_loc_avg": -0.0399,
+          "max_corr_existante": [
+            "n_files",
+            0.8293
+          ],
+          "corr_churn_file_commits_max": 0.3119
+        },
+        "entropy": {
+          "corr_loc_avg": -0.0357,
+          "max_corr_existante": [
+            "n_files",
+            0.7371
+          ],
+          "corr_churn_file_commits_max": 0.3529
+        },
+        "entropy_norm": {
+          "corr_loc_avg": -0.0521,
+          "max_corr_existante": [
+            "touches_tests",
+            0.4098
+          ],
+          "corr_churn_file_commits_max": 0.3492
+        },
+        "ndev": {
+          "corr_loc_avg": 0.3307,
+          "max_corr_existante": [
+            "file_commits_max",
+            0.7979
+          ],
+          "corr_churn_file_commits_max": 0.7979
+        },
+        "rexp": {
+          "corr_loc_avg": -0.1174,
+          "max_corr_existante": [
+            "author_experience",
+            0.9025
+          ],
+          "corr_churn_file_commits_max": 0.1539
+        },
+        "sexp": {
+          "corr_loc_avg": -0.0954,
+          "max_corr_existante": [
+            "author_experience",
+            0.8424
+          ],
+          "corr_churn_file_commits_max": 0.1873
+        }
+      },
+      "meilleure_feature_seule": "nd",
+      "circularite_au_dessus_vigilance": [
+        "ns",
+        "nd",
+        "entropy",
+        "entropy_norm",
+        "ndev"
+      ],
+      "seuils_abandon_declenches": []
+    },
+    "coupling": {
+      "cols": [
+        "fan_out_avg",
+        "fan_in_avg",
+        "fan_in_max"
+      ],
+      "temps_s": 35.3,
+      "nan_part_parmi_applicables": {
+        "fan_out_avg": 0.0574,
+        "fan_in_avg": 0.0574,
+        "fan_in_max": 0.0574
+      },
+      "auc_seule": {
+        "fan_out_avg": {
+          "auc": 0.621,
+          "std": 0.0308
+        },
+        "fan_in_avg": {
+          "auc": 0.6526,
+          "std": 0.0515
+        },
+        "fan_in_max": {
+          "auc": 0.6491,
+          "std": 0.0417
+        }
+      },
+      "base_plus_outil": {
+        "auc": 0.7897,
+        "std": 0.0368,
+        "gain_vs_base": 0.003
+      },
+      "redondance_circularite": {
+        "fan_out_avg": {
+          "corr_loc_avg": 0.587,
+          "max_corr_existante": [
+            "file_commits_avg",
+            0.6005
+          ],
+          "corr_churn_file_commits_max": 0.4707
+        },
+        "fan_in_avg": {
+          "corr_loc_avg": -0.1968,
+          "max_corr_existante": [
+            "mi_avg",
+            0.3122
+          ],
+          "corr_churn_file_commits_max": 0.1419
+        },
+        "fan_in_max": {
+          "corr_loc_avg": -0.1925,
+          "max_corr_existante": [
+            "mi_avg",
+            0.3088
+          ],
+          "corr_churn_file_commits_max": 0.198
+        }
+      },
+      "meilleure_feature_seule": "fan_in_avg",
+      "circularite_au_dessus_vigilance": [
+        "fan_out_avg"
+      ],
+      "seuils_abandon_declenches": []
+    }
+  },
+  "correlations_entre_outils": {
+    "pylint_total_avg": {
+      "pylint_total_avg": 1.0,
+      "pylint_error_avg": 0.711,
+      "pylint_warning_avg": 0.891,
+      "pylint_refactor_avg": 0.481,
+      "pylint_convention_avg": 0.975,
+      "vulture_total_avg": 0.784,
+      "vulture_funcs_avg": 0.756,
+      "vulture_imports_avg": -0.047,
+      "mypy_total_avg": 0.756,
+      "mypy_core_avg": 0.767,
+      "ns": 0.089,
+      "nd": -0.024,
+      "entropy": -0.054,
+      "entropy_norm": 0.01,
+      "ndev": 0.043,
+      "rexp": 0.063,
+      "sexp": 0.006,
+      "fan_out_avg": 0.069,
+      "fan_in_avg": 0.046,
+      "fan_in_max": 0.023
+    },
+    "pylint_error_avg": {
+      "pylint_total_avg": 0.711,
+      "pylint_error_avg": 1.0,
+      "pylint_warning_avg": 0.514,
+      "pylint_refactor_avg": 0.296,
+      "pylint_convention_avg": 0.643,
+      "vulture_total_avg": 0.502,
+      "vulture_funcs_avg": 0.473,
+      "vulture_imports_avg": 0.144,
+      "mypy_total_avg": 0.96,
+      "mypy_core_avg": 0.959,
+      "ns": 0.028,
+      "nd": -0.019,
+      "entropy": -0.041,
+      "entropy_norm": -0.018,
+      "ndev": -0.144,
+      "rexp": 0.119,
+      "sexp": 0.002,
+      "fan_out_avg": -0.119,
+      "fan_in_avg": -0.114,
+      "fan_in_max": -0.121
+    },
+    "pylint_warning_avg": {
+      "pylint_total_avg": 0.891,
+      "pylint_error_avg": 0.514,
+      "pylint_warning_avg": 1.0,
+      "pylint_refactor_avg": 0.274,
+      "pylint_convention_avg": 0.815,
+      "vulture_total_avg": 0.63,
+      "vulture_funcs_avg": 0.624,
+      "vulture_imports_avg": -0.082,
+      "mypy_total_avg": 0.55,
+      "mypy_core_avg": 0.563,
+      "ns": 0.099,
+      "nd": -0.021,
+      "entropy": -0.037,
+      "entropy_norm": 0.054,
+      "ndev": 0.078,
+      "rexp": 0.119,
+      "sexp": 0.076,
+      "fan_out_avg": 0.229,
+      "fan_in_avg": 0.377,
+      "fan_in_max": 0.328
+    },
+    "pylint_refactor_avg": {
+      "pylint_total_avg": 0.481,
+      "pylint_error_avg": 0.296,
+      "pylint_warning_avg": 0.274,
+      "pylint_refactor_avg": 1.0,
+      "pylint_convention_avg": 0.424,
+      "vulture_total_avg": 0.504,
+      "vulture_funcs_avg": 0.446,
+      "vulture_imports_avg": 0.193,
+      "mypy_total_avg": 0.42,
+      "mypy_core_avg": 0.393,
+      "ns": 0.002,
+      "nd": -0.081,
+      "entropy": -0.127,
+      "entropy_norm": -0.113,
+      "ndev": 0.121,
+      "rexp": -0.192,
+      "sexp": -0.165,
+      "fan_out_avg": 0.059,
+      "fan_in_avg": -0.239,
+      "fan_in_max": -0.242
+    },
+    "pylint_convention_avg": {
+      "pylint_total_avg": 0.975,
+      "pylint_error_avg": 0.643,
+      "pylint_warning_avg": 0.815,
+      "pylint_refactor_avg": 0.424,
+      "pylint_convention_avg": 1.0,
+      "vulture_total_avg": 0.791,
+      "vulture_funcs_avg": 0.765,
+      "vulture_imports_avg": -0.107,
+      "mypy_total_avg": 0.689,
+      "mypy_core_avg": 0.705,
+      "ns": 0.092,
+      "nd": -0.01,
+      "entropy": -0.039,
+      "entropy_norm": 0.013,
+      "ndev": 0.046,
+      "rexp": 0.05,
+      "sexp": -0.001,
+      "fan_out_avg": 0.014,
+      "fan_in_avg": -0.052,
+      "fan_in_max": -0.065
+    },
+    "vulture_total_avg": {
+      "pylint_total_avg": 0.784,
+      "pylint_error_avg": 0.502,
+      "pylint_warning_avg": 0.63,
+      "pylint_refactor_avg": 0.504,
+      "pylint_convention_avg": 0.791,
+      "vulture_total_avg": 1.0,
+      "vulture_funcs_avg": 0.964,
+      "vulture_imports_avg": 0.045,
+      "mypy_total_avg": 0.571,
+      "mypy_core_avg": 0.575,
+      "ns": 0.007,
+      "nd": -0.057,
+      "entropy": -0.094,
+      "entropy_norm": -0.101,
+      "ndev": 0.09,
+      "rexp": -0.094,
+      "sexp": -0.115,
+      "fan_out_avg": 0.215,
+      "fan_in_avg": -0.259,
+      "fan_in_max": -0.261
+    },
+    "vulture_funcs_avg": {
+      "pylint_total_avg": 0.756,
+      "pylint_error_avg": 0.473,
+      "pylint_warning_avg": 0.624,
+      "pylint_refactor_avg": 0.446,
+      "pylint_convention_avg": 0.765,
+      "vulture_total_avg": 0.964,
+      "vulture_funcs_avg": 1.0,
+      "vulture_imports_avg": 0.018,
+      "mypy_total_avg": 0.545,
+      "mypy_core_avg": 0.548,
+      "ns": 0.042,
+      "nd": -0.046,
+      "entropy": -0.064,
+      "entropy_norm": -0.059,
+      "ndev": 0.124,
+      "rexp": -0.086,
+      "sexp": -0.104,
+      "fan_out_avg": 0.248,
+      "fan_in_avg": -0.227,
+      "fan_in_max": -0.225
+    },
+    "vulture_imports_avg": {
+      "pylint_total_avg": -0.047,
+      "pylint_error_avg": 0.144,
+      "pylint_warning_avg": -0.082,
+      "pylint_refactor_avg": 0.193,
+      "pylint_convention_avg": -0.107,
+      "vulture_total_avg": 0.045,
+      "vulture_funcs_avg": 0.018,
+      "vulture_imports_avg": 1.0,
+      "mypy_total_avg": 0.107,
+      "mypy_core_avg": 0.074,
+      "ns": -0.06,
+      "nd": -0.061,
+      "entropy": -0.058,
+      "entropy_norm": -0.057,
+      "ndev": -0.148,
+      "rexp": -0.103,
+      "sexp": -0.105,
+      "fan_out_avg": -0.119,
+      "fan_in_avg": -0.023,
+      "fan_in_max": -0.037
+    },
+    "mypy_total_avg": {
+      "pylint_total_avg": 0.756,
+      "pylint_error_avg": 0.96,
+      "pylint_warning_avg": 0.55,
+      "pylint_refactor_avg": 0.42,
+      "pylint_convention_avg": 0.689,
+      "vulture_total_avg": 0.571,
+      "vulture_funcs_avg": 0.545,
+      "vulture_imports_avg": 0.107,
+      "mypy_total_avg": 1.0,
+      "mypy_core_avg": 0.998,
+      "ns": 0.008,
+      "nd": -0.043,
+      "entropy": -0.079,
+      "entropy_norm": -0.057,
+      "ndev": -0.099,
+      "rexp": 0.063,
+      "sexp": -0.044,
+      "fan_out_avg": -0.041,
+      "fan_in_avg": -0.152,
+      "fan_in_max": -0.161
+    },
+    "mypy_core_avg": {
+      "pylint_total_avg": 0.767,
+      "pylint_error_avg": 0.959,
+      "pylint_warning_avg": 0.563,
+      "pylint_refactor_avg": 0.393,
+      "pylint_convention_avg": 0.705,
+      "vulture_total_avg": 0.575,
+      "vulture_funcs_avg": 0.548,
+      "vulture_imports_avg": 0.074,
+      "mypy_total_avg": 0.998,
+      "mypy_core_avg": 1.0,
+      "ns": 0.012,
+      "nd": -0.038,
+      "entropy": -0.073,
+      "entropy_norm": -0.052,
+      "ndev": -0.092,
+      "rexp": 0.071,
+      "sexp": -0.037,
+      "fan_out_avg": -0.025,
+      "fan_in_avg": -0.151,
+      "fan_in_max": -0.159
+    },
+    "ns": {
+      "pylint_total_avg": 0.089,
+      "pylint_error_avg": 0.028,
+      "pylint_warning_avg": 0.099,
+      "pylint_refactor_avg": 0.002,
+      "pylint_convention_avg": 0.092,
+      "vulture_total_avg": 0.007,
+      "vulture_funcs_avg": 0.042,
+      "vulture_imports_avg": -0.06,
+      "mypy_total_avg": 0.008,
+      "mypy_core_avg": 0.012,
+      "ns": 1.0,
+      "nd": 0.729,
+      "entropy": 0.674,
+      "entropy_norm": 0.569,
+      "ndev": 0.581,
+      "rexp": 0.237,
+      "sexp": 0.162,
+      "fan_out_avg": 0.024,
+      "fan_in_avg": 0.017,
+      "fan_in_max": 0.178
+    },
+    "nd": {
+      "pylint_total_avg": -0.024,
+      "pylint_error_avg": -0.019,
+      "pylint_warning_avg": -0.021,
+      "pylint_refactor_avg": -0.081,
+      "pylint_convention_avg": -0.01,
+      "vulture_total_avg": -0.057,
+      "vulture_funcs_avg": -0.046,
+      "vulture_imports_avg": -0.061,
+      "mypy_total_avg": -0.043,
+      "mypy_core_avg": -0.038,
+      "ns": 0.729,
+      "nd": 1.0,
+      "entropy": 0.692,
+      "entropy_norm": 0.455,
+      "ndev": 0.496,
+      "rexp": 0.155,
+      "sexp": 0.09,
+      "fan_out_avg": -0.056,
+      "fan_in_avg": -0.047,
+      "fan_in_max": 0.116
+    },
+    "entropy": {
+      "pylint_total_avg": -0.054,
+      "pylint_error_avg": -0.041,
+      "pylint_warning_avg": -0.037,
+      "pylint_refactor_avg": -0.127,
+      "pylint_convention_avg": -0.039,
+      "vulture_total_avg": -0.094,
+      "vulture_funcs_avg": -0.064,
+      "vulture_imports_avg": -0.058,
+      "mypy_total_avg": -0.079,
+      "mypy_core_avg": -0.073,
+      "ns": 0.674,
+      "nd": 0.692,
+      "entropy": 1.0,
+      "entropy_norm": 0.822,
+      "ndev": 0.533,
+      "rexp": 0.213,
+      "sexp": 0.111,
+      "fan_out_avg": -0.028,
+      "fan_in_avg": -0.029,
+      "fan_in_max": 0.188
+    },
+    "entropy_norm": {
+      "pylint_total_avg": 0.01,
+      "pylint_error_avg": -0.018,
+      "pylint_warning_avg": 0.054,
+      "pylint_refactor_avg": -0.113,
+      "pylint_convention_avg": 0.013,
+      "vulture_total_avg": -0.101,
+      "vulture_funcs_avg": -0.059,
+      "vulture_imports_avg": -0.057,
+      "mypy_total_avg": -0.057,
+      "mypy_core_avg": -0.052,
+      "ns": 0.569,
+      "nd": 0.455,
+      "entropy": 0.822,
+      "entropy_norm": 1.0,
+      "ndev": 0.38,
+      "rexp": 0.223,
+      "sexp": 0.143,
+      "fan_out_avg": 0.008,
+      "fan_in_avg": 0.096,
+      "fan_in_max": 0.203
+    },
+    "ndev": {
+      "pylint_total_avg": 0.043,
+      "pylint_error_avg": -0.144,
+      "pylint_warning_avg": 0.078,
+      "pylint_refactor_avg": 0.121,
+      "pylint_convention_avg": 0.046,
+      "vulture_total_avg": 0.09,
+      "vulture_funcs_avg": 0.124,
+      "vulture_imports_avg": -0.148,
+      "mypy_total_avg": -0.099,
+      "mypy_core_avg": -0.092,
+      "ns": 0.581,
+      "nd": 0.496,
+      "entropy": 0.533,
+      "entropy_norm": 0.38,
+      "ndev": 1.0,
+      "rexp": 0.125,
+      "sexp": 0.118,
+      "fan_out_avg": 0.323,
+      "fan_in_avg": 0.068,
+      "fan_in_max": 0.217
+    },
+    "rexp": {
+      "pylint_total_avg": 0.063,
+      "pylint_error_avg": 0.119,
+      "pylint_warning_avg": 0.119,
+      "pylint_refactor_avg": -0.192,
+      "pylint_convention_avg": 0.05,
+      "vulture_total_avg": -0.094,
+      "vulture_funcs_avg": -0.086,
+      "vulture_imports_avg": -0.103,
+      "mypy_total_avg": 0.063,
+      "mypy_core_avg": 0.071,
+      "ns": 0.237,
+      "nd": 0.155,
+      "entropy": 0.213,
+      "entropy_norm": 0.223,
+      "ndev": 0.125,
+      "rexp": 1.0,
+      "sexp": 0.82,
+      "fan_out_avg": 0.042,
+      "fan_in_avg": 0.246,
+      "fan_in_max": 0.258
+    },
+    "sexp": {
+      "pylint_total_avg": 0.006,
+      "pylint_error_avg": 0.002,
+      "pylint_warning_avg": 0.076,
+      "pylint_refactor_avg": -0.165,
+      "pylint_convention_avg": -0.001,
+      "vulture_total_avg": -0.115,
+      "vulture_funcs_avg": -0.104,
+      "vulture_imports_avg": -0.105,
+      "mypy_total_avg": -0.044,
+      "mypy_core_avg": -0.037,
+      "ns": 0.162,
+      "nd": 0.09,
+      "entropy": 0.111,
+      "entropy_norm": 0.143,
+      "ndev": 0.118,
+      "rexp": 0.82,
+      "sexp": 1.0,
+      "fan_out_avg": 0.109,
+      "fan_in_avg": 0.281,
+      "fan_in_max": 0.277
+    },
+    "fan_out_avg": {
+      "pylint_total_avg": 0.069,
+      "pylint_error_avg": -0.119,
+      "pylint_warning_avg": 0.229,
+      "pylint_refactor_avg": 0.059,
+      "pylint_convention_avg": 0.014,
+      "vulture_total_avg": 0.215,
+      "vulture_funcs_avg": 0.248,
+      "vulture_imports_avg": -0.119,
+      "mypy_total_avg": -0.041,
+      "mypy_core_avg": -0.025,
+      "ns": 0.024,
+      "nd": -0.056,
+      "entropy": -0.028,
+      "entropy_norm": 0.008,
+      "ndev": 0.323,
+      "rexp": 0.042,
+      "sexp": 0.109,
+      "fan_out_avg": 1.0,
+      "fan_in_avg": 0.366,
+      "fan_in_max": 0.32
+    },
+    "fan_in_avg": {
+      "pylint_total_avg": 0.046,
+      "pylint_error_avg": -0.114,
+      "pylint_warning_avg": 0.377,
+      "pylint_refactor_avg": -0.239,
+      "pylint_convention_avg": -0.052,
+      "vulture_total_avg": -0.259,
+      "vulture_funcs_avg": -0.227,
+      "vulture_imports_avg": -0.023,
+      "mypy_total_avg": -0.152,
+      "mypy_core_avg": -0.151,
+      "ns": 0.017,
+      "nd": -0.047,
+      "entropy": -0.029,
+      "entropy_norm": 0.096,
+      "ndev": 0.068,
+      "rexp": 0.246,
+      "sexp": 0.281,
+      "fan_out_avg": 0.366,
+      "fan_in_avg": 1.0,
+      "fan_in_max": 0.893
+    },
+    "fan_in_max": {
+      "pylint_total_avg": 0.023,
+      "pylint_error_avg": -0.121,
+      "pylint_warning_avg": 0.328,
+      "pylint_refactor_avg": -0.242,
+      "pylint_convention_avg": -0.065,
+      "vulture_total_avg": -0.261,
+      "vulture_funcs_avg": -0.225,
+      "vulture_imports_avg": -0.037,
+      "mypy_total_avg": -0.161,
+      "mypy_core_avg": -0.159,
+      "ns": 0.178,
+      "nd": 0.116,
+      "entropy": 0.188,
+      "entropy_norm": 0.203,
+      "ndev": 0.217,
+      "rexp": 0.258,
+      "sexp": 0.277,
+      "fan_out_avg": 0.32,
+      "fan_in_avg": 0.893,
+      "fan_in_max": 1.0
+    }
+  },
+  "tree_unparsable_coupling_moyen": 0.0382
+}

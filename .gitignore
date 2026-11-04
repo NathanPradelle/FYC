@@ -7,3 +7,6 @@ __pycache__/
 *.png
 *Zone.Identifier
 results/github_cache.json
+results/cache_full_v2.pkl
+results/cache_wave1_v2.pkl
+results/cache_grid_v2.json

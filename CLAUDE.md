@@ -576,6 +576,57 @@ implémentation) :
    Couverture cache 100 % sur les 3198 commits étiquetés. Intégré dans `results/benchmark.py`
    (`fyc/process_features.py`, jeux `BASE+process`/`process_only`). Réserve documentée sur
    `ci_failed` (signal isolé trop faible, non investigué plus avant).
+4bis. **Chantier 4bis — état de l'art : outils supplémentaires et recherche de la meilleure
+   combinaison (AJOUTÉ le 2026-11-04, à traiter avant le Chantier 5, NON COMMENCÉ).**
+   *Origine :* l'encadrant a conseillé d'utiliser les outils existants d'analyse de code et de les
+   additionner. *Tension à garder en tête et à présenter honnêtement :* nos mesures (Chantier 2)
+   montrent que additionner ne suffit pas (radon+Ruff+Bandit 0,796 < Ruff seul 0,798) — l'objectif
+   de ce chantier est donc de **combiner** (sélectionner, éventuellement stacker), pas d'empiler.
+
+   **Candidats à tester** (liste rédigée le 2026-11-04 ; estimations de coût/valeur à mesurer, pas
+   des faits) :
+   - *Analyse statique Python* : **Pylint** (duplication, conception — seul vrai complément
+     probable à Ruff/radon, lent : chronométrer sur échantillon d'abord), **mypy/pyright** (types ;
+     bruit attendu sur fichiers isolés de l'historique), **Vulture** (code mort, signal
+     probablement faible), **CodeQL** (sécurité profonde, base de données à construire par version
+     → échantillon seulement).
+   - *Duplication / couplage* : **jscpd**, couplage fan-in/fan-out via AST ou **import-linter**.
+   - *Littérature défaut JIT* : **les 14 indicateurs de Kamei et al. (2013)** — il manque surtout
+     l'**entropie du changement** (dispersion des modifications entre fichiers ; sans outil externe,
+     calcul sur le diff, cousin de `n_hunks`). **PySZZ** (variantes B-/AG-/MA-/R-SZZ) pour comparer
+     `label_v2` à d'autres SZZ — validation de l'étiquetage. PyDriller écarté (n'apporte rien par
+     rapport à `git_extract.py`). Modèles neuronaux (CodeBERT, DeepJIT, CC2Vec, JITLine) : à citer
+     comme état de l'art, implémentation non prioritaire (311 positifs environ → risque de
+     surapprentissage).
+   - *Réévaluation de pistes différées* : **Semgrep avec jeux de règles prêts à l'emploi**
+     (`p/python`, `p/security-audit` — l'objection « règles à écrire » du §4 est à revérifier),
+     **Lizard** (utile surtout au Chantier 6), **SonarQube/SonarCloud** sur échantillon de 200–300
+     commits (comparaison avec un outil industriel).
+   - *Coûteux, a priori hors périmètre* : coverage.py + mutmut (exécution des tests de chaque
+     version), DeepSource/Codacy (services en ligne, redondants avec Sonar).
+
+   **Consigne pour l'instance de Claude qui traitera ce chantier** (décision de l'utilisateur, le
+   2026-11-04 : il ne choisit pas les outils à sa place) : tester les outils **ensemble** et
+   documenter **la meilleure combinaison trouvée**. Méthode obligatoire, à écrire AVANT
+   d'implémenter, comme au Chantier 1 :
+   1. Mesurer chaque outil **seul**, puis BASE+outil, avec le patron établi : module
+      `fyc/<outil>.py`, traitement par lots (`git cat-file --batch`, dossier temporaire, un seul
+      appel), **NaN et jamais 0 en cas d'échec d'analyse** (piège §7 points 8 et 12), jeu curaté
+      (features rejetées gardées dans le code), script `results/chantier4bis_*.py` daté, intégration
+      dans `results/benchmark.py`.
+   2. Pour chaque outil : redondance (corrélation avec `loc_avg` et entre outils) et circularité
+      (corrélation avec `file_commits_max`) avant toute conclusion.
+   3. **Piège de la recherche de combinaison :** choisir la meilleure combinaison parmi de nombreuses
+      sur la même validation croisée donne un chiffre optimiste (surapprentissage de la sélection,
+      avec ~311 positifs). Fixer le protocole de sélection à l'avance et valider la combinaison
+      retenue sur des données **non utilisées pour la sélection** (CV imbriquée, ou split temporel
+      réservé) ; annoncer l'AUC de ce second chiffre, pas celui de la sélection. Gain à comparer à
+      l'écart-type (~0,03) : en dessous, ne pas conclure à une amélioration.
+   4. Les résultats négatifs (outil inutile, bruit, redondant) sont documentés en §6 au même titre
+      que les positifs — l'évaluation porte sur la démarche, pas sur le score.
+   5. Seuil d'abandon d'un outil (à fixer avant la mesure) : coût de calcul prohibitif ou
+      couverture NaN trop élevée pour être interprétable.
+   Ce chantier prépare le Chantier 5 (stacking par famille d'outils, matrice de désaccord).
 5. **Chantier 5 — croisement et combinaison** (stacking, matrice de désaccord entre modèles).
 6. **Chantier 6 — validation externe** sur un deuxième dépôt.
 7. **Chantier 7 — restitution** (modules `.py`, `README.md`, synthèse soutenance).

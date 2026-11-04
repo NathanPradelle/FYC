@@ -1,7 +1,9 @@
 flask/
 .venv/
+.env
 __pycache__/
 .ipynb_checkpoints/
 *.csv
 *.png
 *Zone.Identifier
+results/github_cache.json

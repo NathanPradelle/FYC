@@ -27,7 +27,7 @@ import pandas as pd
 import radon
 import sklearn
 
-from fyc import code_lint, diff_features, evaluate, features, git_extract, labeling
+from fyc import code_lint, diff_features, evaluate, features, git_extract, labeling, process_features
 
 REPO_DIR = str(REPO_ROOT / "flask")
 FENETRE_JOURS = 90
@@ -75,19 +75,40 @@ def main():
     ruff_df, bandit_df = code_lint.lint_features(commits, est_risque, REPO_DIR)
     print("Construction des features de diff (Chantier 3, jeu curate)...")
     diff_df = diff_features.build_diff_features(commits, est_risque, REPO_DIR)
+    print("Signaux de process GitHub (Chantier 4, cache disque resumable)...")
+    process_df, (n_mesures, n_total), mask = process_features.build_process_features(
+        commits, est_risque,
+    )
+    couverture = n_mesures / n_total
+    print(f"Couverture cache GitHub : {n_mesures}/{n_total} ({couverture:.1%})")
+    if couverture < 1.0:
+        print(f"ATTENTION : cache incomplet ({n_total - n_mesures} commits non mesures) "
+              f"-- lignes exclues ci-dessous, pas remplies par defaut.")
 
     for name, df in [("churn", churn), ("code", code), ("ruff", ruff_df), ("bandit", bandit_df),
                       ("diff", diff_df)]:
         assert len(df) == len(base), f"desynchronisation {name} ({len(df)} != {len(base)})"
 
+    mask = pd.Series(mask).values
+    base, is_night, churn, code = (
+        base[mask].reset_index(drop=True), is_night[mask].reset_index(drop=True),
+        churn[mask].reset_index(drop=True), code[mask].reset_index(drop=True),
+    )
+    ruff_df, bandit_df, diff_df = (
+        ruff_df[mask].reset_index(drop=True), bandit_df[mask].reset_index(drop=True),
+        diff_df[mask].reset_index(drop=True),
+    )
+    assert len(process_df) == len(base), "desynchronisation process (couverture cache GitHub)"
+
     full = pd.concat(
         [base.drop(columns="risky"), is_night, churn, code, ruff_df, bandit_df, diff_df,
-         base["risky"]],
+         process_df, base["risky"]],
         axis=1,
     )
 
     LINT = code_lint.RUFF_COLS + code_lint.BANDIT_COLS
     DIFF = diff_features.DIFF_COLS  # jeu curate -- avg_hunk_size/test_line_ratio rejetes (§6)
+    PROCESS = process_features.PROCESS_COLS
     feature_sets = {
         "BASE": features.BASE_COLS,
         "BASE+is_night": features.BASE_COLS + ["is_night"],
@@ -95,13 +116,15 @@ def main():
         "BASE+code": features.BASE_COLS + features.CODE_COLS,
         "BASE+lint": features.BASE_COLS + LINT,
         "BASE+diff": features.BASE_COLS + DIFF,
+        "BASE+process": features.BASE_COLS + PROCESS,
         "code_only": features.CODE_COLS,
         "churn_only": features.CHURN_COLS,
         "lint_only": LINT,
         "diff_only": DIFF,
-        "all_sans_lint_diff": features.BASE_COLS + features.CHURN_COLS + features.CODE_COLS,
+        "process_only": PROCESS,
+        "all_sans_lint_diff_process": features.BASE_COLS + features.CHURN_COLS + features.CODE_COLS,
         "all": (
-            features.BASE_COLS + features.CHURN_COLS + features.CODE_COLS + LINT + DIFF
+            features.BASE_COLS + features.CHURN_COLS + features.CODE_COLS + LINT + DIFF + PROCESS
         ),
     }
 
@@ -142,6 +165,15 @@ def main():
         ),
         "touches_signature_circularite_vs_churn": round(
             float(full["touches_signature"].corr(full["file_commits_max"])), 4,
+        ),
+        "couverture_cache_github": {"n_mesures": n_mesures, "n_total": n_total,
+                                     "part": round(couverture, 4)},
+        "part_has_pr": round(float(full["has_pr"].mean()), 4),
+        "n_reviewers_circularite_vs_churn": round(
+            float(full["n_reviewers"].corr(full["file_commits_max"])), 4,
+        ),
+        "merge_delay_circularite_vs_churn": round(
+            float(full["merge_delay_hours"].corr(full["file_commits_max"])), 4,
         ),
     }
 

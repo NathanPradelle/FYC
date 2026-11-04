@@ -32,6 +32,9 @@ Dépôt étudié : [pallets/flask](https://github.com/pallets/flask) (Python, ~5
 - `.gitignore` couvre `flask/`, `.venv/`, `__pycache__/`, `.ipynb_checkpoints/`, `*.csv`, `*.png`,
   `*Zone.Identifier`.
 - Pas encore de `README.md`.
+- `.env` (créé le 2026-11-04, **non versionné**, ajouté à `.gitignore`) : contient un token
+  GitHub personnel (`token=...`) fourni par l'utilisateur, nécessaire au Chantier 4 (API GitHub
+  authentifiée, 5000 req/h contre 60 non authentifié). Lu par `fyc/github_signals.py`.
 
 ## 3. Architecture du code
 
@@ -54,6 +57,18 @@ Dépôt étudié : [pallets/flask](https://github.com/pallets/flask) (Python, ~5
     `sig_removed`, `sig_modified`, `touches_signature`). `DIFF_COLS` = jeu **curaté** adopté ;
     `ALL_COLS` = tout ce qui a été mesuré, y compris `avg_hunk_size` et `test_line_ratio`,
     **rejetés** (§6) mais gardés dans le code pour la reproductibilité de la mesure négative.
+  - `github_signals.py` (Chantier 4, 2026-11-04) : `fetch_commit_pr_signals` — API **GraphQL**
+    GitHub (pas REST), commits batchés par alias dans une même requête (même principe que
+    `git cat-file --batch` et le batching Ruff/Bandit, §4) : PR associée, reviewers distincts,
+    dates de création/merge, `statusCheckRollup` (état CI agrégé, couvre Travis historique et
+    GitHub Actions actuel en un seul champ). Cache disque resumable (`results/github_cache.json`,
+    gitignore) — un sha absent du cache veut dire "pas encore mesuré" (budget épuisé avant d'y
+    arriver), **différent** de `None` en cache (mesuré, confirmé sans PR) : même piège que
+    `has_py`/Bandit (§7) anticipé cette fois plutôt que découvert après coup.
+  - `process_features.py` (Chantier 4, 2026-09-09→2026-11-04) : `build_process_features` —
+    `has_pr`, `n_reviewers`, `n_review_comments`, `merge_delay_hours`, `ci_failed`. Retourne aussi
+    un masque de couverture pour sous-échantillonner les autres familles aux mêmes lignes si le
+    cache GitHub est incomplet (voir `results/chantier4_github.py` et `results/benchmark.py`).
   - `evaluate.py` : `cv_auc`, `temporal_split_auc`, `baseline_majority_accuracy`.
 - **`results/benchmark.py`** — recalcule tous les jeux de features (BASE, churn, code radon,
   lint Ruff/Bandit, diff) et écrit **`results/results.json`** (label v1, legacy) ou
@@ -62,9 +77,11 @@ Dépôt étudié : [pallets/flask](https://github.com/pallets/flask) (Python, ~5
   des libs, diagnostics de circularité/redondance. Source unique de vérité pour le tableau
   comparatif — plus aucun chiffre à recopier à la main dans le notebook pour cette table précise.
   `python results/benchmark.py` depuis la racine (venv actif) pour régénérer.
-- **`results/chantier1_protocol.py`, `chantier1_fix_detection.py`, `chantier2_lint.py`** — scripts
-  de mesure dédiés à un chantier précis (protocole M1/M2/M2bis/M3, comparaison des détections de
-  fix, redondance/circularité de Ruff+Bandit). Chacun écrit son propre `results/*.json` daté.
+- **`results/chantier1_protocol.py`, `chantier1_fix_detection.py`, `chantier2_lint.py`,
+  `chantier3_diff.py`, `chantier4_github.py`** — scripts de mesure dédiés à un chantier précis
+  (protocole M1/M2/M2bis/M3, comparaison des détections de fix, redondance/circularité de
+  Ruff+Bandit, dispersion du diff, signaux de process GitHub). Chacun écrit son propre
+  `results/*.json` daté.
 - **`cas_pratique_FYC_complete_v2.ipynb`** (58 cellules) — orchestre et raconte. Structure :
 
 - **Partie 1** (cellules 0–13) : clone Flask, extraction `git log --numstat`, DataFrame, exploration.
@@ -125,6 +142,22 @@ notebook au fur et à mesure des chantiers, cf. §8).
   contient alors une entrée sans les clés `SEVERITY.*`. Un `.get(cle, 0)` naïf aurait compté ça
   comme « zéro violation », pas comme un échec — bug réellement rencontré et corrigé en cours de
   Chantier 2 (voir §7).
+- **API GitHub en GraphQL batché (alias de commits dans une même requête), pas un GET REST par
+  commit.** *Pourquoi :* même principe que `git cat-file --batch` et le batching Ruff/Bandit —
+  mesuré à 128 requêtes (coût ~1 point chacune, budget 5000/h) pour 4825 commits, contre un
+  minimum de 4825 appels REST en série pour la seule étape « trouver la PR d'un commit » (plus
+  1-2 appels REST supplémentaires par PR pour ses métadonnées). `statusCheckRollup` (champ
+  GraphQL) donne en un seul champ l'état CI agrégé, couvrant aussi bien l'ancien système de
+  statuts (Travis, utilisé sur l'historique ancien de Flask) que les GitHub Actions actuels —
+  évite d'avoir à requêter deux API REST différentes (`status` legacy et `check-runs`) selon
+  l'ancienneté du commit.
+- **Cache GitHub distinguant explicitement "pas encore mesuré" de "mesuré, confirmé sans PR".**
+  *Pourquoi :* anticipation du piège déjà rencontré deux fois (`has_py`, Bandit, §7) — un sha
+  absent du cache (mesure pas encore faite, ex. arrêt sur budget épuisé) n'a pas la même
+  signification qu'un sha en cache avec la valeur `None` (API interrogée avec succès, aucune PR
+  associée trouvée). Conflater les deux aurait traité un "pas encore su" comme un "zéro" — même
+  famille d'erreur que les deux précédentes, corrigée ici avant qu'elle ne se produise plutôt
+  qu'après.
 
 ## 5. Résultats mesurés
 
@@ -310,6 +343,43 @@ commit qui touche du code déjà complexe/volumineux*.
   marginale au niveau « tout » était nulle. **La couverture de `touches_signature` est de ~47 %**
   (NaN pour les commits sans `.py` touché ou dont l'AST avant/après a échoué à parser des deux
   côtés — même discipline NaN que radon/Bandit, pas de valeur par défaut déguisée).
+- **✅ Validée — les signaux de processus GitHub (reviewers, délai de merge, état CI) apportent
+  un signal réel, non circulaire, meilleur gain individuel que radon.** Mesuré le 2026-11-04
+  (`results/chantier4_github.py`, label_v2 + détection B, couverture cache **100 %** — 3198/3198
+  commits étiquetés) :
+
+  | Jeu de features | AUC seule/ajoutée | Verdict |
+  |---|---|---|
+  | BASE | 0,787 | référence |
+  | BASE + process | **0,799** | **+0,012** — meilleur ajout individuel des familles de code/process (radon +0,004, Ruff +0,011, diff +0,005) |
+  | `process_only` (4 features) | 0,601 | signal réel, bien au-dessus du hasard |
+  | `has_pr` seul | 0,585 | — |
+  | `n_reviewers` seul | 0,593 | — |
+  | `merge_delay_hours` seul | 0,605 | meilleur signal individuel de la famille |
+  | `ci_failed` seul | 0,503 | quasi hasard — signal CI isolé trop faible (réserve ci-dessous) |
+  | `tout` (toutes familles, sans process) | 0,805 | — |
+  | `tout` (toutes familles, avec process, résultat final intégré) | **0,811** | petit gain net positif |
+
+  **Circularité avec le churn fichier** (même diagnostic que pour Ruff/Bandit/diff) :
+  `n_reviewers` ↔ `file_commits_max` = 0,0995, `merge_delay_hours` ↔ `file_commits_max` = −0,0043
+  — **pas circulaire**, du même ordre que Ruff/diff (≤0,12), très loin du churn historique (0,91).
+  **`part_has_pr` = 55,7 %** — l'autre moitié des commits n'a pas de PR associée retrouvée via
+  l'API (rebase direct sur `main`, ou PR trop ancienne pour que GitHub l'associe) ; ces commits
+  reçoivent `has_pr=0` et NaN sur les 4 autres colonnes (pas un zéro déguisé — discipline NaN
+  identique à radon/Bandit/diff).
+  **Réserve sur `ci_failed`** : signal quasi nul en isolation (0,503) alors que `merge_delay`/
+  `n_reviewers` sont nettement au-dessus du hasard — possible dilution (`statusCheckRollup` agrège
+  tous les checks d'une PR, un seul check instable peut suffire à faire basculer l'état sans
+  relation avec le risque du commit lui-même) ou véritable absence de lien. **Non investigué plus
+  avant** — gardé dans `PROCESS_COLS` pour la reproductibilité, mais ne pas vendre `ci_failed`
+  comme un signal individuellement validé, seulement la famille dans son ensemble.
+  **Décision : famille intégrée** à `results/benchmark.py` (jeux `BASE+process`/`process_only`,
+  diagnostics de circularité et de couverture du cache dans `results/results_v2.json`). Sous
+  `label_v1` (legacy, pour comparaison) : `BASE+process` = 0,791 (+0,023 sur BASE=0,768, gain
+  individuel plus fort qu'en v2) mais `tout` = 0,877 **légèrement inférieur** à
+  `all_sans_lint_diff_process` = 0,882 — sous le label circulaire, ajouter le process au reste
+  n'apporte rien net (même lecture que Ruff/Bandit au Chantier 2 : le plafond est déjà saturé par
+  le churn). Cohérent avec la préférence déjà actée pour `label_v2`.
 
 ## 7. Pièges connus et limites assumées
 
@@ -496,16 +566,16 @@ implémentation) :
    petit gain net positif même combiné à tout le reste (0,807 vs 0,805). Ratio code/test en lignes
    testé et **rejeté** (pire que le binaire existant, résultat négatif documenté en §6) ;
    `avg_hunk_size` rejeté (signal trop faible). Intégré dans `results/benchmark.py`.
-4. **Chantier 4 — BLOQUÉ au démarrage (2026-09-09), signaux de processus via l'API GitHub**
-   (reviewers, délai merge, échecs CI). **Constat avant toute mesure, pas après** : pas de `gh`
-   CLI installé, pas de token d'authentification disponible dans cet environnement — l'API
-   GitHub non authentifiée est limitée à **60 requêtes/heure**. Avec ~3200-4700 commits étiquetés
-   et au moins 1-2 appels par commit (trouver la PR associée, puis ses métadonnées), une mesure
-   sur l'ensemble du jeu de données prendrait des dizaines d'heures. **Ce n'est pas une limite
-   contournable par du code** — à arbitrer avec l'utilisateur : (a) fournir un token GitHub
-   personnel (5000 req/h authentifié, rend le chantier faisable à l'échelle) ; (b) se limiter à un
-   échantillon très restreint (~20-30 commits) pour démontrer la méthode sans viser une AUC
-   statistiquement fiable ; (c) reporter le chantier. Pas encore tranché.
+4. **Chantier 4 — CLOS (2026-11-04).** Signaux de processus via l'API GitHub (reviewers, délai de
+   merge, état CI). Bloqué au démarrage le 2026-09-09 (pas de token, API non authentifiée limitée
+   à 60 req/h) ; débloqué le 2026-11-04 par un token GitHub personnel fourni par l'utilisateur
+   (option (a) des trois arbitrées). **Approche GraphQL batchée** (pas REST par commit, §4) :
+   `fyc/github_signals.py`, cache disque resumable `results/github_cache.json`. Mesuré
+   (`results/chantier4_github.py`, détail en §6) : signal réel et non circulaire, meilleur gain
+   individuel que radon (+0,012 sur BASE), petit gain net positif combiné à tout (0,807→0,811).
+   Couverture cache 100 % sur les 3198 commits étiquetés. Intégré dans `results/benchmark.py`
+   (`fyc/process_features.py`, jeux `BASE+process`/`process_only`). Réserve documentée sur
+   `ci_failed` (signal isolé trop faible, non investigué plus avant).
 5. **Chantier 5 — croisement et combinaison** (stacking, matrice de désaccord entre modèles).
 6. **Chantier 6 — validation externe** sur un deuxième dépôt.
 7. **Chantier 7 — restitution** (modules `.py`, `README.md`, synthèse soutenance).
@@ -717,3 +787,51 @@ implémentation) :
 - Notebook ré-exécuté, 0 erreur.
 - **Chantier 3 CLOS.** **Chantier 4 bloqué**, en attente d'arbitrage utilisateur (token GitHub,
   échantillon restreint, ou report).
+- **Projet mis en pause par l'utilisateur** : arbitrage tranché côté utilisateur en faveur de
+  l'option (a) — fournira un token GitHub personnel la prochaine session pour débloquer le
+  Chantier 4 à l'échelle complète (5000 req/h authentifié). Rien d'autre en attente côté code —
+  état propre, tout committé (`71dca24`). **Reste à faire au retour** : récupérer le token,
+  l'utiliser pour l'intégration API GitHub (reviewers, délai merge, échecs CI), puis suivre la
+  même discipline que les chantiers précédents (mesurer, comparer à BASE, vérifier redondance/
+  circularité avant de conclure).
+
+### 2026-11-04 — Session 4 — Chantier 4 débloqué et clos
+- Token GitHub personnel reçu de l'utilisateur, placé dans `.env` (variable `token`). **Ajouté
+  immédiatement à `.gitignore`** avant toute autre action — le fichier n'était pas ignoré au
+  moment où il a été créé, risque de fuite évité en vérifiant `git status`/`git check-ignore`
+  avant de continuer. Token testé (`GET /rate_limit`) : 5000 req/h confirmés.
+  Premier essai avec un nom de variable supposé (`GITHUB_TOKEN`) → 401 ; la vraie variable
+  s'appelle `token` — vérifié en lisant le fichier plutôt qu'en re-essayant à l'aveugle.
+- **Choix d'architecture fait avant de coder a grande echelle** (mesuré sur 5557 commits) : seuls
+  326/5557 messages de commit contiennent déjà un numéro de PR (`(#NNNN)`) — pas assez pour s'en
+  passer. Plutôt qu'un GET REST par commit pour trouver sa PR (minimum 3198+ appels en série),
+  utilisé l'API **GraphQL** avec des commits aliasés par lots de 25 dans une même requête — même
+  principe que `git cat-file --batch` déjà retenu au Chantier 1 et le batching Ruff/Bandit au
+  Chantier 2. Coût mesuré : ~1 point GraphQL par lot de 25, soit ~190 points pour 4825 commits
+  (bien sous le budget de 5000/h) — testé d'abord sur 50 commits avant l'échelle complète.
+- `fyc/github_signals.py` (nouveau) : `fetch_commit_pr_signals`, cache disque resumable
+  (`results/github_cache.json`, gitignore). Distinction explicite anticipée (pas découverte après
+  coup cette fois) entre "sha absent du cache" (pas encore mesuré) et "sha en cache avec `None`"
+  (mesuré, confirmé sans PR associée) — même classe de piège que `has_py`/Bandit (§7), traitée en
+  amont dès la conception du module.
+- `fyc/process_features.py` (nouveau) : `build_process_features` — `has_pr`, `n_reviewers`,
+  `n_review_comments`, `merge_delay_hours`, `ci_failed`. Retourne un masque de couverture pour
+  sous-échantillonner les autres familles de features aux mêmes lignes si le cache GitHub est
+  incomplet (n'a pas été nécessaire : couverture 100 % obtenue en un seul run, 3198/3198).
+- `results/chantier4_github.py` (nouveau) : mesure dédiée, même méthode que les chantiers
+  précédents (AUC par feature isolée avant le jeu combiné, circularité vs churn, couverture du
+  cache vérifiée et affichée avant toute conclusion). Résultat détaillé en §6 : signal réel, non
+  circulaire, meilleur gain individuel (+0,012 sur BASE) que les trois autres familles de
+  code/process mesurées jusqu'ici. Réserve notée sur `ci_failed` (signal isolé proche du hasard).
+- Intégré dans `results/benchmark.py` (`PROCESS_COLS`, jeux `BASE+process`/`process_only`,
+  diagnostics de circularité/couverture). `results_v2.json` régénéré : `all` passe de 0,807 à
+  **0,811**. `results.json` (v1, legacy) aussi régénéré pour verifier la couverture du cache sous
+  l'autre label (100 % également, même ensemble de commits éligibles) — sous v1, `tout` (0,877)
+  est légèrement **inférieur** à `tout sans process` (0,882), cohérent avec la préférence déjà
+  actée pour `label_v2` (le plafond est déjà saturé par la circularité du churn sous v1).
+- **Chantier 4 CLOS.** Pas de notebook à ré-exécuter pour ce chantier (le tableau de la cellule 52
+  ne référence pas les nouvelles clés `BASE+process`/`process_only`/`all_sans_lint_diff_process`,
+  seulement `all` dont le nom est resté inchangé — vérifié avant de conclure qu'aucune mise à jour
+  n'était nécessaire).
+- **Reste à faire** : commit de cet état ; arbitrage de l'utilisateur sur la suite (Chantier 5 —
+  croisement/combinaison — ou autre).

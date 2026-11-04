@@ -1,0 +1,64 @@
+{
+  "generated_at": "2026-11-04T09:09:33.506244+00:00",
+  "flask_head": "d73fa1cdcbd8b1465c151db8924ba58b1dd14e35",
+  "label_version": "v2_ligne_szz_blame",
+  "fix_detection": "candidat_B_exclude_typo_docs_changelog",
+  "n_commits_etiquetes": 3198,
+  "couverture_cache_github": {
+    "n_mesures": 3198,
+    "n_total": 3198,
+    "part": 1.0
+  },
+  "part_has_pr": 0.5566,
+  "auc": {
+    "BASE": {
+      "mean": 0.7867,
+      "std": 0.028
+    },
+    "BASE+process": {
+      "mean": 0.7992,
+      "std": 0.0207
+    },
+    "BASE+code(radon)": {
+      "mean": 0.7913,
+      "std": 0.0324
+    },
+    "BASE+code+process": {
+      "mean": 0.8019,
+      "std": 0.0275
+    },
+    "process_only": {
+      "mean": 0.6008,
+      "std": 0.0332
+    },
+    "has_pr_seul": {
+      "mean": 0.5849,
+      "std": 0.0337
+    },
+    "n_reviewers_seul": {
+      "mean": 0.5925,
+      "std": 0.0424
+    },
+    "merge_delay_seul": {
+      "mean": 0.6049,
+      "std": 0.0429
+    },
+    "ci_failed_seul": {
+      "mean": 0.5027,
+      "std": 0.002
+    },
+    "tout_sans_process": {
+      "mean": 0.8046,
+      "std": 0.0303
+    },
+    "tout_avec_process": {
+      "mean": 0.8069,
+      "std": 0.0287
+    }
+  },
+  "circularite_avec_churn": {
+    "n_reviewers_vs_file_commits_max": 0.0995,
+    "merge_delay_vs_file_commits_max": -0.0043,
+    "n_reviewers_vs_total_churn": 0.0983
+  }
+}

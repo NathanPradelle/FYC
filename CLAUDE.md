@@ -573,6 +573,60 @@ commit qui touche du code déjà complexe/volumineux*.
     flask n = 100 : 2 positifs). Synthèses descriptives (Brier absolu, erreur de π̂, oracle)
     ajoutées **après** la première exécution, signalées comme non pré-enregistrées dans le JSON.
 
+- **❌ Chantier 5 — le stacking par famille ne bat ni BASE ni « tout empiler » ; la
+  complémentarité n'est pas démontrée (échec de justesse sur le second critère) ; seul résultat
+  net : l'empilement en une forêt bat BASE en comparaison appariée, en partie grâce au churn.**
+  Mesuré le 2026-11-05 (`results/chantier5_stacking.py` → `results/chantier5_stacking.json`,
+  330 s), protocole §8 Chantier 5 v1 figé au commit 9e8e892 avant implémentation. CV imbriquée
+  externe 5 plis × 3 graines (15 plis), 12 apprenants (une forêt de 300 arbres par famille), même
+  données que le 4bis (2558 dev / 277 positifs ; réserve 640 / 33 positifs).
+
+  | Modèle | AUC externe (15 plis) | Δ apparié vs BASE | plis > 0 | Δ apparié vs empilement |
+  |---|---|---|---|---|
+  | BASE (une forêt) | 0,7943 ± 0,024 | — | — | — |
+  | Tout empiler (une forêt, 12 familles) | **0,8202 ± 0,022** | **+0,026** | 15/15 | — |
+  | S1 (méta-régression logistique) | 0,8040 ± 0,022 | +0,010 | 13/15 | −0,016 (1/15) |
+  | S2 (moyenne des rangs) | 0,7672 ± 0,020 | −0,027 | 3/15 | −0,053 (0/15) |
+  | Sans churn : empiler / S1 / S2 | 0,8114 / 0,7943 / 0,7525 | +0,017 / 0,000 / −0,042 | 14 / 8 / 1 sur 15 | — |
+
+  - **Verdicts pré-enregistrés (seuil Δ ≥ +0,02 ET ≥ 12 plis sur 15) : S1 et S2 échouent contre
+    BASE et contre l'empilement.** S1 dépasse BASE de +0,010 (13 plis sur 15, mais sous le seuil
+    de magnitude) ; S2 est franchement **pire** que BASE (la moyenne de rangs inclut 11 familles
+    quasi bruitées qui diluent BASE). Règle de résultat négatif appliquée : aucun autre
+    méta-modèle essayé.
+  - **Complémentarité : critère non rempli, de justesse, et à lire avec prudence.** Spearman
+    médian entre familles hors BASE = **0,128** (< 0,5 : remplit la 1re moitié du critère), mais
+    la part des paires hors BASE dont la moyenne bat la meilleure des deux de plus de +0,01 vaut
+    **32,7 %** (18 paires sur 55), sous le seuil de 1/3 (il en fallait 19) : échec à une paire
+    près, rapporté tel que fixé. Recouvrement médian des 10 % de commits les
+    mieux classés (Jaccard) = 0,138. **Ne pas lire « 0,128 » comme de la complémentarité :** des
+    familles dont l'AUC seule est 0,55–0,66 produisent des classements presque indépendants
+    surtout parce que ce sont des classements faibles et bruités, pas parce qu'elles voient des
+    choses différentes et utiles. 22,8 % des commits à risque placés dans le top 10 % par au moins
+    une famille ne le sont que par une seule.
+  - **AUC seules par famille (moyenne sur les plis) :** BASE 0,794, churn 0,728, Kamei 0,692,
+    couplage 0,664, radon 0,623, process 0,618, Pylint 0,612, diff 0,603, Bandit 0,595, mypy
+    0,582, Ruff 0,576, Vulture 0,550. Le churn reste la seule famille à approcher BASE ; Kamei
+    (0,692) est tiré par `ndev`, déjà identifié comme circulaire avec le churn (corr. 0,80, §6 4bis).
+  - **Lecture honnête :** (1) en comparaison **appariée** (ce que le 4bis ne faisait pas), « tout
+    empiler » bat BASE de +0,026 sur 15 plis sur 15 : le gain existe et est régulier, un peu
+    au-dessus de ce que laissait croire la grille (+0,02 plausible). (2) **Il dépend du churn :**
+    sans churn le gain tombe à +0,017 (14 plis sur 15), sous le seuil de +0,02. Même réserve
+    qu'au Chantier 1 et au 4bis : la famille la plus utile est la plus suspecte de circularité
+    (r = 0,81 sous v2). (3) Un modèle par famille puis méta-modèle fait **moins bien** qu'une forêt
+    qui voit toutes les colonnes ensemble : l'interaction entre familles (ex. taille du commit ×
+    complexité du fichier) compte, ce que le stacking de sorties finales ne peut pas capter.
+    (4) Pour le produit : si l'on devait choisir, une seule forêt sur BASE + churn (+ éventuellement
+    le reste) suffit ; le stacking n'apporte rien et complique l'explication.
+  - **Réserve temporelle (20 %, évaluée une seule fois) :** BASE 0,736 [0,659–0,812] ; empiler
+    0,742 [0,659–0,816] ; S1 **0,680** [0,588–0,762] ; S2 **0,635** [0,518–0,744]. BASE et
+    l'empilement sont indiscernables (IC identiques à ±0,08, 33 positifs) ; les deux méta-modèles
+    sont **nettement en dessous** — cohérent avec la CV imbriquée (S1/S2 ne font pas mieux),
+    même si l'écart S1 vs BASE dans la réserve reste dans l'IC.
+  - **Écarts / limites :** une seule graine de méta-modèle ; forêts non réglées ; 12 apprenants
+    sur ≈ 270 positifs (S1 a 12 coefficients, S2 sert de contrôle) ; mêmes familles déjà vues
+    en CV complète lors des chantiers 1–4bis .
+
 ## 7. Pièges connus et limites assumées
 
 1. **Circularité churn/label (r = 0.91).** Toute feature au niveau fichier doit être testée contre
@@ -964,7 +1018,8 @@ implémentation) :
    - **Livrables :** `fyc/<outil>.py` par outil, `results/chantier4bis_*.py` datés (un par vague +
      un pour la sélection imbriquée), intégration au `benchmark.py`, §6 mis à jour (positifs ET
      négatifs), `requirements.txt` mis à jour.
-5. **Chantier 5 — croisement et combinaison** (stacking, matrice de désaccord entre modèles).
+5. **Chantier 5 — croisement et combinaison — CLOS (2026-11-05)** (stacking par famille, matrice de
+   désaccord). Résultat négatif net, détail en §6 : le stacking ne bat ni BASE ni l'empilement.
 
    **PROTOCOLE PRÉ-ENREGISTRÉ — Chantier 5, v1 (rédigé le 2026-11-05, AVANT toute implémentation ;
    lancé sur feu vert de l'utilisateur « oui on peut passer au chantier 5 »).**
@@ -1496,3 +1551,14 @@ implémentation) :
   du label), vague 2 du 4bis (Semgrep/jscpd faisables ; Sonar/CodeQL demandent un compte/serveur),
   Chantier 7. Aucun push GitHub tant que l'utilisateur ne le demande pas (commits non poussés :
   7107f1c, 7ca5564, baea7ff, 640c001 et celui-ci).
+
+### 2026-11-05 — Session 6 (suite) — Chantier 5 : stacking par famille
+- Protocole écrit et commité seul avant toute implémentation (`9e8e892`), seuils fixés d'avance,
+  comparaison appariée sur les mêmes plis (corrige l'écart n°3 du 4bis).
+- `results/chantier5_stacking.py` → `chantier5_stacking.json` (330 s, pic 223 Mo, garde-fou RAM
+  actif). **Résultat (détail §6) :** S1/S2 échouent contre BASE et l'empilement ; complémentarité
+  non démontrée (échec à une paire près sur le critère de gain, Spearman bas dû surtout au bruit
+  des familles faibles) ; l'empilement en une forêt bat BASE de +0,026 (15 plis sur 15) mais le
+  gain tombe à +0,017 sans churn. Réserve : BASE 0,736 ≈ empiler 0,742 > S1 0,680 > S2 0,635.
+- Aucun résultat retouché après coup ; aucun autre méta-modèle essayé (règle négative).
+- **Reste à faire :** PySZZ (validation du label), vague 2 du 4bis, Chantier 7 ; commits non poussés.

@@ -1,0 +1,5964 @@
+{
+ "protocole": "CLAUDE.md \u00a78 Chantier 5 v1 (commit 9e8e892)",
+ "generated_at": "2026-11-05T10:28:08.436832+00:00",
+ "n_dev": 2558,
+ "n_reserve": 640,
+ "n_pos_dev": 277,
+ "n_pos_reserve": 33,
+ "familles": [
+  "BASE",
+  "churn",
+  "radon",
+  "ruff",
+  "bandit",
+  "diff",
+  "process",
+  "pylint",
+  "vulture",
+  "mypy",
+  "kamei",
+  "coupling"
+ ],
+ "n_plis_externes": 15,
+ "cv_imbriquee": {
+  "BASE": {
+   "mean": 0.7943054255661864,
+   "std": 0.023567681122453544
+  },
+  "concat": {
+   "mean": 0.8201712985675182,
+   "std": 0.021516031046617843
+  },
+  "S1": {
+   "mean": 0.803967334227253,
+   "std": 0.021820978197983346
+  },
+  "S2": {
+   "mean": 0.7671975763313363,
+   "std": 0.020355234138842892
+  },
+  "concat_sans_churn": {
+   "mean": 0.8113511132927305,
+   "std": 0.0267635755397244
+  },
+  "S1_sans_churn": {
+   "mean": 0.7942714121313827,
+   "std": 0.025538577711713934
+  },
+  "S2_sans_churn": {
+   "mean": 0.7525248660366852,
+   "std": 0.022602499430420416
+  },
+  "familles_seules": {
+   "BASE": 0.7943054255661864,
+   "churn": 0.7282130705240158,
+   "radon": 0.622860941527697,
+   "ruff": 0.5762362327080381,
+   "bandit": 0.5954932664468179,
+   "diff": 0.6029754240946008,
+   "process": 0.6184914730089929,
+   "pylint": 0.6116411215484837,
+   "vulture": 0.5504085724265242,
+   "mypy": 0.5818110906202579,
+   "kamei": 0.6918149698914916,
+   "coupling": 0.66416127457469
+  },
+  "desaccord": {
+   "paires": {
+    "BASE|churn": {
+     "spearman": 0.380311399999849,
+     "jaccard_top": 0.1677526440403404,
+     "gain_complementarite": 0.00791389648571063,
+     "spearman_mediane_plis": 0.370724896221557
+    },
+    "BASE|radon": {
+     "spearman": 0.18521688096863398,
+     "jaccard_top": 0.1470108181891759,
+     "gain_complementarite": -0.03181661280547035,
+     "spearman_mediane_plis": 0.18173737840557544
+    },
+    "BASE|ruff": {
+     "spearman": 0.11577400461708404,
+     "jaccard_top": 0.13697513955076673,
+     "gain_complementarite": -0.0532441683123331,
+     "spearman_mediane_plis": 0.09241039837002386
+    },
+    "BASE|bandit": {
+     "spearman": 0.12432474349109138,
+     "jaccard_top": 0.16387294612680348,
+     "gain_complementarite": -0.05344109836332426,
+     "spearman_mediane_plis": 0.1288254219308379
+    },
+    "BASE|diff": {
+     "spearman": 0.37600063987939464,
+     "jaccard_top": 0.15954589101922173,
+     "gain_complementarite": -0.060426721030163076,
+     "spearman_mediane_plis": 0.36683461429575226
+    },
+    "BASE|process": {
+     "spearman": 0.1953756109520407,
+     "jaccard_top": 0.0720518636598709,
+     "gain_complementarite": -0.018947734188182474,
+     "spearman_mediane_plis": 0.19971237549395662
+    },
+    "BASE|pylint": {
+     "spearman": 0.109141098809919,
+     "jaccard_top": 0.17991627845163313,
+     "gain_complementarite": -0.035958242574475406,
+     "spearman_mediane_plis": 0.10615531901858086
+    },
+    "BASE|vulture": {
+     "spearman": 0.049699574154195174,
+     "jaccard_top": 0.12886126510989848,
+     "gain_complementarite": -0.06466602287912608,
+     "spearman_mediane_plis": 0.05608410637271726
+    },
+    "BASE|mypy": {
+     "spearman": 0.1451234871813951,
+     "jaccard_top": 0.13102458786033308,
+     "gain_complementarite": -0.053983082935273985,
+     "spearman_mediane_plis": 0.14523595140394333
+    },
+    "BASE|kamei": {
+     "spearman": 0.44695558442273836,
+     "jaccard_top": 0.22488232800626576,
+     "gain_complementarite": -0.018435652987651145,
+     "spearman_mediane_plis": 0.4398652192781404
+    },
+    "BASE|coupling": {
+     "spearman": 0.2246917290409191,
+     "jaccard_top": 0.1460359293600969,
+     "gain_complementarite": -0.010878233676409714,
+     "spearman_mediane_plis": 0.23048118045586113
+    },
+    "churn|radon": {
+     "spearman": 0.17140552479994617,
+     "jaccard_top": 0.126526678243108,
+     "gain_complementarite": -0.004368903586879825,
+     "spearman_mediane_plis": 0.16552555517759404
+    },
+    "churn|ruff": {
+     "spearman": 0.10554480887543291,
+     "jaccard_top": 0.10685058314470988,
+     "gain_complementarite": -0.03001474073212672,
+     "spearman_mediane_plis": 0.09784021517227043
+    },
+    "churn|bandit": {
+     "spearman": 0.1597798361741724,
+     "jaccard_top": 0.1217321046518945,
+     "gain_complementarite": -0.030484370666155523,
+     "spearman_mediane_plis": 0.14527131236016527
+    },
+    "churn|diff": {
+     "spearman": 0.211705666786054,
+     "jaccard_top": 0.08615038087525906,
+     "gain_complementarite": -0.019163881840484166,
+     "spearman_mediane_plis": 0.22231829972441863
+    },
+    "churn|process": {
+     "spearman": 0.20688469837135595,
+     "jaccard_top": 0.07478265562145298,
+     "gain_complementarite": 0.002540686360902574,
+     "spearman_mediane_plis": 0.20218638204870096
+    },
+    "churn|pylint": {
+     "spearman": 0.14436375390041106,
+     "jaccard_top": 0.13689831039611206,
+     "gain_complementarite": -0.013215453437402965,
+     "spearman_mediane_plis": 0.13963067706963941
+    },
+    "churn|vulture": {
+     "spearman": 0.12879460161802933,
+     "jaccard_top": 0.14296874596984027,
+     "gain_complementarite": -0.05193234494257327,
+     "spearman_mediane_plis": 0.13491560147598383
+    },
+    "churn|mypy": {
+     "spearman": 0.11997881532452759,
+     "jaccard_top": 0.11036367723978438,
+     "gain_complementarite": -0.032159196697482746,
+     "spearman_mediane_plis": 0.10667129338948818
+    },
+    "churn|kamei": {
+     "spearman": 0.3775109169988838,
+     "jaccard_top": 0.15057887262476866,
+     "gain_complementarite": 0.01637054621003143,
+     "spearman_mediane_plis": 0.4001706975578649
+    },
+    "churn|coupling": {
+     "spearman": 0.17660280917386534,
+     "jaccard_top": 0.1200064732004093,
+     "gain_complementarite": 0.01880979895282265,
+     "spearman_mediane_plis": 0.17948656925773832
+    },
+    "radon|ruff": {
+     "spearman": 0.3833764417938086,
+     "jaccard_top": 0.2441519599448741,
+     "gain_complementarite": -0.018376544853281034,
+     "spearman_mediane_plis": 0.3834030947954599
+    },
+    "radon|bandit": {
+     "spearman": -0.0758424082555546,
+     "jaccard_top": 0.1891437596440969,
+     "gain_complementarite": 0.004451663606333667,
+     "spearman_mediane_plis": -0.10681220568419786
+    },
+    "radon|diff": {
+     "spearman": 0.14956421088127578,
+     "jaccard_top": 0.1125798169944831,
+     "gain_complementarite": 0.007421489173583806,
+     "spearman_mediane_plis": 0.14674445065700176
+    },
+    "radon|process": {
+     "spearman": 0.09370501019501619,
+     "jaccard_top": 0.07644790445346479,
+     "gain_complementarite": 0.0333322042486862,
+     "spearman_mediane_plis": 0.09740417374749522
+    },
+    "radon|pylint": {
+     "spearman": 0.4362463221962461,
+     "jaccard_top": 0.23811138532082377,
+     "gain_complementarite": -0.009239346459777191,
+     "spearman_mediane_plis": 0.45576253991664256
+    },
+    "radon|vulture": {
+     "spearman": 0.2178541035320196,
+     "jaccard_top": 0.17557290991674626,
+     "gain_complementarite": -0.018710963719889208,
+     "spearman_mediane_plis": 0.21938448022682158
+    },
+    "radon|mypy": {
+     "spearman": 0.0571543802164051,
+     "jaccard_top": 0.1522744839235573,
+     "gain_complementarite": -0.007085399400879385,
+     "spearman_mediane_plis": 0.058938446061088126
+    },
+    "radon|kamei": {
+     "spearman": 0.1496136363949834,
+     "jaccard_top": 0.12681741542531896,
+     "gain_complementarite": 0.007886428324640904,
+     "spearman_mediane_plis": 0.14776509237999338
+    },
+    "radon|coupling": {
+     "spearman": 0.21184120893024294,
+     "jaccard_top": 0.165759872736976,
+     "gain_complementarite": 0.017402485745728356,
+     "spearman_mediane_plis": 0.22236898191233231
+    },
+    "ruff|bandit": {
+     "spearman": -0.02948045835521927,
+     "jaccard_top": 0.21563583329079095,
+     "gain_complementarite": 0.002956571221751747,
+     "spearman_mediane_plis": -0.035966868636422504
+    },
+    "ruff|diff": {
+     "spearman": 0.12914090880327395,
+     "jaccard_top": 0.12553124819715183,
+     "gain_complementarite": -0.0012364980878527183,
+     "spearman_mediane_plis": 0.12811861174971365
+    },
+    "ruff|process": {
+     "spearman": 0.028809504150866992,
+     "jaccard_top": 0.07471599728034492,
+     "gain_complementarite": 0.013390101451327418,
+     "spearman_mediane_plis": 0.025615499523523343
+    },
+    "ruff|pylint": {
+     "spearman": 0.4223401051675345,
+     "jaccard_top": 0.2594011443028368,
+     "gain_complementarite": -0.023101649640396352,
+     "spearman_mediane_plis": 0.4250068521506163
+    },
+    "ruff|vulture": {
+     "spearman": 0.2156547332961275,
+     "jaccard_top": 0.20583686386022734,
+     "gain_complementarite": -0.006614771410241019,
+     "spearman_mediane_plis": 0.2098960322496049
+    },
+    "ruff|mypy": {
+     "spearman": 0.02658338738032616,
+     "jaccard_top": 0.18245098007124494,
+     "gain_complementarite": -0.0056239618507843755,
+     "spearman_mediane_plis": -0.00596129290099051
+    },
+    "ruff|kamei": {
+     "spearman": 0.10649579554118113,
+     "jaccard_top": 0.12230528492666132,
+     "gain_complementarite": -0.022444002054735655,
+     "spearman_mediane_plis": 0.10294413133955052
+    },
+    "ruff|coupling": {
+     "spearman": 0.17205672954303267,
+     "jaccard_top": 0.17159217909796495,
+     "gain_complementarite": -0.015972562801639677,
+     "spearman_mediane_plis": 0.16109358442271246
+    },
+    "bandit|diff": {
+     "spearman": -0.0031003688727243824,
+     "jaccard_top": 0.15404564102686866,
+     "gain_complementarite": 0.018300726515413236,
+     "spearman_mediane_plis": 0.006212822049135478
+    },
+    "bandit|process": {
+     "spearman": 0.12327186431915728,
+     "jaccard_top": 0.06871297084019937,
+     "gain_complementarite": 0.01695788263427615,
+     "spearman_mediane_plis": 0.12984955019111508
+    },
+    "bandit|pylint": {
+     "spearman": 0.0020456016773833085,
+     "jaccard_top": 0.2832525315353392,
+     "gain_complementarite": 0.006741103886963651,
+     "spearman_mediane_plis": 0.001297972641916979
+    },
+    "bandit|vulture": {
+     "spearman": 0.10168304067362387,
+     "jaccard_top": 0.25460636936956665,
+     "gain_complementarite": 0.009345815543018447,
+     "spearman_mediane_plis": 0.0968470956561168
+    },
+    "bandit|mypy": {
+     "spearman": 0.18649409704672204,
+     "jaccard_top": 0.2442871371384547,
+     "gain_complementarite": 0.011502412764721304,
+     "spearman_mediane_plis": 0.17785296227219755
+    },
+    "bandit|kamei": {
+     "spearman": 0.11496245313250181,
+     "jaccard_top": 0.14288207307107967,
+     "gain_complementarite": -0.01767239991971511,
+     "spearman_mediane_plis": 0.11672720463171048
+    },
+    "bandit|coupling": {
+     "spearman": 0.12643283566982685,
+     "jaccard_top": 0.24149705734580515,
+     "gain_complementarite": -0.003915768488424772,
+     "spearman_mediane_plis": 0.1286930449677043
+    },
+    "diff|process": {
+     "spearman": 0.07457623799855548,
+     "jaccard_top": 0.07104505994801219,
+     "gain_complementarite": 0.03134644858033948,
+     "spearman_mediane_plis": 0.0742680298423618
+    },
+    "diff|pylint": {
+     "spearman": 0.11469993267334161,
+     "jaccard_top": 0.11907365721328338,
+     "gain_complementarite": 0.014411295857008769,
+     "spearman_mediane_plis": 0.0914021407802439
+    },
+    "diff|vulture": {
+     "spearman": 0.05330452452478003,
+     "jaccard_top": 0.133194866596919,
+     "gain_complementarite": -0.007039925453096315,
+     "spearman_mediane_plis": 0.048837772742133495
+    },
+    "diff|mypy": {
+     "spearman": 0.07130020883767092,
+     "jaccard_top": 0.1377726890988635,
+     "gain_complementarite": 0.016353218829681482,
+     "spearman_mediane_plis": 0.0770502572244806
+    },
+    "diff|kamei": {
+     "spearman": 0.22316882148078318,
+     "jaccard_top": 0.11701015709605249,
+     "gain_complementarite": -0.015081151537337474,
+     "spearman_mediane_plis": 0.231211175668501
+    },
+    "diff|coupling": {
+     "spearman": 0.10646453410800263,
+     "jaccard_top": 0.12343481838202627,
+     "gain_complementarite": 0.01081819016907696,
+     "spearman_mediane_plis": 0.10674520525015989
+    },
+    "process|pylint": {
+     "spearman": 0.030264857204642212,
+     "jaccard_top": 0.07400262324814706,
+     "gain_complementarite": 0.03208859465693941,
+     "spearman_mediane_plis": 0.03078443450706167
+    },
+    "process|vulture": {
+     "spearman": 0.04999260787705576,
+     "jaccard_top": 0.06673709529633201,
+     "gain_complementarite": -0.0011071593408127356,
+     "spearman_mediane_plis": 0.034090957549474284
+    },
+    "process|mypy": {
+     "spearman": 0.005272384619531939,
+     "jaccard_top": 0.05981166380759953,
+     "gain_complementarite": 0.014606171213874494,
+     "spearman_mediane_plis": 0.00959329391979377
+    },
+    "process|kamei": {
+     "spearman": 0.20079511010992912,
+     "jaccard_top": 0.06658576793645227,
+     "gain_complementarite": 0.018535917013041893,
+     "spearman_mediane_plis": 0.21294985924199483
+    },
+    "process|coupling": {
+     "spearman": 0.08270272172655585,
+     "jaccard_top": 0.06067702946239269,
+     "gain_complementarite": 0.028822789009108573,
+     "spearman_mediane_plis": 0.09312838018053855
+    },
+    "pylint|vulture": {
+     "spearman": 0.31385434771193804,
+     "jaccard_top": 0.27907702340427404,
+     "gain_complementarite": -0.021116724751089323,
+     "spearman_mediane_plis": 0.29876661519962927
+    },
+    "pylint|mypy": {
+     "spearman": 0.11619870722246985,
+     "jaccard_top": 0.22244826773026027,
+     "gain_complementarite": -0.018425982360250424,
+     "spearman_mediane_plis": 0.1249280460117643
+    },
+    "pylint|kamei": {
+     "spearman": 0.1249787315432914,
+     "jaccard_top": 0.14847641875367798,
+     "gain_complementarite": -0.002905646341418833,
+     "spearman_mediane_plis": 0.1266674219468475
+    },
+    "pylint|coupling": {
+     "spearman": 0.2483944895104499,
+     "jaccard_top": 0.2285350786517032,
+     "gain_complementarite": 0.010464949381942378,
+     "spearman_mediane_plis": 0.24067674017387003
+    },
+    "vulture|mypy": {
+     "spearman": 0.0767077863227054,
+     "jaccard_top": 0.1987694211123171,
+     "gain_complementarite": -0.003809448298320217,
+     "spearman_mediane_plis": 0.08071277070470681
+    },
+    "vulture|kamei": {
+     "spearman": 0.05971258719415581,
+     "jaccard_top": 0.11513375660560193,
+     "gain_complementarite": -0.03681729053669913,
+     "spearman_mediane_plis": 0.057034322398472746
+    },
+    "vulture|coupling": {
+     "spearman": 0.17345146903108744,
+     "jaccard_top": 0.20269809271423886,
+     "gain_complementarite": -0.024846694080037937,
+     "spearman_mediane_plis": 0.18999760620025283
+    },
+    "mypy|kamei": {
+     "spearman": 0.11444065164172143,
+     "jaccard_top": 0.10966904733675177,
+     "gain_complementarite": -0.021518098010093863,
+     "spearman_mediane_plis": 0.11307434636276474
+    },
+    "mypy|coupling": {
+     "spearman": 0.20883151790529703,
+     "jaccard_top": 0.23400457434963834,
+     "gain_complementarite": -0.015745028693426377,
+     "spearman_mediane_plis": 0.20791915237024802
+    },
+    "kamei|coupling": {
+     "spearman": 0.17119217095457878,
+     "jaccard_top": 0.14048180800044655,
+     "gain_complementarite": 0.020014615053232203,
+     "spearman_mediane_plis": 0.17159001575989824
+    }
+   },
+   "spearman_median_hors_BASE": 0.12811861174971365,
+   "jaccard_top10_median_hors_BASE": 0.1377726890988635,
+   "part_paires_gain_gt_0.01_hors_BASE": 0.32727272727272727,
+   "part_paires_gain_gt_0.01_toutes": 0.2727272727272727,
+   "part_positifs_vus_par_une_seule_famille": 0.22805660395310845
+  }
+ },
+ "differences_appariees": {
+  "S1-BASE": {
+   "mean": 0.009661908661066495,
+   "std": 0.00933360647322037,
+   "plis_positifs": 13,
+   "n_plis": 15
+  },
+  "S1-concat": {
+   "mean": -0.01620396434026515,
+   "std": 0.008720198700926232,
+   "plis_positifs": 1,
+   "n_plis": 15
+  },
+  "S2-BASE": {
+   "mean": -0.027107849234850257,
+   "std": 0.02463157358637764,
+   "plis_positifs": 3,
+   "n_plis": 15
+  },
+  "S2-concat": {
+   "mean": -0.0529737222361819,
+   "std": 0.02068801814115307,
+   "plis_positifs": 0,
+   "n_plis": 15
+  },
+  "concat-BASE": {
+   "mean": 0.025865873001331644,
+   "std": 0.010003157441433222,
+   "plis_positifs": 15,
+   "n_plis": 15
+  },
+  "S1_sans_churn-BASE": {
+   "mean": -3.4013434803751666e-05,
+   "std": 0.01000026595140996,
+   "plis_positifs": 8,
+   "n_plis": 15
+  },
+  "S1_sans_churn-concat": {
+   "mean": -0.025899886436135396,
+   "std": 0.012507287934466465,
+   "plis_positifs": 1,
+   "n_plis": 15
+  },
+  "S2_sans_churn-BASE": {
+   "mean": -0.04178055952950139,
+   "std": 0.026961242642049556,
+   "plis_positifs": 1,
+   "n_plis": 15
+  },
+  "S2_sans_churn-concat": {
+   "mean": -0.06764643253083304,
+   "std": 0.023704639658250523,
+   "plis_positifs": 0,
+   "n_plis": 15
+  },
+  "concat_sans_churn-BASE": {
+   "mean": 0.01704568772654401,
+   "std": 0.011893706813532766,
+   "plis_positifs": 14,
+   "n_plis": 15
+  },
+  "concat_sans_churn-concat": {
+   "mean": -0.008820185274787637,
+   "std": 0.00930535569870093,
+   "plis_positifs": 2,
+   "n_plis": 15
+  }
+ },
+ "verdicts": {
+  "S1_bat_BASE": false,
+  "S1_bat_concat": false,
+  "S2_bat_BASE": false,
+  "S2_bat_concat": false,
+  "complementarite": false
+ },
+ "reserve": {
+  "BASE": {
+   "auc": 0.7363586441016425,
+   "ic95": [
+    0.6594257044196437,
+    0.812309942316557
+   ]
+  },
+  "concat": {
+   "auc": 0.7420997453946383,
+   "ic95": [
+    0.6590712769916086,
+    0.8158807977305765
+   ]
+  },
+  "S1": {
+   "auc": 0.6796465478508313,
+   "ic95": [
+    0.5883742335964621,
+    0.7621165060851927
+   ]
+  },
+  "S2": {
+   "auc": 0.6348160351455244,
+   "ic95": [
+    0.5178932207971464,
+    0.7439850403037968
+   ]
+  }
+ },
+ "plis": [
+  {
+   "seed": 0,
+   "BASE": 0.7806038533834586,
+   "concat": 0.801280545112782,
+   "concat_sans_churn": 0.7954260651629073,
+   "S1": 0.7919016290726817,
+   "S2": 0.7397987155388471,
+   "S1_sans_churn": 0.7611998746867168,
+   "S2_sans_churn": 0.716654918546366,
+   "familles": {
+    "BASE": 0.7806038533834586,
+    "churn": 0.7325932017543859,
+    "radon": 0.5853892543859649,
+    "ruff": 0.6022086466165416,
+    "bandit": 0.6148182957393482,
+    "diff": 0.6159931077694236,
+    "process": 0.5872297932330828,
+    "pylint": 0.56952929197995,
+    "vulture": 0.5531210839598998,
+    "mypy": 0.6422305764411028,
+    "kamei": 0.6935502819548872,
+    "coupling": 0.6402138157894737
+   },
+   "pairs": {
+    "BASE|churn": {
+     "spearman": 0.37476342631250265,
+     "jaccard_top": 0.12087912087912088,
+     "gain_complementarite": 0.02249765037593987
+    },
+    "BASE|radon": {
+     "spearman": 0.16894933948111784,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": -0.05286654135338342
+    },
+    "BASE|ruff": {
+     "spearman": 0.07291018737066836,
+     "jaccard_top": 0.12087912087912088,
+     "gain_complementarite": -0.03806390977443608
+    },
+    "BASE|bandit": {
+     "spearman": 0.15111115753429952,
+     "jaccard_top": 0.2,
+     "gain_complementarite": -0.04667919799498743
+    },
+    "BASE|diff": {
+     "spearman": 0.30932986623444436,
+     "jaccard_top": 0.2,
+     "gain_complementarite": -0.05560776942355883
+    },
+    "BASE|process": {
+     "spearman": 0.19971237549395662,
+     "jaccard_top": 0.05154639175257732,
+     "gain_complementarite": -0.028567512531328276
+    },
+    "BASE|pylint": {
+     "spearman": 0.08786373627818245,
+     "jaccard_top": 0.18604651162790697,
+     "gain_complementarite": -0.07397399749373423
+    },
+    "BASE|vulture": {
+     "spearman": 0.028470157231474273,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": -0.06954887218045114
+    },
+    "BASE|mypy": {
+     "spearman": 0.26360829739396135,
+     "jaccard_top": 0.2289156626506024,
+     "gain_complementarite": -0.028058427318295664
+    },
+    "BASE|kamei": {
+     "spearman": 0.3947894943983843,
+     "jaccard_top": 0.2911392405063291,
+     "gain_complementarite": -0.01492011278195493
+    },
+    "BASE|coupling": {
+     "spearman": 0.14641363193960483,
+     "jaccard_top": 0.10869565217391304,
+     "gain_complementarite": -0.025982926065162837
+    },
+    "churn|radon": {
+     "spearman": 0.15555384630106514,
+     "jaccard_top": 0.12087912087912088,
+     "gain_complementarite": -0.03336466165413532
+    },
+    "churn|ruff": {
+     "spearman": 0.11404971507475437,
+     "jaccard_top": 0.10869565217391304,
+     "gain_complementarite": -0.020950814536340845
+    },
+    "churn|bandit": {
+     "spearman": 0.16079382321400654,
+     "jaccard_top": 0.1724137931034483,
+     "gain_complementarite": -0.01615366541353369
+    },
+    "churn|diff": {
+     "spearman": 0.24254325411179836,
+     "jaccard_top": 0.07368421052631578,
+     "gain_complementarite": -0.014978853383458723
+    },
+    "churn|process": {
+     "spearman": 0.15403074190720678,
+     "jaccard_top": 0.0851063829787234,
+     "gain_complementarite": -0.0058936403508771384
+    },
+    "churn|pylint": {
+     "spearman": 0.09804307620969618,
+     "jaccard_top": 0.14606741573033707,
+     "gain_complementarite": -0.04430999373433586
+    },
+    "churn|vulture": {
+     "spearman": 0.09117740976592728,
+     "jaccard_top": 0.1590909090909091,
+     "gain_complementarite": -0.05537280701754388
+    },
+    "churn|mypy": {
+     "spearman": 0.1623756424853141,
+     "jaccard_top": 0.10869565217391304,
+     "gain_complementarite": 0.0046992481203007586
+    },
+    "churn|kamei": {
+     "spearman": 0.33000017518453967,
+     "jaccard_top": 0.10869565217391304,
+     "gain_complementarite": 0.019834743107769448
+    },
+    "churn|coupling": {
+     "spearman": 0.13655635668935318,
+     "jaccard_top": 0.14606741573033707,
+     "gain_complementarite": -0.0021538220551378107
+    },
+    "radon|ruff": {
+     "spearman": 0.29345465480830585,
+     "jaccard_top": 0.2,
+     "gain_complementarite": -0.04107926065162926
+    },
+    "radon|bandit": {
+     "spearman": -0.08266463761121218,
+     "jaccard_top": 0.24390243902439024,
+     "gain_complementarite": 0.01958020050125331
+    },
+    "radon|diff": {
+     "spearman": 0.15217880951882143,
+     "jaccard_top": 0.12087912087912088,
+     "gain_complementarite": 0.008830670426065113
+    },
+    "radon|process": {
+     "spearman": 0.0463324129227279,
+     "jaccard_top": 0.030303030303030304,
+     "gain_complementarite": 0.03972822681704258
+    },
+    "radon|pylint": {
+     "spearman": 0.4920774135018976,
+     "jaccard_top": 0.34210526315789475,
+     "gain_complementarite": -0.02504307644110282
+    },
+    "radon|vulture": {
+     "spearman": 0.294259978923995,
+     "jaccard_top": 0.275,
+     "gain_complementarite": -0.034206610275689164
+    },
+    "radon|mypy": {
+     "spearman": 0.14586682761780748,
+     "jaccard_top": 0.275,
+     "gain_complementarite": 0.008908991228070096
+    },
+    "radon|kamei": {
+     "spearman": 0.08164746971147113,
+     "jaccard_top": 0.14606741573033707,
+     "gain_complementarite": -0.029879385964912242
+    },
+    "radon|coupling": {
+     "spearman": 0.24472045668574344,
+     "jaccard_top": 0.21428571428571427,
+     "gain_complementarite": 0.021851503759398483
+    },
+    "ruff|bandit": {
+     "spearman": -0.07424619604218609,
+     "jaccard_top": 0.18604651162790697,
+     "gain_complementarite": 0.029664003759398816
+    },
+    "ruff|diff": {
+     "spearman": 0.10055397759634387,
+     "jaccard_top": 0.0851063829787234,
+     "gain_complementarite": 0.024338189223057638
+    },
+    "ruff|process": {
+     "spearman": 0.025248729265485607,
+     "jaccard_top": 0.05154639175257732,
+     "gain_complementarite": 0.029487781954886993
+    },
+    "ruff|pylint": {
+     "spearman": 0.43074621915655864,
+     "jaccard_top": 0.1724137931034483,
+     "gain_complementarite": -0.021929824561403577
+    },
+    "ruff|vulture": {
+     "spearman": 0.29815262696941547,
+     "jaccard_top": 0.2,
+     "gain_complementarite": -0.027059837092732186
+    },
+    "ruff|mypy": {
+     "spearman": -0.03420970718021894,
+     "jaccard_top": 0.1590909090909091,
+     "gain_complementarite": -0.016956453634085267
+    },
+    "ruff|kamei": {
+     "spearman": 0.0774298621337425,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": -0.029233239348370854
+    },
+    "ruff|coupling": {
+     "spearman": 0.26789280619366346,
+     "jaccard_top": 0.18604651162790697,
+     "gain_complementarite": -0.05018405388471181
+    },
+    "bandit|diff": {
+     "spearman": -0.07118998770922685,
+     "jaccard_top": 0.18604651162790697,
+     "gain_complementarite": 0.059347587719298156
+    },
+    "bandit|process": {
+     "spearman": 0.1463618466131211,
+     "jaccard_top": 0.0851063829787234,
+     "gain_complementarite": 0.029644423558897404
+    },
+    "bandit|pylint": {
+     "spearman": -0.047510709357743056,
+     "jaccard_top": 0.3246753246753247,
+     "gain_complementarite": -0.018170426065162837
+    },
+    "bandit|vulture": {
+     "spearman": -0.0053037497115099455,
+     "jaccard_top": 0.2911392405063291,
+     "gain_complementarite": -0.014156484962405846
+    },
+    "bandit|mypy": {
+     "spearman": 0.17785296227219755,
+     "jaccard_top": 0.275,
+     "gain_complementarite": 0.01206140350877194
+    },
+    "bandit|kamei": {
+     "spearman": 0.12549160084261396,
+     "jaccard_top": 0.1724137931034483,
+     "gain_complementarite": -0.019286497493734345
+    },
+    "bandit|coupling": {
+     "spearman": 0.0017415464223726673,
+     "jaccard_top": 0.24390243902439024,
+     "gain_complementarite": 0.03125
+    },
+    "diff|process": {
+     "spearman": -0.00010163355012064097,
+     "jaccard_top": 0.04081632653061224,
+     "gain_complementarite": 0.033756265664160345
+    },
+    "diff|pylint": {
+     "spearman": 0.1652139699250201,
+     "jaccard_top": 0.1724137931034483,
+     "gain_complementarite": 0.0063439849624059574
+    },
+    "diff|vulture": {
+     "spearman": 0.16073777768589703,
+     "jaccard_top": 0.18604651162790697,
+     "gain_complementarite": 0.0013706140350876472
+    },
+    "diff|mypy": {
+     "spearman": 0.07325675964163196,
+     "jaccard_top": 0.18604651162790697,
+     "gain_complementarite": 0.03283599624060152
+    },
+    "diff|kamei": {
+     "spearman": 0.18393409641037747,
+     "jaccard_top": 0.1590909090909091,
+     "gain_complementarite": -0.016388627819548862
+    },
+    "diff|coupling": {
+     "spearman": 0.08485328651719044,
+     "jaccard_top": 0.12087912087912088,
+     "gain_complementarite": 0.034421992481203145
+    },
+    "process|pylint": {
+     "spearman": 0.055921327087042005,
+     "jaccard_top": 0.05154639175257732,
+     "gain_complementarite": 0.026354949874686562
+    },
+    "process|vulture": {
+     "spearman": -0.0014535116644729725,
+     "jaccard_top": 0.04081632653061224,
+     "gain_complementarite": 0.020480889724310725
+    },
+    "process|mypy": {
+     "spearman": 0.023161476185781897,
+     "jaccard_top": 0.05154639175257732,
+     "gain_complementarite": 0.03551848370927313
+    },
+    "process|kamei": {
+     "spearman": 0.14096968147403752,
+     "jaccard_top": 0.0967741935483871,
+     "gain_complementarite": 0.01304041353383456
+    },
+    "process|coupling": {
+     "spearman": 0.04591149285927645,
+     "jaccard_top": 0.05154639175257732,
+     "gain_complementarite": 0.02606124686716782
+    },
+    "pylint|vulture": {
+     "spearman": 0.47062525572856084,
+     "jaccard_top": 0.2911392405063291,
+     "gain_complementarite": -0.04094219924812048
+    },
+    "pylint|mypy": {
+     "spearman": 0.1767121506658302,
+     "jaccard_top": 0.2911392405063291,
+     "gain_complementarite": -0.03669329573934832
+    },
+    "pylint|kamei": {
+     "spearman": 0.0824635021521458,
+     "jaccard_top": 0.1724137931034483,
+     "gain_complementarite": -0.058114035087719285
+    },
+    "pylint|coupling": {
+     "spearman": 0.29424125287579417,
+     "jaccard_top": 0.24390243902439024,
+     "gain_complementarite": -0.05486372180451138
+    },
+    "vulture|mypy": {
+     "spearman": 0.13767838841101981,
+     "jaccard_top": 0.3076923076923077,
+     "gain_complementarite": -0.06841322055137844
+    },
+    "vulture|kamei": {
+     "spearman": 0.007807631683972008,
+     "jaccard_top": 0.14606741573033707,
+     "gain_complementarite": -0.059562969924812026
+    },
+    "vulture|coupling": {
+     "spearman": 0.2143556388539104,
+     "jaccard_top": 0.24390243902439024,
+     "gain_complementarite": -0.07602991854636587
+    },
+    "mypy|kamei": {
+     "spearman": 0.15434285446892812,
+     "jaccard_top": 0.21428571428571427,
+     "gain_complementarite": 0.0045426065162907925
+    },
+    "mypy|coupling": {
+     "spearman": 0.17046133121681703,
+     "jaccard_top": 0.2289156626506024,
+     "gain_complementarite": -0.007832080200501301
+    },
+    "kamei|coupling": {
+     "spearman": 0.07686488656157621,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": 0.0036223370927318532
+    }
+   },
+   "part_positifs_vus_par_une_seule_famille": 0.23809523809523808,
+   "n_positifs_vus_top10": 42,
+   "n_positifs": 56
+  },
+  {
+   "seed": 0,
+   "BASE": 0.8137922932330827,
+   "concat": 0.8310424498746867,
+   "concat_sans_churn": 0.8255795739348372,
+   "S1": 0.8108552631578947,
+   "S2": 0.7430686090225564,
+   "S1_sans_churn": 0.7980106516290727,
+   "S2_sans_churn": 0.7215891290726817,
+   "familles": {
+    "BASE": 0.8137922932330827,
+    "churn": 0.7335722117794485,
+    "radon": 0.6105889724310778,
+    "ruff": 0.5222235275689223,
+    "bandit": 0.5533560463659147,
+    "diff": 0.5691572681704261,
+    "process": 0.6116854636591479,
+    "pylint": 0.5788103070175439,
+    "vulture": 0.48204495614035087,
+    "mypy": 0.5510847431077693,
+    "kamei": 0.7248002819548872,
+    "coupling": 0.6004268483709272
+   },
+   "pairs": {
+    "BASE|churn": {
+     "spearman": 0.4275641580498049,
+     "jaccard_top": 0.2289156626506024,
+     "gain_complementarite": -0.00027412280701744063
+    },
+    "BASE|radon": {
+     "spearman": 0.24043484536249365,
+     "jaccard_top": 0.1590909090909091,
+     "gain_complementarite": -0.03970864661654128
+    },
+    "BASE|ruff": {
+     "spearman": 0.09241039837002386,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": -0.08881578947368418
+    },
+    "BASE|bandit": {
+     "spearman": 0.12137960570108045,
+     "jaccard_top": 0.14606741573033707,
+     "gain_complementarite": -0.07352365288220541
+    },
+    "BASE|diff": {
+     "spearman": 0.36508176587576574,
+     "jaccard_top": 0.18604651162790697,
+     "gain_complementarite": -0.08912907268170411
+    },
+    "BASE|process": {
+     "spearman": 0.2814791698449822,
+     "jaccard_top": 0.10869565217391304,
+     "gain_complementarite": -0.029957706766917225
+    },
+    "BASE|pylint": {
+     "spearman": 0.19159399872121066,
+     "jaccard_top": 0.18604651162790697,
+     "gain_complementarite": -0.0545700187969923
+    },
+    "BASE|vulture": {
+     "spearman": 0.06086951090147105,
+     "jaccard_top": 0.10869565217391304,
+     "gain_complementarite": -0.1104714912280701
+    },
+    "BASE|mypy": {
+     "spearman": 0.11111229771704752,
+     "jaccard_top": 0.0851063829787234,
+     "gain_complementarite": -0.06647478070175417
+    },
+    "BASE|kamei": {
+     "spearman": 0.49483463846314896,
+     "jaccard_top": 0.2911392405063291,
+     "gain_complementarite": -0.012218045112781906
+    },
+    "BASE|coupling": {
+     "spearman": 0.23048118045586113,
+     "jaccard_top": 0.14606741573033707,
+     "gain_complementarite": -0.04871553884711777
+    },
+    "churn|radon": {
+     "spearman": 0.2029878634549966,
+     "jaccard_top": 0.0851063829787234,
+     "gain_complementarite": -0.011239035087719285
+    },
+    "churn|ruff": {
+     "spearman": 0.008517145340929311,
+     "jaccard_top": 0.07368421052631578,
+     "gain_complementarite": -0.05564692982456132
+    },
+    "churn|bandit": {
+     "spearman": 0.12676668658683987,
+     "jaccard_top": 0.0967741935483871,
+     "gain_complementarite": -0.046033051378446155
+    },
+    "churn|diff": {
+     "spearman": 0.17384478208610565,
+     "jaccard_top": 0.0851063829787234,
+     "gain_complementarite": -0.04000234962406002
+    },
+    "churn|process": {
+     "spearman": 0.23816989830236224,
+     "jaccard_top": 0.0851063829787234,
+     "gain_complementarite": -0.0007440476190475609
+    },
+    "churn|pylint": {
+     "spearman": 0.11960953033894721,
+     "jaccard_top": 0.14606741573033707,
+     "gain_complementarite": -0.026354949874686673
+    },
+    "churn|vulture": {
+     "spearman": 0.05582821287640415,
+     "jaccard_top": 0.10869565217391304,
+     "gain_complementarite": -0.08337249373433564
+    },
+    "churn|mypy": {
+     "spearman": 0.0789522499134667,
+     "jaccard_top": 0.07368421052631578,
+     "gain_complementarite": -0.046287593984962294
+    },
+    "churn|kamei": {
+     "spearman": 0.4001706975578649,
+     "jaccard_top": 0.2,
+     "gain_complementarite": 0.031073778195488844
+    },
+    "churn|coupling": {
+     "spearman": 0.1635228732684411,
+     "jaccard_top": 0.0851063829787234,
+     "gain_complementarite": -0.015076754385964897
+    },
+    "radon|ruff": {
+     "spearman": 0.29760752362594556,
+     "jaccard_top": 0.2911392405063291,
+     "gain_complementarite": -0.046502976190476386
+    },
+    "radon|bandit": {
+     "spearman": -0.10681220568419786,
+     "jaccard_top": 0.1724137931034483,
+     "gain_complementarite": -0.030564692982456232
+    },
+    "radon|diff": {
+     "spearman": 0.14674445065700176,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": -0.021910244360902276
+    },
+    "radon|process": {
+     "spearman": 0.08616856442268925,
+     "jaccard_top": 0.0625,
+     "gain_complementarite": 0.049126723057644206
+    },
+    "radon|pylint": {
+     "spearman": 0.5522773032386818,
+     "jaccard_top": 0.25925925925925924,
+     "gain_complementarite": -0.0040922619047619735
+    },
+    "radon|vulture": {
+     "spearman": 0.22399580209580866,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": -0.05492246240601517
+    },
+    "radon|mypy": {
+     "spearman": 0.15759960339536114,
+     "jaccard_top": 0.14606741573033707,
+     "gain_complementarite": -0.03829887218045114
+    },
+    "radon|kamei": {
+     "spearman": 0.1441838914374163,
+     "jaccard_top": 0.0967741935483871,
+     "gain_complementarite": -0.0008419486215538452
+    },
+    "radon|coupling": {
+     "spearman": 0.17275740836184442,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": 0.04057017543859642
+    },
+    "ruff|bandit": {
+     "spearman": -0.07416018915910087,
+     "jaccard_top": 0.275,
+     "gain_complementarite": -0.01844454887218039
+    },
+    "ruff|diff": {
+     "spearman": 0.08900399970813345,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": -0.040100250626566525
+    },
+    "ruff|process": {
+     "spearman": -0.043281804497421014,
+     "jaccard_top": 0.05154639175257732,
+     "gain_complementarite": -0.013314536340852112
+    },
+    "ruff|pylint": {
+     "spearman": 0.444832078846131,
+     "jaccard_top": 0.3076923076923077,
+     "gain_complementarite": -0.05204417293233088
+    },
+    "ruff|vulture": {
+     "spearman": 0.1817799698661004,
+     "jaccard_top": 0.275,
+     "gain_complementarite": -0.013980263157894801
+    },
+    "ruff|mypy": {
+     "spearman": 0.11457186392214684,
+     "jaccard_top": 0.1590909090909091,
+     "gain_complementarite": 0.014783051378446044
+    },
+    "ruff|kamei": {
+     "spearman": 0.0707189369396248,
+     "jaccard_top": 0.14606741573033707,
+     "gain_complementarite": -0.05715460526315774
+    },
+    "ruff|coupling": {
+     "spearman": 0.04431333139811647,
+     "jaccard_top": 0.14606741573033707,
+     "gain_complementarite": -0.030153508771929682
+    },
+    "bandit|diff": {
+     "spearman": -0.04049398984653959,
+     "jaccard_top": 0.21428571428571427,
+     "gain_complementarite": -0.007205513784461215
+    },
+    "bandit|process": {
+     "spearman": 0.12984955019111508,
+     "jaccard_top": 0.05154639175257732,
+     "gain_complementarite": 0.009907581453634129
+    },
+    "bandit|pylint": {
+     "spearman": 0.0026153845498468405,
+     "jaccard_top": 0.25925925925925924,
+     "gain_complementarite": 0.007146773182957533
+    },
+    "bandit|vulture": {
+     "spearman": 0.1305068622871679,
+     "jaccard_top": 0.24390243902439024,
+     "gain_complementarite": -0.0077733395989973975
+    },
+    "bandit|mypy": {
+     "spearman": 0.05315397633120965,
+     "jaccard_top": 0.2,
+     "gain_complementarite": 0.01634946741854637
+    },
+    "bandit|kamei": {
+     "spearman": 0.13716569789201805,
+     "jaccard_top": 0.14606741573033707,
+     "gain_complementarite": -0.05445253759398494
+    },
+    "bandit|coupling": {
+     "spearman": 0.2214035609097215,
+     "jaccard_top": 0.1724137931034483,
+     "gain_complementarite": 0.0005090852130328338
+    },
+    "diff|process": {
+     "spearman": 0.05819540764598684,
+     "jaccard_top": 0.0625,
+     "gain_complementarite": 0.019756422305764354
+    },
+    "diff|pylint": {
+     "spearman": 0.17510872757731655,
+     "jaccard_top": 0.0851063829787234,
+     "gain_complementarite": 0.02012844611528819
+    },
+    "diff|vulture": {
+     "spearman": 0.03627416203475449,
+     "jaccard_top": 0.14606741573033707,
+     "gain_complementarite": -0.05615601503759404
+    },
+    "diff|mypy": {
+     "spearman": 0.14028074331494597,
+     "jaccard_top": 0.14606741573033707,
+     "gain_complementarite": 0.011748120300751896
+    },
+    "diff|kamei": {
+     "spearman": 0.18432832278108333,
+     "jaccard_top": 0.10869565217391304,
+     "gain_complementarite": -0.054570018796992525
+    },
+    "diff|coupling": {
+     "spearman": 0.10674520525015989,
+     "jaccard_top": 0.21428571428571427,
+     "gain_complementarite": 0.003093671679198162
+    },
+    "process|pylint": {
+     "spearman": 0.019357179716437734,
+     "jaccard_top": 0.10869565217391304,
+     "gain_complementarite": 0.03144580200501246
+    },
+    "process|vulture": {
+     "spearman": 0.07618524489738993,
+     "jaccard_top": 0.0851063829787234,
+     "gain_complementarite": -0.0340695488721805
+    },
+    "process|mypy": {
+     "spearman": 0.01901676523006474,
+     "jaccard_top": 0.04081632653061224,
+     "gain_complementarite": 0.00330905388471181
+    },
+    "process|kamei": {
+     "spearman": 0.21294985924199483,
+     "jaccard_top": 0.0625,
+     "gain_complementarite": 0.003230733082706938
+    },
+    "process|coupling": {
+     "spearman": 0.08129597785977341,
+     "jaccard_top": 0.0625,
+     "gain_complementarite": 0.04194078947368418
+    },
+    "pylint|vulture": {
+     "spearman": 0.31448285959288497,
+     "jaccard_top": 0.275,
+     "gain_complementarite": -0.05746788847117812
+    },
+    "pylint|mypy": {
+     "spearman": 0.21016277197870997,
+     "jaccard_top": 0.10869565217391304,
+     "gain_complementarite": -0.037026159147869664
+    },
+    "pylint|kamei": {
+     "spearman": 0.16087369210791616,
+     "jaccard_top": 0.1724137931034483,
+     "gain_complementarite": -0.02412280701754388
+    },
+    "pylint|coupling": {
+     "spearman": 0.2453180714569246,
+     "jaccard_top": 0.1724137931034483,
+     "gain_complementarite": 0.035577224310777145
+    },
+    "vulture|mypy": {
+     "spearman": 0.08071277070470681,
+     "jaccard_top": 0.12087912087912088,
+     "gain_complementarite": -0.022164786967418415
+    },
+    "vulture|kamei": {
+     "spearman": 0.09902462105127989,
+     "jaccard_top": 0.12087912087912088,
+     "gain_complementarite": -0.08069000626566414
+    },
+    "vulture|coupling": {
+     "spearman": 0.12009525141270633,
+     "jaccard_top": 0.2,
+     "gain_complementarite": -0.01470473057644095
+    },
+    "mypy|kamei": {
+     "spearman": 0.10681144178943622,
+     "jaccard_top": 0.10869565217391304,
+     "gain_complementarite": -0.049107142857142794
+    },
+    "mypy|coupling": {
+     "spearman": 0.24140848232202616,
+     "jaccard_top": 0.1724137931034483,
+     "gain_complementarite": -0.018894893483709096
+    },
+    "kamei|coupling": {
+     "spearman": 0.17101484449634888,
+     "jaccard_top": 0.1590909090909091,
+     "gain_complementarite": -0.018327067669173025
+    }
+   },
+   "part_positifs_vus_par_une_seule_famille": 0.26666666666666666,
+   "n_positifs_vus_top10": 45,
+   "n_positifs": 56
+  },
+  {
+   "seed": 0,
+   "BASE": 0.8088124129699621,
+   "concat": 0.8566341754525562,
+   "concat_sans_churn": 0.8514819972150389,
+   "S1": 0.8338969564352496,
+   "S2": 0.8126118957628805,
+   "S1_sans_churn": 0.8233936741595386,
+   "S2_sans_churn": 0.7986274119753333,
+   "familles": {
+    "BASE": 0.8088124129699621,
+    "churn": 0.7763477222995823,
+    "radon": 0.6631788342948082,
+    "ruff": 0.6715337179232146,
+    "bandit": 0.6217425900139248,
+    "diff": 0.5703600556992242,
+    "process": 0.7012731251243286,
+    "pylint": 0.6749950268549831,
+    "vulture": 0.6299184404217226,
+    "mypy": 0.5685498309130692,
+    "kamei": 0.6916451163715934,
+    "coupling": 0.6598368808434456
+   },
+   "pairs": {
+    "BASE|churn": {
+     "spearman": 0.370724896221557,
+     "jaccard_top": 0.1590909090909091,
+     "gain_complementarite": 0.030515217823751994
+    },
+    "BASE|radon": {
+     "spearman": 0.2624502430017314,
+     "jaccard_top": 0.1724137931034483,
+     "gain_complementarite": -0.02019096876864923
+    },
+    "BASE|ruff": {
+     "spearman": 0.1574469623850368,
+     "jaccard_top": 0.12087912087912088,
+     "gain_complementarite": -0.006445195941913506
+    },
+    "BASE|bandit": {
+     "spearman": 0.16395329775949866,
+     "jaccard_top": 0.14606741573033707,
+     "gain_complementarite": -0.046906703799482585
+    },
+    "BASE|diff": {
+     "spearman": 0.34175688632814183,
+     "jaccard_top": 0.1724137931034483,
+     "gain_complementarite": -0.08046548637358253
+    },
+    "BASE|process": {
+     "spearman": 0.17598754868293068,
+     "jaccard_top": 0.07368421052631578,
+     "gain_complementarite": 0.027909289834891604
+    },
+    "BASE|pylint": {
+     "spearman": 0.13581893671891365,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": -0.003242490551024435
+    },
+    "BASE|vulture": {
+     "spearman": 0.15309784539750124,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": -0.02866520787746163
+    },
+    "BASE|mypy": {
+     "spearman": 0.20312422440810438,
+     "jaccard_top": 0.12087912087912088,
+     "gain_complementarite": -0.07201113984483776
+    },
+    "BASE|kamei": {
+     "spearman": 0.42583091278803126,
+     "jaccard_top": 0.18604651162790697,
+     "gain_complementarite": -0.02114581261189563
+    },
+    "BASE|coupling": {
+     "spearman": 0.25246151709830655,
+     "jaccard_top": 0.10869565217391304,
+     "gain_complementarite": -0.018699025263576696
+    },
+    "churn|radon": {
+     "spearman": 0.2681664315534066,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": -0.0062064849811021006
+    },
+    "churn|ruff": {
+     "spearman": 0.1688926335242818,
+     "jaccard_top": 0.12087912087912088,
+     "gain_complementarite": 0.011080167097672455
+    },
+    "churn|bandit": {
+     "spearman": 0.2907845839043892,
+     "jaccard_top": 0.1590909090909091,
+     "gain_complementarite": -0.03972548239506668
+    },
+    "churn|diff": {
+     "spearman": 0.15371734337088083,
+     "jaccard_top": 0.0967741935483871,
+     "gain_complementarite": -0.055500298388701075
+    },
+    "churn|process": {
+     "spearman": 0.18033758740115846,
+     "jaccard_top": 0.0967741935483871,
+     "gain_complementarite": 0.04555400835488366
+    },
+    "churn|pylint": {
+     "spearman": 0.17922825510994572,
+     "jaccard_top": 0.1590909090909091,
+     "gain_complementarite": 0.004794111796300182
+    },
+    "churn|vulture": {
+     "spearman": 0.2704628159117425,
+     "jaccard_top": 0.1724137931034483,
+     "gain_complementarite": -0.027968967575094483
+    },
+    "churn|mypy": {
+     "spearman": 0.23066117128987593,
+     "jaccard_top": 0.1724137931034483,
+     "gain_complementarite": -0.06288044559379347
+    },
+    "churn|kamei": {
+     "spearman": 0.41351650909017057,
+     "jaccard_top": 0.1590909090909091,
+     "gain_complementarite": -0.003341953451362567
+    },
+    "churn|coupling": {
+     "spearman": 0.2173598078312213,
+     "jaccard_top": 0.1590909090909091,
+     "gain_complementarite": -0.0012333399641935028
+    },
+    "radon|ruff": {
+     "spearman": 0.35394421066299914,
+     "jaccard_top": 0.21428571428571427,
+     "gain_complementarite": 0.02635766858961608
+    },
+    "radon|bandit": {
+     "spearman": -0.027177492831311066,
+     "jaccard_top": 0.2,
+     "gain_complementarite": 0.019932365227769977
+    },
+    "radon|diff": {
+     "spearman": 0.19246809959618252,
+     "jaccard_top": 0.12087912087912088,
+     "gain_complementarite": -0.010921026457131555
+    },
+    "radon|process": {
+     "spearman": 0.1016495363451825,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": 0.04802068828327033
+    },
+    "radon|pylint": {
+     "spearman": 0.30285487887059,
+     "jaccard_top": 0.2,
+     "gain_complementarite": 0.02741197533320061
+    },
+    "radon|vulture": {
+     "spearman": 0.1574423332348517,
+     "jaccard_top": 0.18604651162790697,
+     "gain_complementarite": 0.026934553411577355
+    },
+    "radon|mypy": {
+     "spearman": -0.01514876369996992,
+     "jaccard_top": 0.12087912087912088,
+     "gain_complementarite": -0.007022080763875116
+    },
+    "radon|kamei": {
+     "spearman": 0.2170610291020693,
+     "jaccard_top": 0.10869565217391304,
+     "gain_complementarite": 0.032802864531529696
+    },
+    "radon|coupling": {
+     "spearman": 0.22389609976866148,
+     "jaccard_top": 0.14606741573033707,
+     "gain_complementarite": 0.048498110204893474
+    },
+    "ruff|bandit": {
+     "spearman": -0.0032968672840634873,
+     "jaccard_top": 0.2,
+     "gain_complementarite": 0.019494728466282085
+    },
+    "ruff|diff": {
+     "spearman": 0.11448512648421547,
+     "jaccard_top": 0.12087912087912088,
+     "gain_complementarite": -0.011159737417943072
+    },
+    "ruff|process": {
+     "spearman": 0.067873517284003,
+     "jaccard_top": 0.0851063829787234,
+     "gain_complementarite": 0.05627610901133884
+    },
+    "ruff|pylint": {
+     "spearman": 0.36760452942514055,
+     "jaccard_top": 0.2289156626506024,
+     "gain_complementarite": 0.0185597772031032
+    },
+    "ruff|vulture": {
+     "spearman": 0.13283198659383608,
+     "jaccard_top": 0.1724137931034483,
+     "gain_complementarite": 0.046409389297792036
+    },
+    "ruff|mypy": {
+     "spearman": -0.00596129290099051,
+     "jaccard_top": 0.2,
+     "gain_complementarite": -0.014979112790928895
+    },
+    "ruff|kamei": {
+     "spearman": 0.15560440786037769,
+     "jaccard_top": 0.0851063829787234,
+     "gain_complementarite": 0.039466878854187315
+    },
+    "ruff|coupling": {
+     "spearman": 0.15176705833626905,
+     "jaccard_top": 0.12087912087912088,
+     "gain_complementarite": 0.03841257211060278
+    },
+    "bandit|diff": {
+     "spearman": 0.0232048117065613,
+     "jaccard_top": 0.12087912087912088,
+     "gain_complementarite": 0.020051720708175735
+    },
+    "bandit|process": {
+     "spearman": 0.1467772072636936,
+     "jaccard_top": 0.07368421052631578,
+     "gain_complementarite": 0.008155957827730265
+    },
+    "bandit|pylint": {
+     "spearman": -0.02765635357364219,
+     "jaccard_top": 0.34210526315789475,
+     "gain_complementarite": 0.017565148199721436
+    },
+    "bandit|vulture": {
+     "spearman": 0.2029763039332607,
+     "jaccard_top": 0.36,
+     "gain_complementarite": 0.037219017306544755
+    },
+    "bandit|mypy": {
+     "spearman": 0.5235081308807841,
+     "jaccard_top": 0.2911392405063291,
+     "gain_complementarite": -0.018360851402426936
+    },
+    "bandit|kamei": {
+     "spearman": 0.1856045680822547,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": 0.0014322657648696557
+    },
+    "bandit|coupling": {
+     "spearman": 0.2638747451101775,
+     "jaccard_top": 0.2289156626506024,
+     "gain_complementarite": -0.009707579073006012
+    },
+    "diff|process": {
+     "spearman": 0.0742680298423618,
+     "jaccard_top": 0.0625,
+     "gain_complementarite": -0.01822160334195344
+    },
+    "diff|pylint": {
+     "spearman": 0.08800843102044416,
+     "jaccard_top": 0.12087912087912088,
+     "gain_complementarite": -0.004515615675353191
+    },
+    "diff|vulture": {
+     "spearman": 0.05430951899401463,
+     "jaccard_top": 0.10869565217391304,
+     "gain_complementarite": 0.015197931171673007
+    },
+    "diff|mypy": {
+     "spearman": 0.05171339515528412,
+     "jaccard_top": 0.0967741935483871,
+     "gain_complementarite": 0.0450765864332604
+    },
+    "diff|kamei": {
+     "spearman": 0.19315785052459267,
+     "jaccard_top": 0.1590909090909091,
+     "gain_complementarite": -0.025024865725084555
+    },
+    "diff|coupling": {
+     "spearman": 0.13611481890695754,
+     "jaccard_top": 0.0851063829787234,
+     "gain_complementarite": 0.009110801670976443
+    },
+    "process|pylint": {
+     "spearman": -0.004359787815550671,
+     "jaccard_top": 0.0851063829787234,
+     "gain_complementarite": 0.057409986075193875
+    },
+    "process|vulture": {
+     "spearman": 0.1183604234852361,
+     "jaccard_top": 0.07368421052631578,
+     "gain_complementarite": 0.027968967575094594
+    },
+    "process|mypy": {
+     "spearman": 0.059311321657772705,
+     "jaccard_top": 0.05154639175257732,
+     "gain_complementarite": -0.018122140441615198
+    },
+    "process|kamei": {
+     "spearman": 0.1500244417738039,
+     "jaccard_top": 0.04081632653061224,
+     "gain_complementarite": 0.0696240302367217
+    },
+    "process|coupling": {
+     "spearman": 0.07050950312744328,
+     "jaccard_top": 0.04081632653061224,
+     "gain_complementarite": 0.0488760692261786
+    },
+    "pylint|vulture": {
+     "spearman": 0.2545008484837161,
+     "jaccard_top": 0.275,
+     "gain_complementarite": 0.007519395265565887
+    },
+    "pylint|mypy": {
+     "spearman": 0.030595498629010943,
+     "jaccard_top": 0.2911392405063291,
+     "gain_complementarite": -0.007519395265565887
+    },
+    "pylint|kamei": {
+     "spearman": 0.15529869973523427,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": 0.03994430077581057
+    },
+    "pylint|coupling": {
+     "spearman": 0.24067674017387003,
+     "jaccard_top": 0.24390243902439024,
+     "gain_complementarite": 0.014442013129102649
+    },
+    "vulture|mypy": {
+     "spearman": 0.10387877943313055,
+     "jaccard_top": 0.24390243902439024,
+     "gain_complementarite": -0.027213049532524458
+    },
+    "vulture|kamei": {
+     "spearman": 0.1327452543989698,
+     "jaccard_top": 0.1590909090909091,
+     "gain_complementarite": 0.014581261189576256
+    },
+    "vulture|coupling": {
+     "spearman": 0.2480656853214357,
+     "jaccard_top": 0.21428571428571427,
+     "gain_complementarite": 0.02888402625820552
+    },
+    "mypy|kamei": {
+     "spearman": 0.15380166670146034,
+     "jaccard_top": 0.14606741573033707,
+     "gain_complementarite": -0.02860553013725886
+    },
+    "mypy|coupling": {
+     "spearman": 0.3110473488011947,
+     "jaccard_top": 0.2289156626506024,
+     "gain_complementarite": -0.020171076188581938
+    },
+    "kamei|coupling": {
+     "spearman": 0.16988269038900733,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": 0.0297394072011139
+    }
+   },
+   "part_positifs_vus_par_une_seule_famille": 0.2391304347826087,
+   "n_positifs_vus_top10": 46,
+   "n_positifs": 55
+  },
+  {
+   "seed": 0,
+   "BASE": 0.7653708133971292,
+   "concat": 0.7899122807017545,
+   "concat_sans_churn": 0.7866427432216905,
+   "S1": 0.7663078149920255,
+   "S2": 0.7655303030303029,
+   "S1_sans_churn": 0.7727671451355662,
+   "S2_sans_churn": 0.767902711323764,
+   "familles": {
+    "BASE": 0.7653708133971292,
+    "churn": 0.6720494417862839,
+    "radon": 0.627212918660287,
+    "ruff": 0.5968700159489633,
+    "bandit": 0.5832535885167462,
+    "diff": 0.6031499202551834,
+    "process": 0.6188397129186605,
+    "pylint": 0.6387161084529505,
+    "vulture": 0.5623006379585327,
+    "mypy": 0.6163277511961722,
+    "kamei": 0.6913078149920255,
+    "coupling": 0.6510167464114832
+   },
+   "pairs": {
+    "BASE|churn": {
+     "spearman": 0.34046655027054606,
+     "jaccard_top": 0.1590909090909091,
+     "gain_complementarite": -0.012001594896331791
+    },
+    "BASE|radon": {
+     "spearman": 0.18173737840557544,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": -0.01832137161084535
+    },
+    "BASE|ruff": {
+     "spearman": 0.13106629156336502,
+     "jaccard_top": 0.14606741573033707,
+     "gain_complementarite": -0.030183413078149868
+    },
+    "BASE|bandit": {
+     "spearman": 0.17855140133452913,
+     "jaccard_top": 0.2289156626506024,
+     "gain_complementarite": -0.0492025518341308
+    },
+    "BASE|diff": {
+     "spearman": 0.48123559640172414,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": -0.05418660287081334
+    },
+    "BASE|process": {
+     "spearman": 0.2004011129414386,
+     "jaccard_top": 0.07368421052631578,
+     "gain_complementarite": -0.011722488038277468
+    },
+    "BASE|pylint": {
+     "spearman": 0.10615531901858086,
+     "jaccard_top": 0.18604651162790697,
+     "gain_complementarite": -0.0076156299840509645
+    },
+    "BASE|vulture": {
+     "spearman": 0.09909762604028759,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": -0.05320972886762376
+    },
+    "BASE|mypy": {
+     "spearman": 0.09342390562065367,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": -0.026794258373205704
+    },
+    "BASE|kamei": {
+     "spearman": 0.43467209024525655,
+     "jaccard_top": 0.25925925925925924,
+     "gain_complementarite": -0.005881180223285543
+    },
+    "BASE|coupling": {
+     "spearman": 0.23781270429828696,
+     "jaccard_top": 0.21428571428571427,
+     "gain_complementarite": -0.010406698564593309
+    },
+    "churn|radon": {
+     "spearman": 0.18153772863544568,
+     "jaccard_top": 0.0851063829787234,
+     "gain_complementarite": 0.017623604465709652
+    },
+    "churn|ruff": {
+     "spearman": 0.15804690749730926,
+     "jaccard_top": 0.0967741935483871,
+     "gain_complementarite": 0.0031100478468899517
+    },
+    "churn|bandit": {
+     "spearman": 0.14527131236016527,
+     "jaccard_top": 0.0967741935483871,
+     "gain_complementarite": -0.01963716108452951
+    },
+    "churn|diff": {
+     "spearman": 0.24183852308173256,
+     "jaccard_top": 0.10869565217391304,
+     "gain_complementarite": 0.0013755980861243078
+    },
+    "churn|process": {
+     "spearman": 0.25898004075786246,
+     "jaccard_top": 0.12087912087912088,
+     "gain_complementarite": 0.013676236044657175
+    },
+    "churn|pylint": {
+     "spearman": 0.13948781561284893,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": 0.031020733652312504
+    },
+    "churn|vulture": {
+     "spearman": 0.13481245496163402,
+     "jaccard_top": 0.2,
+     "gain_complementarite": -0.03301435406698561
+    },
+    "churn|mypy": {
+     "spearman": 0.07423015686806336,
+     "jaccard_top": 0.0967741935483871,
+     "gain_complementarite": 0.01160287081339706
+    },
+    "churn|kamei": {
+     "spearman": 0.4070503850063319,
+     "jaccard_top": 0.12087912087912088,
+     "gain_complementarite": 0.02075358851674647
+    },
+    "churn|coupling": {
+     "spearman": 0.17288428856881707,
+     "jaccard_top": 0.0967741935483871,
+     "gain_complementarite": 0.026535087719298245
+    },
+    "radon|ruff": {
+     "spearman": 0.50609520353623,
+     "jaccard_top": 0.275,
+     "gain_complementarite": 0.0009370015948962918
+    },
+    "radon|bandit": {
+     "spearman": -0.12417614935377759,
+     "jaccard_top": 0.18604651162790697,
+     "gain_complementarite": -0.019936204146730363
+    },
+    "radon|diff": {
+     "spearman": 0.11461240672435166,
+     "jaccard_top": 0.0967741935483871,
+     "gain_complementarite": 0.017165071770334994
+    },
+    "radon|process": {
+     "spearman": 0.13020673846195716,
+     "jaccard_top": 0.0851063829787234,
+     "gain_complementarite": 0.03783891547049445
+    },
+    "radon|pylint": {
+     "spearman": 0.47209230275949227,
+     "jaccard_top": 0.2911392405063291,
+     "gain_complementarite": -0.004126794258373145
+    },
+    "radon|vulture": {
+     "spearman": 0.17083397781090548,
+     "jaccard_top": 0.21428571428571427,
+     "gain_complementarite": 0.008751993620414678
+    },
+    "radon|mypy": {
+     "spearman": -0.01976411082335059,
+     "jaccard_top": 0.10869565217391304,
+     "gain_complementarite": 0.020095693779904278
+    },
+    "radon|kamei": {
+     "spearman": 0.20671148460480035,
+     "jaccard_top": 0.12087912087912088,
+     "gain_complementarite": 0.011283891547049452
+    },
+    "radon|coupling": {
+     "spearman": 0.19934403520358923,
+     "jaccard_top": 0.2,
+     "gain_complementarite": 0.01754385964912286
+    },
+    "ruff|bandit": {
+     "spearman": -0.0736151058309716,
+     "jaccard_top": 0.2289156626506024,
+     "gain_complementarite": 0.009429824561403621
+    },
+    "ruff|diff": {
+     "spearman": 0.1603506787117151,
+     "jaccard_top": 0.18604651162790697,
+     "gain_complementarite": 0.007117224880382689
+    },
+    "ruff|process": {
+     "spearman": 0.09679317256421112,
+     "jaccard_top": 0.0851063829787234,
+     "gain_complementarite": 0.031080542264752542
+    },
+    "ruff|pylint": {
+     "spearman": 0.4789315496703258,
+     "jaccard_top": 0.275,
+     "gain_complementarite": -0.0340311004784688
+    },
+    "ruff|vulture": {
+     "spearman": 0.11878567708467476,
+     "jaccard_top": 0.2289156626506024,
+     "gain_complementarite": -0.002791068580542122
+    },
+    "ruff|mypy": {
+     "spearman": -0.0071075742363278975,
+     "jaccard_top": 0.1590909090909091,
+     "gain_complementarite": 0.005243221690590105
+    },
+    "ruff|kamei": {
+     "spearman": 0.15016958325468494,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": 0.0021132376395534003
+    },
+    "ruff|coupling": {
+     "spearman": 0.16109358442271246,
+     "jaccard_top": 0.21428571428571427,
+     "gain_complementarite": -0.007595693779904211
+    },
+    "bandit|diff": {
+     "spearman": 0.03568189249889491,
+     "jaccard_top": 0.1724137931034483,
+     "gain_complementarite": 0.02781100478468901
+    },
+    "bandit|process": {
+     "spearman": 0.07556997987150366,
+     "jaccard_top": 0.0625,
+     "gain_complementarite": 0.02408293460925015
+    },
+    "bandit|pylint": {
+     "spearman": -0.03356073302977369,
+     "jaccard_top": 0.3076923076923077,
+     "gain_complementarite": -0.029645135566188086
+    },
+    "bandit|vulture": {
+     "spearman": 0.19633760798467054,
+     "jaccard_top": 0.21428571428571427,
+     "gain_complementarite": 0.03682216905901137
+    },
+    "bandit|mypy": {
+     "spearman": 0.21071671960157956,
+     "jaccard_top": 0.275,
+     "gain_complementarite": 0.027113237639553422
+    },
+    "bandit|kamei": {
+     "spearman": 0.07070019481186678,
+     "jaccard_top": 0.1590909090909091,
+     "gain_complementarite": -0.01832137161084546
+    },
+    "bandit|coupling": {
+     "spearman": 0.10981884917728293,
+     "jaccard_top": 0.36,
+     "gain_complementarite": -0.028448963317384335
+    },
+    "diff|process": {
+     "spearman": 0.0923736072650885,
+     "jaccard_top": 0.0851063829787234,
+     "gain_complementarite": 0.0414274322169057
+    },
+    "diff|pylint": {
+     "spearman": 0.0914021407802439,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": 0.03757974481658699
+    },
+    "diff|vulture": {
+     "spearman": 0.07182786736879751,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": 0.009609250398723956
+    },
+    "diff|mypy": {
+     "spearman": 0.002832487724148674,
+     "jaccard_top": 0.10869565217391304,
+     "gain_complementarite": 0.042424242424242475
+    },
+    "diff|kamei": {
+     "spearman": 0.23471793184897582,
+     "jaccard_top": 0.14606741573033707,
+     "gain_complementarite": -0.008094098883572598
+    },
+    "diff|coupling": {
+     "spearman": 0.11792350054204928,
+     "jaccard_top": 0.12087912087912088,
+     "gain_complementarite": 0.006180223285486397
+    },
+    "process|pylint": {
+     "spearman": -0.01678698319978371,
+     "jaccard_top": 0.0625,
+     "gain_complementarite": 0.03849681020733653
+    },
+    "process|vulture": {
+     "spearman": 0.03170840441361527,
+     "jaccard_top": 0.07368421052631578,
+     "gain_complementarite": -0.0011164274322171819
+    },
+    "process|mypy": {
+     "spearman": 0.006841224660630923,
+     "jaccard_top": 0.07368421052631578,
+     "gain_complementarite": 0.04615231259968089
+    },
+    "process|kamei": {
+     "spearman": 0.23846485857589933,
+     "jaccard_top": 0.05154639175257732,
+     "gain_complementarite": 0.014613237639553578
+    },
+    "process|coupling": {
+     "spearman": 0.09417236876348918,
+     "jaccard_top": 0.07368421052631578,
+     "gain_complementarite": 0.03716108452950562
+    },
+    "pylint|vulture": {
+     "spearman": 0.2070061407669332,
+     "jaccard_top": 0.2911392405063291,
+     "gain_complementarite": 0.002272727272727315
+    },
+    "pylint|mypy": {
+     "spearman": 0.07109988930935242,
+     "jaccard_top": 0.21428571428571427,
+     "gain_complementarite": 0.011084529505582252
+    },
+    "pylint|kamei": {
+     "spearman": 0.179565819469831,
+     "jaccard_top": 0.2,
+     "gain_complementarite": 0.019338118022328654
+    },
+    "pylint|coupling": {
+     "spearman": 0.21461460255839238,
+     "jaccard_top": 0.21428571428571427,
+     "gain_complementarite": 0.03572567783094094
+    },
+    "vulture|mypy": {
+     "spearman": 0.11604944527875667,
+     "jaccard_top": 0.18604651162790697,
+     "gain_complementarite": 0.02932615629984059
+    },
+    "vulture|kamei": {
+     "spearman": 0.11156971259205103,
+     "jaccard_top": 0.14606741573033707,
+     "gain_complementarite": -0.031140350877193024
+    },
+    "vulture|coupling": {
+     "spearman": 0.20722997475510693,
+     "jaccard_top": 0.1724137931034483,
+     "gain_complementarite": 0.0023125996810208216
+    },
+    "mypy|kamei": {
+     "spearman": 0.03225054678706506,
+     "jaccard_top": 0.10869565217391304,
+     "gain_complementarite": 0.004445773524720864
+    },
+    "mypy|coupling": {
+     "spearman": 0.30690336012008285,
+     "jaccard_top": 0.25925925925925924,
+     "gain_complementarite": 0.025338915470494494
+    },
+    "kamei|coupling": {
+     "spearman": 0.21789281810717354,
+     "jaccard_top": 0.1590909090909091,
+     "gain_complementarite": 0.021610845295055747
+    }
+   },
+   "part_positifs_vus_par_une_seule_famille": 0.26666666666666666,
+   "n_positifs_vus_top10": 45,
+   "n_positifs": 55
+  },
+  {
+   "seed": 0,
+   "BASE": 0.7962121212121213,
+   "concat": 0.8269338118022328,
+   "concat_sans_churn": 0.8133771929824563,
+   "S1": 0.8141945773524721,
+   "S2": 0.7765749601275918,
+   "S1_sans_churn": 0.802671451355662,
+   "S2_sans_churn": 0.7578748006379585,
+   "familles": {
+    "BASE": 0.7962121212121213,
+    "churn": 0.7534888357256779,
+    "radon": 0.5733253588516746,
+    "ruff": 0.5219497607655502,
+    "bandit": 0.6373205741626793,
+    "diff": 0.5770733652312598,
+    "process": 0.6092703349282296,
+    "pylint": 0.6238038277511961,
+    "vulture": 0.5376395534290273,
+    "mypy": 0.6288476874003188,
+    "kamei": 0.6781698564593301,
+    "coupling": 0.7300039872408293
+   },
+   "pairs": {
+    "BASE|churn": {
+     "spearman": 0.3596668002770323,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": 0.022248803827750963
+    },
+    "BASE|radon": {
+     "spearman": 0.11609716606329298,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": -0.06391547049441793
+    },
+    "BASE|ruff": {
+     "spearman": 0.08754350576125695,
+     "jaccard_top": 0.1724137931034483,
+     "gain_complementarite": -0.08759968102073368
+    },
+    "BASE|bandit": {
+     "spearman": 0.1253233906274183,
+     "jaccard_top": 0.1590909090909091,
+     "gain_complementarite": -0.03480861244019151
+    },
+    "BASE|diff": {
+     "spearman": 0.3152672486938736,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": -0.06875996810207341
+    },
+    "BASE|process": {
+     "spearman": 0.20956799405717966,
+     "jaccard_top": 0.05154639175257732,
+     "gain_complementarite": -0.03421052631578958
+    },
+    "BASE|pylint": {
+     "spearman": 0.12329415373644957,
+     "jaccard_top": 0.24390243902439024,
+     "gain_complementarite": -0.03482854864433804
+    },
+    "BASE|vulture": {
+     "spearman": -0.02042630638892499,
+     "jaccard_top": 0.10869565217391304,
+     "gain_complementarite": -0.06875996810207341
+    },
+    "BASE|mypy": {
+     "spearman": 0.1632597275867834,
+     "jaccard_top": 0.14606741573033707,
+     "gain_complementarite": -0.029027113237639512
+    },
+    "BASE|kamei": {
+     "spearman": 0.4424038109762821,
+     "jaccard_top": 0.1724137931034483,
+     "gain_complementarite": -0.02280701754385961
+    },
+    "BASE|coupling": {
+     "spearman": 0.2717332796643723,
+     "jaccard_top": 0.10869565217391304,
+     "gain_complementarite": 0.030801435406698552
+    },
+    "churn|radon": {
+     "spearman": 0.12172003738020651,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": -0.04047049441786299
+    },
+    "churn|ruff": {
+     "spearman": 0.09784021517227043,
+     "jaccard_top": 0.12087912087912088,
+     "gain_complementarite": -0.08036283891547058
+    },
+    "churn|bandit": {
+     "spearman": 0.20706981050696843,
+     "jaccard_top": 0.12087912087912088,
+     "gain_complementarite": -0.03498803827751207
+    },
+    "churn|diff": {
+     "spearman": 0.1961396516299188,
+     "jaccard_top": 0.05154639175257732,
+     "gain_complementarite": -0.04318181818181843
+    },
+    "churn|process": {
+     "spearman": 0.23348659545198017,
+     "jaccard_top": 0.04081632653061224,
+     "gain_complementarite": -0.01634768740031911
+    },
+    "churn|pylint": {
+     "spearman": 0.1468699658937458,
+     "jaccard_top": 0.10869565217391304,
+     "gain_complementarite": -0.019417862838915667
+    },
+    "churn|vulture": {
+     "spearman": 0.049433832714507686,
+     "jaccard_top": 0.10869565217391304,
+     "gain_complementarite": -0.06537081339712936
+    },
+    "churn|mypy": {
+     "spearman": 0.09874275092185361,
+     "jaccard_top": 0.10869565217391304,
+     "gain_complementarite": -0.026116427432216982
+    },
+    "churn|kamei": {
+     "spearman": 0.3049749029132122,
+     "jaccard_top": 0.1724137931034483,
+     "gain_complementarite": 0.0021132376395534003
+    },
+    "churn|coupling": {
+     "spearman": 0.18159132282442872,
+     "jaccard_top": 0.10869565217391304,
+     "gain_complementarite": 0.04840510366826134
+    },
+    "radon|ruff": {
+     "spearman": 0.4555785122754443,
+     "jaccard_top": 0.25925925925925924,
+     "gain_complementarite": -0.03381180223285474
+    },
+    "radon|bandit": {
+     "spearman": 0.03552253921807601,
+     "jaccard_top": 0.14606741573033707,
+     "gain_complementarite": 0.015590111642743265
+    },
+    "radon|diff": {
+     "spearman": 0.1485773334020807,
+     "jaccard_top": 0.10869565217391304,
+     "gain_complementarite": 0.013995215311004783
+    },
+    "radon|process": {
+     "spearman": 0.12180905592625293,
+     "jaccard_top": 0.0851063829787234,
+     "gain_complementarite": 0.016786283891547127
+    },
+    "radon|pylint": {
+     "spearman": 0.43687002520343343,
+     "jaccard_top": 0.2,
+     "gain_complementarite": 0.027173046251993682
+    },
+    "radon|vulture": {
+     "spearman": 0.34539457185538447,
+     "jaccard_top": 0.14606741573033707,
+     "gain_complementarite": -0.004346092503987209
+    },
+    "radon|mypy": {
+     "spearman": 0.058938446061088126,
+     "jaccard_top": 0.1590909090909091,
+     "gain_complementarite": 0.004066985645933108
+    },
+    "radon|kamei": {
+     "spearman": 0.1174265627697224,
+     "jaccard_top": 0.12087912087912088,
+     "gain_complementarite": -0.019936204146730474
+    },
+    "radon|coupling": {
+     "spearman": 0.22236898191233231,
+     "jaccard_top": 0.1590909090909091,
+     "gain_complementarite": -0.003468899521531066
+    },
+    "ruff|bandit": {
+     "spearman": 0.07909084408097083,
+     "jaccard_top": 0.25925925925925924,
+     "gain_complementarite": -0.026355661881977466
+    },
+    "ruff|diff": {
+     "spearman": 0.17039241239491412,
+     "jaccard_top": 0.12087912087912088,
+     "gain_complementarite": -0.002890749601275888
+    },
+    "ruff|process": {
+     "spearman": 0.025615499523523343,
+     "jaccard_top": 0.07368421052631578,
+     "gain_complementarite": -0.01543062200956924
+    },
+    "ruff|pylint": {
+     "spearman": 0.4354226690674998,
+     "jaccard_top": 0.3076923076923077,
+     "gain_complementarite": -0.04597288676236044
+    },
+    "ruff|vulture": {
+     "spearman": 0.33928508906147875,
+     "jaccard_top": 0.24390243902439024,
+     "gain_complementarite": 0.002870813397129135
+    },
+    "ruff|mypy": {
+     "spearman": 0.07278832149509781,
+     "jaccard_top": 0.2,
+     "gain_complementarite": -0.019397926634768692
+    },
+    "ruff|kamei": {
+     "spearman": 0.1263892412649459,
+     "jaccard_top": 0.10869565217391304,
+     "gain_complementarite": -0.05829346092503984
+    },
+    "ruff|coupling": {
+     "spearman": 0.16849526240432483,
+     "jaccard_top": 0.14606741573033707,
+     "gain_complementarite": -0.08118022328548646
+    },
+    "bandit|diff": {
+     "spearman": 0.05864689963434937,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": -0.00771531100478462
+    },
+    "bandit|process": {
+     "spearman": 0.1800344040374518,
+     "jaccard_top": 0.05154639175257732,
+     "gain_complementarite": 0.032256778309410095
+    },
+    "bandit|pylint": {
+     "spearman": 0.09267898227090984,
+     "jaccard_top": 0.34210526315789475,
+     "gain_complementarite": 0.03514752791068598
+    },
+    "bandit|vulture": {
+     "spearman": 0.031790188286660644,
+     "jaccard_top": 0.2911392405063291,
+     "gain_complementarite": -0.015350877192982226
+    },
+    "bandit|mypy": {
+     "spearman": 0.02338715536001474,
+     "jaccard_top": 0.1724137931034483,
+     "gain_complementarite": 0.04812599681020746
+    },
+    "bandit|kamei": {
+     "spearman": 0.10625976951720077,
+     "jaccard_top": 0.14606741573033707,
+     "gain_complementarite": 0.009409888357256757
+    },
+    "bandit|coupling": {
+     "spearman": 0.1858574220396249,
+     "jaccard_top": 0.2,
+     "gain_complementarite": -0.027771132376395502
+    },
+    "diff|process": {
+     "spearman": 0.1067883339361519,
+     "jaccard_top": 0.05154639175257732,
+     "gain_complementarite": 0.025159489633173937
+    },
+    "diff|pylint": {
+     "spearman": 0.14306801864752247,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": 0.003389154704944275
+    },
+    "diff|vulture": {
+     "spearman": 0.009109097867916938,
+     "jaccard_top": 0.10869565217391304,
+     "gain_complementarite": -0.0005382775119615602
+    },
+    "diff|mypy": {
+     "spearman": 0.14825205518158693,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": 0.009370015948963473
+    },
+    "diff|kamei": {
+     "spearman": 0.25892938523781556,
+     "jaccard_top": 0.0967741935483871,
+     "gain_complementarite": -0.024381977671451338
+    },
+    "diff|coupling": {
+     "spearman": 0.07762516906181954,
+     "jaccard_top": 0.0967741935483871,
+     "gain_complementarite": -0.019397926634768692
+    },
+    "process|pylint": {
+     "spearman": 0.09020709991000886,
+     "jaccard_top": 0.0851063829787234,
+     "gain_complementarite": 0.03229665071770338
+    },
+    "process|vulture": {
+     "spearman": 0.013830256700449567,
+     "jaccard_top": 0.05154639175257732,
+     "gain_complementarite": -0.008931419457735124
+    },
+    "process|mypy": {
+     "spearman": -0.01204492337681985,
+     "jaccard_top": 0.05154639175257732,
+     "gain_complementarite": 0.03532695374800643
+    },
+    "process|kamei": {
+     "spearman": 0.24010286466385308,
+     "jaccard_top": 0.07368421052631578,
+     "gain_complementarite": 0.009988038277511935
+    },
+    "process|coupling": {
+     "spearman": 0.11178620290863628,
+     "jaccard_top": 0.0625,
+     "gain_complementarite": 0.007555821371611038
+    },
+    "pylint|vulture": {
+     "spearman": 0.4282441218044196,
+     "jaccard_top": 0.275,
+     "gain_complementarite": -0.03323365231259956
+    },
+    "pylint|mypy": {
+     "spearman": 0.15350163869503086,
+     "jaccard_top": 0.25925925925925924,
+     "gain_complementarite": 0.06052631578947387
+    },
+    "pylint|kamei": {
+     "spearman": 0.11805254000824415,
+     "jaccard_top": 0.1590909090909091,
+     "gain_complementarite": 0.0011164274322169598
+    },
+    "pylint|coupling": {
+     "spearman": 0.26211492957313337,
+     "jaccard_top": 0.2,
+     "gain_complementarite": -0.00039872408293450956
+    },
+    "vulture|mypy": {
+     "spearman": 0.02028814081637696,
+     "jaccard_top": 0.1724137931034483,
+     "gain_complementarite": 0.014872408293461037
+    },
+    "vulture|kamei": {
+     "spearman": 0.014438335719480356,
+     "jaccard_top": 0.07368421052631578,
+     "gain_complementarite": -0.0409888357256778
+    },
+    "vulture|coupling": {
+     "spearman": 0.12058055809142874,
+     "jaccard_top": 0.2,
+     "gain_complementarite": -0.06160287081339699
+    },
+    "mypy|kamei": {
+     "spearman": 0.15535654781530894,
+     "jaccard_top": 0.0851063829787234,
+     "gain_complementarite": 0.00699760765550228
+    },
+    "mypy|coupling": {
+     "spearman": 0.16962627414022752,
+     "jaccard_top": 0.2289156626506024,
+     "gain_complementarite": -0.0008173843700158834
+    },
+    "kamei|coupling": {
+     "spearman": 0.2030391889061293,
+     "jaccard_top": 0.0851063829787234,
+     "gain_complementarite": 0.02517942583732058
+    }
+   },
+   "part_positifs_vus_par_une_seule_famille": 0.22,
+   "n_positifs_vus_top10": 50,
+   "n_positifs": 55
+  },
+  {
+   "seed": 1,
+   "BASE": 0.8371906328320802,
+   "concat": 0.8557526629072683,
+   "concat_sans_churn": 0.8530897556390976,
+   "S1": 0.8383067042606516,
+   "S2": 0.7877114661654135,
+   "S1_sans_churn": 0.8476660401002506,
+   "S2_sans_churn": 0.7835017230576441,
+   "familles": {
+    "BASE": 0.8371906328320802,
+    "churn": 0.7254660087719299,
+    "radon": 0.6429158834586466,
+    "ruff": 0.5791235902255639,
+    "bandit": 0.5637922932330827,
+    "diff": 0.5776354949874687,
+    "process": 0.6497689536340852,
+    "pylint": 0.5676104323308271,
+    "vulture": 0.5973135964912281,
+    "mypy": 0.580141760651629,
+    "kamei": 0.676515507518797,
+    "coupling": 0.629483865914787
+   },
+   "pairs": {
+    "BASE|churn": {
+     "spearman": 0.42012437772793887,
+     "jaccard_top": 0.21428571428571427,
+     "gain_complementarite": -0.013334116541353302
+    },
+    "BASE|radon": {
+     "spearman": 0.18803013744277017,
+     "jaccard_top": 0.12087912087912088,
+     "gain_complementarite": -0.03479401629072665
+    },
+    "BASE|ruff": {
+     "spearman": 0.18037522694465577,
+     "jaccard_top": 0.0851063829787234,
+     "gain_complementarite": -0.06665100250626566
+    },
+    "BASE|bandit": {
+     "spearman": 0.1453654498889831,
+     "jaccard_top": 0.0967741935483871,
+     "gain_complementarite": -0.0757949561403507
+    },
+    "BASE|diff": {
+     "spearman": 0.41784694847696774,
+     "jaccard_top": 0.14606741573033707,
+     "gain_complementarite": -0.09408286340852134
+    },
+    "BASE|process": {
+     "spearman": 0.18265157025786763,
+     "jaccard_top": 0.10869565217391304,
+     "gain_complementarite": -0.013843201754385914
+    },
+    "BASE|pylint": {
+     "spearman": 0.12678202429847177,
+     "jaccard_top": 0.1724137931034483,
+     "gain_complementarite": -0.06896146616541343
+    },
+    "BASE|vulture": {
+     "spearman": 0.13630783371884728,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": -0.05094768170426067
+    },
+    "BASE|mypy": {
+     "spearman": 0.09482256700930942,
+     "jaccard_top": 0.0851063829787234,
+     "gain_complementarite": -0.05425673558897248
+    },
+    "BASE|kamei": {
+     "spearman": 0.46250976262276106,
+     "jaccard_top": 0.275,
+     "gain_complementarite": -0.04783442982456143
+    },
+    "BASE|coupling": {
+     "spearman": 0.1931486387386355,
+     "jaccard_top": 0.14606741573033707,
+     "gain_complementarite": -0.0323660714285714
+    },
+    "churn|radon": {
+     "spearman": 0.2378501443791932,
+     "jaccard_top": 0.10869565217391304,
+     "gain_complementarite": 0.003916040100250595
+    },
+    "churn|ruff": {
+     "spearman": 0.15821328972428536,
+     "jaccard_top": 0.04081632653061224,
+     "gain_complementarite": -0.02200814536340856
+    },
+    "churn|bandit": {
+     "spearman": 0.08945198961356124,
+     "jaccard_top": 0.0851063829787234,
+     "gain_complementarite": -0.038240131578947345
+    },
+    "churn|diff": {
+     "spearman": 0.2866417679677774,
+     "jaccard_top": 0.10869565217391304,
+     "gain_complementarite": -0.036575814536340845
+    },
+    "churn|process": {
+     "spearman": 0.2210145560894643,
+     "jaccard_top": 0.0625,
+     "gain_complementarite": 0.01987390350877183
+    },
+    "churn|pylint": {
+     "spearman": 0.18869888989587683,
+     "jaccard_top": 0.14606741573033707,
+     "gain_complementarite": -0.03289473684210531
+    },
+    "churn|vulture": {
+     "spearman": 0.2097320388703524,
+     "jaccard_top": 0.14606741573033707,
+     "gain_complementarite": -0.011943922305764465
+    },
+    "churn|mypy": {
+     "spearman": 0.05633434124063324,
+     "jaccard_top": 0.12087912087912088,
+     "gain_complementarite": -0.02292841478696761
+    },
+    "churn|kamei": {
+     "spearman": 0.4002018898204697,
+     "jaccard_top": 0.2,
+     "gain_complementarite": 0.010338345864661647
+    },
+    "churn|coupling": {
+     "spearman": 0.16570821863798893,
+     "jaccard_top": 0.12087912087912088,
+     "gain_complementarite": 0.012629229323308233
+    },
+    "radon|ruff": {
+     "spearman": 0.3021031941718753,
+     "jaccard_top": 0.1724137931034483,
+     "gain_complementarite": -0.009653038847117767
+    },
+    "radon|bandit": {
+     "spearman": 0.07830505904263128,
+     "jaccard_top": 0.1590909090909091,
+     "gain_complementarite": -0.034206610275689164
+    },
+    "radon|diff": {
+     "spearman": 0.12453586652105825,
+     "jaccard_top": 0.0967741935483871,
+     "gain_complementarite": -0.009555137844611483
+    },
+    "radon|process": {
+     "spearman": 0.1558068328568971,
+     "jaccard_top": 0.0851063829787234,
+     "gain_complementarite": 0.045563126566416146
+    },
+    "radon|pylint": {
+     "spearman": 0.46310336709320304,
+     "jaccard_top": 0.2,
+     "gain_complementarite": -0.019599780701754277
+    },
+    "radon|vulture": {
+     "spearman": 0.1942464525887702,
+     "jaccard_top": 0.14606741573033707,
+     "gain_complementarite": 0.019031954887218094
+    },
+    "radon|mypy": {
+     "spearman": -0.047351494865551444,
+     "jaccard_top": 0.0851063829787234,
+     "gain_complementarite": 0.005932800751879741
+    },
+    "radon|kamei": {
+     "spearman": 0.1761070466444893,
+     "jaccard_top": 0.1590909090909091,
+     "gain_complementarite": 0.030740914786967388
+    },
+    "radon|coupling": {
+     "spearman": 0.16731571199152473,
+     "jaccard_top": 0.1724137931034483,
+     "gain_complementarite": 0.035401002506265766
+    },
+    "ruff|bandit": {
+     "spearman": 0.10344308990567287,
+     "jaccard_top": 0.10869565217391304,
+     "gain_complementarite": 0.0016643170426065002
+    },
+    "ruff|diff": {
+     "spearman": 0.15823425786211706,
+     "jaccard_top": 0.14606741573033707,
+     "gain_complementarite": 0.017465538847117767
+    },
+    "ruff|process": {
+     "spearman": 0.11237364607343667,
+     "jaccard_top": 0.05154639175257732,
+     "gain_complementarite": 0.012570488721804551
+    },
+    "ruff|pylint": {
+     "spearman": 0.3415636962945948,
+     "jaccard_top": 0.2289156626506024,
+     "gain_complementarite": -0.0027608082706767068
+    },
+    "ruff|vulture": {
+     "spearman": 0.2098960322496049,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": 0.025160557644110182
+    },
+    "ruff|mypy": {
+     "spearman": -0.07557577111616423,
+     "jaccard_top": 0.10869565217391304,
+     "gain_complementarite": 0.0719572368421052
+    },
+    "ruff|kamei": {
+     "spearman": 0.18026503941057595,
+     "jaccard_top": 0.12087912087912088,
+     "gain_complementarite": -0.00922227443609025
+    },
+    "ruff|coupling": {
+     "spearman": 0.14096181117719425,
+     "jaccard_top": 0.12087912087912088,
+     "gain_complementarite": 0.01940397869674182
+    },
+    "bandit|diff": {
+     "spearman": 0.06990067395594657,
+     "jaccard_top": 0.14606741573033707,
+     "gain_complementarite": 0.022889254385964897
+    },
+    "bandit|process": {
+     "spearman": 0.07839632332502829,
+     "jaccard_top": 0.0967741935483871,
+     "gain_complementarite": -0.011219454887218094
+    },
+    "bandit|pylint": {
+     "spearman": 0.15180451140291937,
+     "jaccard_top": 0.1724137931034483,
+     "gain_complementarite": 0.014841791979949837
+    },
+    "bandit|vulture": {
+     "spearman": 0.08461227950154532,
+     "jaccard_top": 0.1590909090909091,
+     "gain_complementarite": 0.03436325187969924
+    },
+    "bandit|mypy": {
+     "spearman": 0.34744753817239715,
+     "jaccard_top": 0.1590909090909091,
+     "gain_complementarite": 0.035851347117794585
+    },
+    "bandit|kamei": {
+     "spearman": 0.06963225033345682,
+     "jaccard_top": 0.10869565217391304,
+     "gain_complementarite": -0.011571898496240518
+    },
+    "bandit|coupling": {
+     "spearman": 0.22153083669383625,
+     "jaccard_top": 0.2289156626506024,
+     "gain_complementarite": -0.003974780701754277
+    },
+    "diff|process": {
+     "spearman": 0.07189496738095115,
+     "jaccard_top": 0.0851063829787234,
+     "gain_complementarite": 0.005247493734335862
+    },
+    "diff|pylint": {
+     "spearman": 0.0801882280109825,
+     "jaccard_top": 0.0851063829787234,
+     "gain_complementarite": 0.016388627819548862
+    },
+    "diff|vulture": {
+     "spearman": 0.09250041680880255,
+     "jaccard_top": 0.1724137931034483,
+     "gain_complementarite": 0.021910244360902387
+    },
+    "diff|mypy": {
+     "spearman": -0.03487211648273631,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": 0.04836309523809523
+    },
+    "diff|kamei": {
+     "spearman": 0.2801125438900959,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": -0.02580670426065157
+    },
+    "diff|coupling": {
+     "spearman": 0.045104719605445834,
+     "jaccard_top": 0.0967741935483871,
+     "gain_complementarite": 0.019560620300751896
+    },
+    "process|pylint": {
+     "spearman": 0.06012288001351763,
+     "jaccard_top": 0.0851063829787234,
+     "gain_complementarite": 0.0023300438596493
+    },
+    "process|vulture": {
+     "spearman": 0.08127239407769044,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": 0.02480811403508787
+    },
+    "process|mypy": {
+     "spearman": 0.02040117947664247,
+     "jaccard_top": 0.05154639175257732,
+     "gain_complementarite": 0.007381735588972482
+    },
+    "process|kamei": {
+     "spearman": 0.2414671209496891,
+     "jaccard_top": 0.05154639175257732,
+     "gain_complementarite": 0.040785557644110404
+    },
+    "process|coupling": {
+     "spearman": 0.10551989709869276,
+     "jaccard_top": 0.030303030303030304,
+     "gain_complementarite": 0.0502427944862156
+    },
+    "pylint|vulture": {
+     "spearman": 0.29577132842217396,
+     "jaccard_top": 0.2,
+     "gain_complementarite": 0.03657581453634062
+    },
+    "pylint|mypy": {
+     "spearman": -0.030624140699552056,
+     "jaccard_top": 0.1724137931034483,
+     "gain_complementarite": 0.03173950501253131
+    },
+    "pylint|kamei": {
+     "spearman": 0.1558651888069947,
+     "jaccard_top": 0.14606741573033707,
+     "gain_complementarite": -0.01754385964912275
+    },
+    "pylint|coupling": {
+     "spearman": 0.21422487932693482,
+     "jaccard_top": 0.24390243902439024,
+     "gain_complementarite": 0.014548088972430984
+    },
+    "vulture|mypy": {
+     "spearman": 0.023423961640737928,
+     "jaccard_top": 0.14606741573033707,
+     "gain_complementarite": 0.025610902255639
+    },
+    "vulture|kamei": {
+     "spearman": 0.14981397996142146,
+     "jaccard_top": 0.0851063829787234,
+     "gain_complementarite": 0.006755169172932396
+    },
+    "vulture|coupling": {
+     "spearman": 0.2355413530275286,
+     "jaccard_top": 0.2289156626506024,
+     "gain_complementarite": 0.03818139097744366
+    },
+    "mypy|kamei": {
+     "spearman": 0.050001423893791266,
+     "jaccard_top": 0.0967741935483871,
+     "gain_complementarite": 0.00033286340852134444
+    },
+    "mypy|coupling": {
+     "spearman": 0.2538753488238264,
+     "jaccard_top": 0.21428571428571427,
+     "gain_complementarite": 0.014352286967418415
+    },
+    "kamei|coupling": {
+     "spearman": 0.11216658147811988,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": 0.02747102130325818
+    }
+   },
+   "part_positifs_vus_par_une_seule_famille": 0.2222222222222222,
+   "n_positifs_vus_top10": 45,
+   "n_positifs": 56
+  },
+  {
+   "seed": 1,
+   "BASE": 0.7486098057644109,
+   "concat": 0.7811129385964912,
+   "concat_sans_churn": 0.7463189223057645,
+   "S1": 0.7610040726817042,
+   "S2": 0.7327694235588972,
+   "S1_sans_churn": 0.7537202380952381,
+   "S2_sans_churn": 0.7249569235588973,
+   "familles": {
+    "BASE": 0.7486098057644109,
+    "churn": 0.692453790726817,
+    "radon": 0.658638784461153,
+    "ruff": 0.6049498746867166,
+    "bandit": 0.6274475250626567,
+    "diff": 0.5742677005012531,
+    "process": 0.5847431077694236,
+    "pylint": 0.5796326754385965,
+    "vulture": 0.537672305764411,
+    "mypy": 0.608826754385965,
+    "kamei": 0.6641212406015038,
+    "coupling": 0.7033795426065161
+   },
+   "pairs": {
+    "BASE|churn": {
+     "spearman": 0.34203942564527673,
+     "jaccard_top": 0.0851063829787234,
+     "gain_complementarite": 0.005952380952380931
+    },
+    "BASE|radon": {
+     "spearman": 0.15806780124210562,
+     "jaccard_top": 0.10869565217391304,
+     "gain_complementarite": 0.0009594298245614308
+    },
+    "BASE|ruff": {
+     "spearman": 0.06570673317644184,
+     "jaccard_top": 0.0851063829787234,
+     "gain_complementarite": -0.031132518796992303
+    },
+    "BASE|bandit": {
+     "spearman": 0.08662941173807757,
+     "jaccard_top": 0.12087912087912088,
+     "gain_complementarite": -0.018659931077694147
+    },
+    "BASE|diff": {
+     "spearman": 0.33786811946509826,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": -0.05592105263157887
+    },
+    "BASE|process": {
+     "spearman": 0.21091280798859305,
+     "jaccard_top": 0.05154639175257732,
+     "gain_complementarite": -0.02108787593984951
+    },
+    "BASE|pylint": {
+     "spearman": 0.021652039091918093,
+     "jaccard_top": 0.14606741573033707,
+     "gain_complementarite": -0.04689458020050119
+    },
+    "BASE|vulture": {
+     "spearman": 0.07094867872505192,
+     "jaccard_top": 0.0967741935483871,
+     "gain_complementarite": -0.07295582706766912
+    },
+    "BASE|mypy": {
+     "spearman": 0.14523595140394333,
+     "jaccard_top": 0.1590909090909091,
+     "gain_complementarite": -0.03379542606516284
+    },
+    "BASE|kamei": {
+     "spearman": 0.4985686190669719,
+     "jaccard_top": 0.24390243902439024,
+     "gain_complementarite": -0.017680921052631526
+    },
+    "BASE|coupling": {
+     "spearman": 0.2481851004639157,
+     "jaccard_top": 0.10869565217391304,
+     "gain_complementarite": 0.013999843358395991
+    },
+    "churn|radon": {
+     "spearman": 0.15192449366092722,
+     "jaccard_top": 0.1590909090909091,
+     "gain_complementarite": 0.029507362155388406
+    },
+    "churn|ruff": {
+     "spearman": 0.08722083180186008,
+     "jaccard_top": 0.10869565217391304,
+     "gain_complementarite": 0.0006069862155390071
+    },
+    "churn|bandit": {
+     "spearman": 0.141272697965047,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": 0.0013706140350876472
+    },
+    "churn|diff": {
+     "spearman": 0.13781206578588195,
+     "jaccard_top": 0.0625,
+     "gain_complementarite": -0.022164786967418526
+    },
+    "churn|process": {
+     "spearman": 0.20029506281372686,
+     "jaccard_top": 0.07368421052631578,
+     "gain_complementarite": -0.010808270676691656
+    },
+    "churn|pylint": {
+     "spearman": 0.15628919334965047,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": -0.022908834586466198
+    },
+    "churn|vulture": {
+     "spearman": 0.17436651917722418,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": -0.059562969924812026
+    },
+    "churn|mypy": {
+     "spearman": 0.14976850152928814,
+     "jaccard_top": 0.07368421052631578,
+     "gain_complementarite": -0.0029566102756892754
+    },
+    "churn|kamei": {
+     "spearman": 0.41592823518006544,
+     "jaccard_top": 0.1590909090909091,
+     "gain_complementarite": 0.01490053258145363
+    },
+    "churn|coupling": {
+     "spearman": 0.17948656925773832,
+     "jaccard_top": 0.12087912087912088,
+     "gain_complementarite": 0.04147086466165428
+    },
+    "radon|ruff": {
+     "spearman": 0.4143989575893232,
+     "jaccard_top": 0.275,
+     "gain_complementarite": -0.027725563909774542
+    },
+    "radon|bandit": {
+     "spearman": -0.11347144892218497,
+     "jaccard_top": 0.1590909090909091,
+     "gain_complementarite": 0.009868421052631526
+    },
+    "radon|diff": {
+     "spearman": 0.09226655647244263,
+     "jaccard_top": 0.0967741935483871,
+     "gain_complementarite": -0.022125626566416146
+    },
+    "radon|process": {
+     "spearman": 0.13419998124786517,
+     "jaccard_top": 0.0851063829787234,
+     "gain_complementarite": 0.011258615288220475
+    },
+    "radon|pylint": {
+     "spearman": 0.36524338700354025,
+     "jaccard_top": 0.18604651162790697,
+     "gain_complementarite": -0.05494204260651647
+    },
+    "radon|vulture": {
+     "spearman": 0.31495437961833994,
+     "jaccard_top": 0.1724137931034483,
+     "gain_complementarite": -0.048128132832080395
+    },
+    "radon|mypy": {
+     "spearman": 0.09542397788714012,
+     "jaccard_top": 0.12087912087912088,
+     "gain_complementarite": 0.0002937030075186309
+    },
+    "radon|kamei": {
+     "spearman": 0.09077961243580579,
+     "jaccard_top": 0.1724137931034483,
+     "gain_complementarite": 0.04092261904761896
+    },
+    "radon|coupling": {
+     "spearman": 0.2341299868797456,
+     "jaccard_top": 0.12087912087912088,
+     "gain_complementarite": 0.022497650375940204
+    },
+    "ruff|bandit": {
+     "spearman": -0.11549765712569708,
+     "jaccard_top": 0.18604651162790697,
+     "gain_complementarite": 0.06050281954887193
+    },
+    "ruff|diff": {
+     "spearman": 0.11874678303742232,
+     "jaccard_top": 0.10869565217391304,
+     "gain_complementarite": -0.0005678258145359605
+    },
+    "ruff|process": {
+     "spearman": -0.013862964433526656,
+     "jaccard_top": 0.0967741935483871,
+     "gain_complementarite": 0.017328477443609325
+    },
+    "ruff|pylint": {
+     "spearman": 0.40937593664766553,
+     "jaccard_top": 0.24390243902439024,
+     "gain_complementarite": -0.014176065162907259
+    },
+    "ruff|vulture": {
+     "spearman": 0.3233480493284833,
+     "jaccard_top": 0.21428571428571427,
+     "gain_complementarite": -0.0506931390977442
+    },
+    "ruff|mypy": {
+     "spearman": 0.1657045986207488,
+     "jaccard_top": 0.18604651162790697,
+     "gain_complementarite": 0.013490758145363269
+    },
+    "ruff|kamei": {
+     "spearman": 0.07417464691446418,
+     "jaccard_top": 0.0851063829787234,
+     "gain_complementarite": 0.01850328947368418
+    },
+    "ruff|coupling": {
+     "spearman": 0.19774657984665436,
+     "jaccard_top": 0.18604651162790697,
+     "gain_complementarite": -0.01824874686716771
+    },
+    "bandit|diff": {
+     "spearman": -0.003823364601136637,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": 3.916040100249152e-05
+    },
+    "bandit|process": {
+     "spearman": 0.10496021667363806,
+     "jaccard_top": 0.030303030303030304,
+     "gain_complementarite": 0.021440319548872155
+    },
+    "bandit|pylint": {
+     "spearman": 0.06570412853448869,
+     "jaccard_top": 0.2911392405063291,
+     "gain_complementarite": 0.0217536027568922
+    },
+    "bandit|vulture": {
+     "spearman": 0.10941613456209555,
+     "jaccard_top": 0.21428571428571427,
+     "gain_complementarite": 0.00926143483709263
+    },
+    "bandit|mypy": {
+     "spearman": 0.10507109487067495,
+     "jaccard_top": 0.3783783783783784,
+     "gain_complementarite": 0.035870927318295553
+    },
+    "bandit|kamei": {
+     "spearman": 0.11672720463171048,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": 0.022497650375939537
+    },
+    "bandit|coupling": {
+     "spearman": -0.015171153989643459,
+     "jaccard_top": 0.275,
+     "gain_complementarite": -0.018816572681704113
+    },
+    "diff|process": {
+     "spearman": 0.04640864649004551,
+     "jaccard_top": 0.07368421052631578,
+     "gain_complementarite": 0.030153508771929793
+    },
+    "diff|pylint": {
+     "spearman": 0.05150368451635246,
+     "jaccard_top": 0.12087912087912088,
+     "gain_complementarite": -0.009535557644110182
+    },
+    "diff|vulture": {
+     "spearman": 0.08522312103166495,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": -0.019012374686716793
+    },
+    "diff|mypy": {
+     "spearman": 0.0770502572244806,
+     "jaccard_top": 0.1724137931034483,
+     "gain_complementarite": -0.00992716165413532
+    },
+    "diff|kamei": {
+     "spearman": 0.2550200273063848,
+     "jaccard_top": 0.0851063829787234,
+     "gain_complementarite": -0.024044486215538896
+    },
+    "diff|coupling": {
+     "spearman": 0.13835854105555162,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": -0.03485275689223044
+    },
+    "process|pylint": {
+     "spearman": 0.03260585771051967,
+     "jaccard_top": 0.0625,
+     "gain_complementarite": 0.02529761904761907
+    },
+    "process|vulture": {
+     "spearman": 0.09042615901322341,
+     "jaccard_top": 0.05154639175257732,
+     "gain_complementarite": -0.009281015037594043
+    },
+    "process|mypy": {
+     "spearman": 0.04337496940161787,
+     "jaccard_top": 0.0851063829787234,
+     "gain_complementarite": 0.03671287593984973
+    },
+    "process|kamei": {
+     "spearman": 0.18075756024842957,
+     "jaccard_top": 0.030303030303030304,
+     "gain_complementarite": 0.007518796992481147
+    },
+    "process|coupling": {
+     "spearman": 0.10633338749458136,
+     "jaccard_top": 0.05154639175257732,
+     "gain_complementarite": 0.0004111842105264385
+    },
+    "pylint|vulture": {
+     "spearman": 0.4128211769037682,
+     "jaccard_top": 0.3246753246753247,
+     "gain_complementarite": -0.026394110275689275
+    },
+    "pylint|mypy": {
+     "spearman": 0.21037421290320335,
+     "jaccard_top": 0.25925925925925924,
+     "gain_complementarite": -0.02670739348370943
+    },
+    "pylint|kamei": {
+     "spearman": 0.06876587294122576,
+     "jaccard_top": 0.1590909090909091,
+     "gain_complementarite": -0.007068452380952439
+    },
+    "pylint|coupling": {
+     "spearman": 0.23115764395455068,
+     "jaccard_top": 0.2,
+     "gain_complementarite": -0.02206688596491202
+    },
+    "vulture|mypy": {
+     "spearman": 0.20370568352842808,
+     "jaccard_top": 0.2,
+     "gain_complementarite": -0.008615288220551465
+    },
+    "vulture|kamei": {
+     "spearman": 0.060720427876825404,
+     "jaccard_top": 0.1724137931034483,
+     "gain_complementarite": -0.02774514411027562
+    },
+    "vulture|coupling": {
+     "spearman": 0.18999760620025283,
+     "jaccard_top": 0.1724137931034483,
+     "gain_complementarite": -0.0669251253132831
+    },
+    "mypy|kamei": {
+     "spearman": 0.1720168996067044,
+     "jaccard_top": 0.10869565217391304,
+     "gain_complementarite": 0.004855889724310725
+    },
+    "mypy|coupling": {
+     "spearman": 0.1711067488533375,
+     "jaccard_top": 0.21428571428571427,
+     "gain_complementarite": -0.013471177944861967
+    },
+    "kamei|coupling": {
+     "spearman": 0.19675824703136377,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": 0.024906015037594154
+    }
+   },
+   "part_positifs_vus_par_une_seule_famille": 0.20930232558139536,
+   "n_positifs_vus_top10": 43,
+   "n_positifs": 56
+  },
+  {
+   "seed": 1,
+   "BASE": 0.7879053113188781,
+   "concat": 0.8183608514024269,
+   "concat_sans_churn": 0.7955440620648497,
+   "S1": 0.8047344340560971,
+   "S2": 0.7650686294012333,
+   "S1_sans_churn": 0.7904913467276706,
+   "S2_sans_churn": 0.7449373383727871,
+   "familles": {
+    "BASE": 0.7879053113188781,
+    "churn": 0.7358663218619456,
+    "radon": 0.6311318878058483,
+    "ruff": 0.5389695643524965,
+    "bandit": 0.613944698627412,
+    "diff": 0.6124129699622041,
+    "process": 0.614819972150388,
+    "pylint": 0.5873881042371195,
+    "vulture": 0.541774418142033,
+    "mypy": 0.6437636761487965,
+    "kamei": 0.7010940919037199,
+    "coupling": 0.670797692460712
+   },
+   "pairs": {
+    "BASE|churn": {
+     "spearman": 0.39107515952045363,
+     "jaccard_top": 0.2,
+     "gain_complementarite": 0.01416351700815599
+    },
+    "BASE|radon": {
+     "spearman": 0.22637610619748616,
+     "jaccard_top": 0.18604651162790697,
+     "gain_complementarite": -0.04243087328426509
+    },
+    "BASE|ruff": {
+     "spearman": 0.07705170854430936,
+     "jaccard_top": 0.14606741573033707,
+     "gain_complementarite": -0.060115376964392286
+    },
+    "BASE|bandit": {
+     "spearman": 0.13548328266282259,
+     "jaccard_top": 0.1724137931034483,
+     "gain_complementarite": -0.049234135667396206
+    },
+    "BASE|diff": {
+     "spearman": 0.376887984220164,
+     "jaccard_top": 0.1590909090909091,
+     "gain_complementarite": -0.05345136264173456
+    },
+    "BASE|process": {
+     "spearman": 0.15084413132097632,
+     "jaccard_top": 0.0625,
+     "gain_complementarite": -0.02912273721901737
+    },
+    "BASE|pylint": {
+     "spearman": 0.08341995641289215,
+     "jaccard_top": 0.24390243902439024,
+     "gain_complementarite": -0.04117764074000396
+    },
+    "BASE|vulture": {
+     "spearman": -0.015082363994150748,
+     "jaccard_top": 0.14606741573033707,
+     "gain_complementarite": -0.07083747762084747
+    },
+    "BASE|mypy": {
+     "spearman": 0.21728127875195125,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": -0.02414959220210866
+    },
+    "BASE|kamei": {
+     "spearman": 0.4318500221901145,
+     "jaccard_top": 0.1724137931034483,
+     "gain_complementarite": -0.011418340958822437
+    },
+    "BASE|coupling": {
+     "spearman": 0.21173637215218222,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": -0.011597374179431075
+    },
+    "churn|radon": {
+     "spearman": 0.10744719534564563,
+     "jaccard_top": 0.12087912087912088,
+     "gain_complementarite": 0.0015317286652077877
+    },
+    "churn|ruff": {
+     "spearman": 0.046986599148642554,
+     "jaccard_top": 0.0967741935483871,
+     "gain_complementarite": -0.058603540879252125
+    },
+    "churn|bandit": {
+     "spearman": 0.17914738632057134,
+     "jaccard_top": 0.07368421052631578,
+     "gain_complementarite": -0.019992042967973078
+    },
+    "churn|diff": {
+     "spearman": 0.2448172063405928,
+     "jaccard_top": 0.02,
+     "gain_complementarite": -0.018042570121344803
+    },
+    "churn|process": {
+     "spearman": 0.10242988680846801,
+     "jaccard_top": 0.07368421052631578,
+     "gain_complementarite": -0.0010741993236526026
+    },
+    "churn|pylint": {
+     "spearman": 0.13820297054122213,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": -0.03121145812611903
+    },
+    "churn|vulture": {
+     "spearman": 0.06745696778822045,
+     "jaccard_top": 0.0851063829787234,
+     "gain_complementarite": -0.0525959816988264
+    },
+    "churn|mypy": {
+     "spearman": 0.17507090426231325,
+     "jaccard_top": 0.07368421052631578,
+     "gain_complementarite": -0.0010145215834495014
+    },
+    "churn|kamei": {
+     "spearman": 0.4305341375396826,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": 0.015416749552416786
+    },
+    "churn|coupling": {
+     "spearman": 0.20893434137040043,
+     "jaccard_top": 0.07368421052631578,
+     "gain_complementarite": 0.011020489357469576
+    },
+    "radon|ruff": {
+     "spearman": 0.3799017722118658,
+     "jaccard_top": 0.3076923076923077,
+     "gain_complementarite": -0.07881440222796898
+    },
+    "radon|bandit": {
+     "spearman": -0.12453503788174528,
+     "jaccard_top": 0.2289156626506024,
+     "gain_complementarite": 0.011199522578078547
+    },
+    "radon|diff": {
+     "spearman": 0.18447906330308714,
+     "jaccard_top": 0.1590909090909091,
+     "gain_complementarite": 0.0025462502486574
+    },
+    "radon|process": {
+     "spearman": 0.0609163319531344,
+     "jaccard_top": 0.0851063829787234,
+     "gain_complementarite": 0.03859160533121153
+    },
+    "radon|pylint": {
+     "spearman": 0.42868403986012776,
+     "jaccard_top": 0.3076923076923077,
+     "gain_complementarite": -0.01545653471255215
+    },
+    "radon|vulture": {
+     "spearman": 0.22417877324734997,
+     "jaccard_top": 0.2,
+     "gain_complementarite": -0.02713347921225362
+    },
+    "radon|mypy": {
+     "spearman": -0.05947130221492752,
+     "jaccard_top": 0.1590909090909091,
+     "gain_complementarite": 0.027232942112591974
+    },
+    "radon|kamei": {
+     "spearman": 0.1774103905713949,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": 0.007320469464889623
+    },
+    "radon|coupling": {
+     "spearman": 0.23757209617182126,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": -0.017406007559180203
+    },
+    "ruff|bandit": {
+     "spearman": -0.13213210561392377,
+     "jaccard_top": 0.2911392405063291,
+     "gain_complementarite": -0.02804853789536499
+    },
+    "ruff|diff": {
+     "spearman": 0.15248422892553892,
+     "jaccard_top": 0.12087912087912088,
+     "gain_complementarite": -0.017286652078774445
+    },
+    "ruff|process": {
+     "spearman": -0.0072751931837403095,
+     "jaccard_top": 0.0851063829787234,
+     "gain_complementarite": -0.015317286652078876
+    },
+    "ruff|pylint": {
+     "spearman": 0.5268942635925941,
+     "jaccard_top": 0.3783783783783784,
+     "gain_complementarite": -0.04326636164710551
+    },
+    "ruff|vulture": {
+     "spearman": 0.27134966902418944,
+     "jaccard_top": 0.25925925925925924,
+     "gain_complementarite": 0.0011338770638551487
+    },
+    "ruff|mypy": {
+     "spearman": -0.10353718342987374,
+     "jaccard_top": 0.2,
+     "gain_complementarite": 0.0008354883628408638
+    },
+    "ruff|kamei": {
+     "spearman": 0.07793694262948202,
+     "jaccard_top": 0.2,
+     "gain_complementarite": -0.06443206683906899
+    },
+    "ruff|coupling": {
+     "spearman": 0.21953928813573031,
+     "jaccard_top": 0.21428571428571427,
+     "gain_complementarite": -0.04159538492142423
+    },
+    "bandit|diff": {
+     "spearman": 0.029252983373221107,
+     "jaccard_top": 0.18604651162790697,
+     "gain_complementarite": 0.03550825542072811
+    },
+    "bandit|process": {
+     "spearman": 0.11155964763558453,
+     "jaccard_top": 0.0625,
+     "gain_complementarite": 0.0382136463099263
+    },
+    "bandit|pylint": {
+     "spearman": -0.08217622422954932,
+     "jaccard_top": 0.2911392405063291,
+     "gain_complementarite": 0.04356475034812024
+    },
+    "bandit|vulture": {
+     "spearman": 0.07446909110524037,
+     "jaccard_top": 0.275,
+     "gain_complementarite": 0.004475830515217827
+    },
+    "bandit|mypy": {
+     "spearman": 0.30037022203589375,
+     "jaccard_top": 0.21428571428571427,
+     "gain_complementarite": 0.02414959220210866
+    },
+    "bandit|kamei": {
+     "spearman": 0.10046199517126017,
+     "jaccard_top": 0.1724137931034483,
+     "gain_complementarite": -0.017704396260194932
+    },
+    "bandit|coupling": {
+     "spearman": 0.05992843475028382,
+     "jaccard_top": 0.2911392405063291,
+     "gain_complementarite": -0.005092500497314467
+    },
+    "diff|process": {
+     "spearman": 0.08746092808380183,
+     "jaccard_top": 0.030303030303030304,
+     "gain_complementarite": 0.04237119554406177
+    },
+    "diff|pylint": {
+     "spearman": 0.10903369263500727,
+     "jaccard_top": 0.12087912087912088,
+     "gain_complementarite": 0.016232345335189913
+    },
+    "diff|vulture": {
+     "spearman": 0.026316572966165828,
+     "jaccard_top": 0.12087912087912088,
+     "gain_complementarite": -0.007380147205092502
+    },
+    "diff|mypy": {
+     "spearman": 0.10639431170771821,
+     "jaccard_top": 0.0851063829787234,
+     "gain_complementarite": 0.01969365426695857
+    },
+    "diff|kamei": {
+     "spearman": 0.28634205580288263,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": -0.018201710761885703
+    },
+    "diff|coupling": {
+     "spearman": 0.1703384414580338,
+     "jaccard_top": 0.14606741573033707,
+     "gain_complementarite": -0.014541476029440892
+    },
+    "process|pylint": {
+     "spearman": -0.0007322799438299513,
+     "jaccard_top": 0.07368421052631578,
+     "gain_complementarite": 0.01195544062064835
+    },
+    "process|vulture": {
+     "spearman": 0.08654354991565245,
+     "jaccard_top": 0.07368421052631578,
+     "gain_complementarite": -0.013347921225382975
+    },
+    "process|mypy": {
+     "spearman": 0.04840895757696378,
+     "jaccard_top": 0.0851063829787234,
+     "gain_complementarite": 0.03367813805450559
+    },
+    "process|kamei": {
+     "spearman": 0.157795173910169,
+     "jaccard_top": 0.0967741935483871,
+     "gain_complementarite": 0.011418340958822326
+    },
+    "process|coupling": {
+     "spearman": 0.08748105763766922,
+     "jaccard_top": 0.0851063829787234,
+     "gain_complementarite": 0.008116172667595234
+    },
+    "pylint|vulture": {
+     "spearman": 0.24850368440972065,
+     "jaccard_top": 0.25925925925925924,
+     "gain_complementarite": -0.006922617863536873
+    },
+    "pylint|mypy": {
+     "spearman": -0.02714867712347135,
+     "jaccard_top": 0.25925925925925924,
+     "gain_complementarite": 0.015993634374378507
+    },
+    "pylint|kamei": {
+     "spearman": 0.10798168243970777,
+     "jaccard_top": 0.1590909090909091,
+     "gain_complementarite": -0.02297592997811826
+    },
+    "pylint|coupling": {
+     "spearman": 0.22482253437946734,
+     "jaccard_top": 0.2289156626506024,
+     "gain_complementarite": -0.010244678734831703
+    },
+    "vulture|mypy": {
+     "spearman": -0.141876046256413,
+     "jaccard_top": 0.2289156626506024,
+     "gain_complementarite": 0.04451959419136653
+    },
+    "vulture|kamei": {
+     "spearman": 0.02145170357870342,
+     "jaccard_top": 0.0851063829787234,
+     "gain_complementarite": -0.05585836482991835
+    },
+    "vulture|coupling": {
+     "spearman": 0.064109796631199,
+     "jaccard_top": 0.1724137931034483,
+     "gain_complementarite": -0.05267555201909668
+    },
+    "mypy|kamei": {
+     "spearman": 0.16970355466303247,
+     "jaccard_top": 0.0967741935483871,
+     "gain_complementarite": 0.006564551422319487
+    },
+    "mypy|coupling": {
+     "spearman": 0.0963063346523169,
+     "jaccard_top": 0.2289156626506024,
+     "gain_complementarite": 0.039148597573105515
+    },
+    "kamei|coupling": {
+     "spearman": 0.1783195208186094,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": 0.023115178038591644
+    }
+   },
+   "part_positifs_vus_par_une_seule_famille": 0.1590909090909091,
+   "n_positifs_vus_top10": 44,
+   "n_positifs": 55
+  },
+  {
+   "seed": 1,
+   "BASE": 0.7988237639553429,
+   "concat": 0.8080940988835724,
+   "concat_sans_churn": 0.8024322169059012,
+   "S1": 0.8180223285486443,
+   "S2": 0.7962320574162679,
+   "S1_sans_churn": 0.8103269537480063,
+   "S2_sans_churn": 0.7836124401913876,
+   "familles": {
+    "BASE": 0.7988237639553429,
+    "churn": 0.7425039872408293,
+    "radon": 0.6154904306220096,
+    "ruff": 0.5894537480063796,
+    "bandit": 0.607037480063796,
+    "diff": 0.6293460925039873,
+    "process": 0.6398325358851675,
+    "pylint": 0.6796251993620415,
+    "vulture": 0.5351076555023924,
+    "mypy": 0.4980462519936204,
+    "kamei": 0.7072169059011164,
+    "coupling": 0.6830143540669855
+   },
+   "pairs": {
+    "BASE|churn": {
+     "spearman": 0.35231020189878265,
+     "jaccard_top": 0.0967741935483871,
+     "gain_complementarite": 0.022986443381180055
+    },
+    "BASE|radon": {
+     "spearman": 0.1599025644470345,
+     "jaccard_top": 0.12087912087912088,
+     "gain_complementarite": -0.023644338118022357
+    },
+    "BASE|ruff": {
+     "spearman": 0.08484900343654188,
+     "jaccard_top": 0.0967741935483871,
+     "gain_complementarite": -0.04023125996810217
+    },
+    "BASE|bandit": {
+     "spearman": 0.06112463460766748,
+     "jaccard_top": 0.10869565217391304,
+     "gain_complementarite": -0.045773524720893244
+    },
+    "BASE|diff": {
+     "spearman": 0.344068329430371,
+     "jaccard_top": 0.10869565217391304,
+     "gain_complementarite": -0.04278309409888359
+    },
+    "BASE|process": {
+     "spearman": 0.16894011734479708,
+     "jaccard_top": 0.030303030303030304,
+     "gain_complementarite": 0.00633971291866009
+    },
+    "BASE|pylint": {
+     "spearman": 0.10383741207898523,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": 0.010964912280701733
+    },
+    "BASE|vulture": {
+     "spearman": -0.03517228534106397,
+     "jaccard_top": 0.10869565217391304,
+     "gain_complementarite": -0.061204146730462594
+    },
+    "BASE|mypy": {
+     "spearman": 0.06498060798244373,
+     "jaccard_top": 0.12087912087912088,
+     "gain_complementarite": -0.0992224880382776
+    },
+    "BASE|kamei": {
+     "spearman": 0.35652984656409853,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": 0.00277113237639548
+    },
+    "BASE|coupling": {
+     "spearman": 0.2444581671092266,
+     "jaccard_top": 0.1724137931034483,
+     "gain_complementarite": -0.000697767145135697
+    },
+    "churn|radon": {
+     "spearman": 0.16552555517759404,
+     "jaccard_top": 0.10869565217391304,
+     "gain_complementarite": -0.015390749601275844
+    },
+    "churn|ruff": {
+     "spearman": 0.07589103079721377,
+     "jaccard_top": 0.12087912087912088,
+     "gain_complementarite": -0.030502392344497586
+    },
+    "churn|bandit": {
+     "spearman": 0.12552376769717669,
+     "jaccard_top": 0.14606741573033707,
+     "gain_complementarite": -0.030602073365231353
+    },
+    "churn|diff": {
+     "spearman": 0.16880800365884402,
+     "jaccard_top": 0.0967741935483871,
+     "gain_complementarite": -0.006379585326953818
+    },
+    "churn|process": {
+     "spearman": 0.18458069672795296,
+     "jaccard_top": 0.0625,
+     "gain_complementarite": 0.014633173843700109
+    },
+    "churn|pylint": {
+     "spearman": 0.14298777731857645,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": 0.004685007974481681
+    },
+    "churn|vulture": {
+     "spearman": 0.13250027766444922,
+     "jaccard_top": 0.2289156626506024,
+     "gain_complementarite": -0.07244816586921854
+    },
+    "churn|mypy": {
+     "spearman": 0.0690283424889759,
+     "jaccard_top": 0.1590909090909091,
+     "gain_complementarite": -0.0973484848484848
+    },
+    "churn|kamei": {
+     "spearman": 0.3266374889916885,
+     "jaccard_top": 0.12087912087912088,
+     "gain_complementarite": 0.030641945773524748
+    },
+    "churn|coupling": {
+     "spearman": 0.19923599986829982,
+     "jaccard_top": 0.1590909090909091,
+     "gain_complementarite": 0.025598086124401842
+    },
+    "radon|ruff": {
+     "spearman": 0.3834030947954599,
+     "jaccard_top": 0.25925925925925924,
+     "gain_complementarite": 0.006897926634768736
+    },
+    "radon|bandit": {
+     "spearman": -0.004650956269300065,
+     "jaccard_top": 0.14606741573033707,
+     "gain_complementarite": 0.03686204146730465
+    },
+    "radon|diff": {
+     "spearman": 0.11019653588574506,
+     "jaccard_top": 0.0625,
+     "gain_complementarite": 0.040051834130781394
+    },
+    "radon|process": {
+     "spearman": 0.10047394245081101,
+     "jaccard_top": 0.05154639175257732,
+     "gain_complementarite": 0.051315789473684204
+    },
+    "radon|pylint": {
+     "spearman": 0.4844744552503349,
+     "jaccard_top": 0.18604651162790697,
+     "gain_complementarite": -0.022069377990430628
+    },
+    "radon|vulture": {
+     "spearman": 0.17428256741162107,
+     "jaccard_top": 0.1590909090909091,
+     "gain_complementarite": -0.002890749601275777
+    },
+    "radon|mypy": {
+     "spearman": 0.19044017266363736,
+     "jaccard_top": 0.10869565217391304,
+     "gain_complementarite": -0.06816188197767159
+    },
+    "radon|kamei": {
+     "spearman": 0.15029236487027184,
+     "jaccard_top": 0.10869565217391304,
+     "gain_complementarite": 0.0018540669856459413
+    },
+    "radon|coupling": {
+     "spearman": 0.20285352212759614,
+     "jaccard_top": 0.10869565217391304,
+     "gain_complementarite": 0.015829346092504082
+    },
+    "ruff|bandit": {
+     "spearman": 0.12158281347875505,
+     "jaccard_top": 0.2289156626506024,
+     "gain_complementarite": 0.012519936204146487
+    },
+    "ruff|diff": {
+     "spearman": 0.09681027949337051,
+     "jaccard_top": 0.0967741935483871,
+     "gain_complementarite": -0.010625996810207483
+    },
+    "ruff|process": {
+     "spearman": -0.016417898167114767,
+     "jaccard_top": 0.0851063829787234,
+     "gain_complementarite": 0.021730462519936156
+    },
+    "ruff|pylint": {
+     "spearman": 0.3901179103607005,
+     "jaccard_top": 0.24390243902439024,
+     "gain_complementarite": -0.05972886762360463
+    },
+    "ruff|vulture": {
+     "spearman": 0.22799322766576768,
+     "jaccard_top": 0.2289156626506024,
+     "gain_complementarite": -0.034389952153110026
+    },
+    "ruff|mypy": {
+     "spearman": 0.13085668068421255,
+     "jaccard_top": 0.21428571428571427,
+     "gain_complementarite": -0.05285087719298254
+    },
+    "ruff|kamei": {
+     "spearman": 0.05306801021514441,
+     "jaccard_top": 0.10869565217391304,
+     "gain_complementarite": -0.007695374800637866
+    },
+    "ruff|coupling": {
+     "spearman": 0.14218683046233246,
+     "jaccard_top": 0.14606741573033707,
+     "gain_complementarite": -0.014593301435406603
+    },
+    "bandit|diff": {
+     "spearman": -0.05107332916422861,
+     "jaccard_top": 0.0851063829787234,
+     "gain_complementarite": 0.023444976076554935
+    },
+    "bandit|process": {
+     "spearman": 0.17029602540252575,
+     "jaccard_top": 0.0851063829787234,
+     "gain_complementarite": 0.030382775119617178
+    },
+    "bandit|pylint": {
+     "spearman": 0.042215978429661696,
+     "jaccard_top": 0.2911392405063291,
+     "gain_complementarite": -0.019657097288676262
+    },
+    "bandit|vulture": {
+     "spearman": 0.0968470956561168,
+     "jaccard_top": 0.25925925925925924,
+     "gain_complementarite": 0.009170653907495718
+    },
+    "bandit|mypy": {
+     "spearman": 0.09338202569778817,
+     "jaccard_top": 0.2289156626506024,
+     "gain_complementarite": -0.038716108452950704
+    },
+    "bandit|kamei": {
+     "spearman": 0.10170587418413371,
+     "jaccard_top": 0.12087912087912088,
+     "gain_complementarite": -0.01806220095693778
+    },
+    "bandit|coupling": {
+     "spearman": 0.2613566309201596,
+     "jaccard_top": 0.21428571428571427,
+     "gain_complementarite": -0.0030103668261560745
+    },
+    "diff|process": {
+     "spearman": 0.0629373473910152,
+     "jaccard_top": 0.0851063829787234,
+     "gain_complementarite": 0.04505582137161068
+    },
+    "diff|pylint": {
+     "spearman": 0.12076667761081518,
+     "jaccard_top": 0.0851063829787234,
+     "gain_complementarite": 0.020793460925039864
+    },
+    "diff|vulture": {
+     "spearman": 0.048837772742133495,
+     "jaccard_top": 0.10869565217391304,
+     "gain_complementarite": -0.026614832535885258
+    },
+    "diff|mypy": {
+     "spearman": 0.071296817659052,
+     "jaccard_top": 0.12087912087912088,
+     "gain_complementarite": -0.019597288676236224
+    },
+    "diff|kamei": {
+     "spearman": 0.07219933989970855,
+     "jaccard_top": 0.0967741935483871,
+     "gain_complementarite": 0.008991228070175494
+    },
+    "diff|coupling": {
+     "spearman": 0.032800818742850145,
+     "jaccard_top": 0.07368421052631578,
+     "gain_complementarite": 0.028448963317384335
+    },
+    "process|pylint": {
+     "spearman": 0.05615392346187779,
+     "jaccard_top": 0.05154639175257732,
+     "gain_complementarite": 0.047428229665071764
+    },
+    "process|vulture": {
+     "spearman": 0.019949091732879308,
+     "jaccard_top": 0.0625,
+     "gain_complementarite": -0.020414673046252108
+    },
+    "process|mypy": {
+     "spearman": -0.08586471230893132,
+     "jaccard_top": 0.04081632653061224,
+     "gain_complementarite": -0.03977272727272729
+    },
+    "process|kamei": {
+     "spearman": 0.18775039545571853,
+     "jaccard_top": 0.0967741935483871,
+     "gain_complementarite": 0.0390350877192982
+    },
+    "process|coupling": {
+     "spearman": 0.03561667630676657,
+     "jaccard_top": 0.030303030303030304,
+     "gain_complementarite": 0.039912280701754455
+    },
+    "pylint|vulture": {
+     "spearman": 0.27609708369483565,
+     "jaccard_top": 0.34210526315789475,
+     "gain_complementarite": -0.053050239234449736
+    },
+    "pylint|mypy": {
+     "spearman": 0.1721366266626851,
+     "jaccard_top": 0.18604651162790697,
+     "gain_complementarite": -0.11160287081339715
+    },
+    "pylint|kamei": {
+     "spearman": 0.1266674219468475,
+     "jaccard_top": 0.0851063829787234,
+     "gain_complementarite": 0.037480063795853225
+    },
+    "pylint|coupling": {
+     "spearman": 0.2193720253661142,
+     "jaccard_top": 0.21428571428571427,
+     "gain_complementarite": 0.041965709728867706
+    },
+    "vulture|mypy": {
+     "spearman": 0.0475966958837134,
+     "jaccard_top": 0.21428571428571427,
+     "gain_complementarite": -0.019736842105263164
+    },
+    "vulture|kamei": {
+     "spearman": -0.029217832784931737,
+     "jaccard_top": 0.0851063829787234,
+     "gain_complementarite": -0.03624401913875608
+    },
+    "vulture|coupling": {
+     "spearman": 0.22822990524309392,
+     "jaccard_top": 0.25925925925925924,
+     "gain_complementarite": -0.008253588516746402
+    },
+    "mypy|kamei": {
+     "spearman": 0.06457383373883913,
+     "jaccard_top": 0.0625,
+     "gain_complementarite": -0.07761164274322163
+    },
+    "mypy|coupling": {
+     "spearman": 0.2065072244831691,
+     "jaccard_top": 0.21428571428571427,
+     "gain_complementarite": -0.07051435406698559
+    },
+    "kamei|coupling": {
+     "spearman": 0.22329861723352215,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": 0.038257575757575824
+    }
+   },
+   "part_positifs_vus_par_une_seule_famille": 0.2127659574468085,
+   "n_positifs_vus_top10": 47,
+   "n_positifs": 55
+  },
+  {
+   "seed": 1,
+   "BASE": 0.8205143540669857,
+   "concat": 0.8375,
+   "concat_sans_churn": 0.8378987240829346,
+   "S1": 0.8208931419457736,
+   "S2": 0.7648724082934608,
+   "S1_sans_churn": 0.817822966507177,
+   "S2_sans_churn": 0.7470295055821372,
+   "familles": {
+    "BASE": 0.8205143540669857,
+    "churn": 0.7048046251993622,
+    "radon": 0.5983851674641149,
+    "ruff": 0.5620614035087719,
+    "bandit": 0.6368022328548645,
+    "diff": 0.6097288676236045,
+    "process": 0.6064992025518341,
+    "pylint": 0.6135964912280703,
+    "vulture": 0.5284290271132376,
+    "mypy": 0.6104266347687402,
+    "kamei": 0.7177033492822966,
+    "coupling": 0.6722687400318978
+   },
+   "pairs": {
+    "BASE|churn": {
+     "spearman": 0.4083906750023879,
+     "jaccard_top": 0.2,
+     "gain_complementarite": -0.015450558213716215
+    },
+    "BASE|radon": {
+     "spearman": 0.1726818364343885,
+     "jaccard_top": 0.14606741573033707,
+     "gain_complementarite": -0.04372009569377999
+    },
+    "BASE|ruff": {
+     "spearman": 0.15766078078224316,
+     "jaccard_top": 0.2,
+     "gain_complementarite": -0.06844098883572569
+    },
+    "BASE|bandit": {
+     "spearman": 0.17305376603729092,
+     "jaccard_top": 0.2289156626506024,
+     "gain_complementarite": -0.04383971291866051
+    },
+    "BASE|diff": {
+     "spearman": 0.41673047177514616,
+     "jaccard_top": 0.24390243902439024,
+     "gain_complementarite": -0.06846092503987244
+    },
+    "BASE|process": {
+     "spearman": 0.21162001032420988,
+     "jaccard_top": 0.0625,
+     "gain_complementarite": -0.03341307814992034
+    },
+    "BASE|pylint": {
+     "spearman": 0.1366710918477675,
+     "jaccard_top": 0.21428571428571427,
+     "gain_complementarite": -0.036423444976076635
+    },
+    "BASE|vulture": {
+     "spearman": -0.050746473736288406,
+     "jaccard_top": 0.1724137931034483,
+     "gain_complementarite": -0.056858054226475385
+    },
+    "BASE|mypy": {
+     "spearman": 0.18274392971424824,
+     "jaccard_top": 0.14606741573033707,
+     "gain_complementarite": -0.04667065390749614
+    },
+    "BASE|kamei": {
+     "spearman": 0.47395812948818616,
+     "jaccard_top": 0.14606741573033707,
+     "gain_complementarite": -0.01628787878787885
+    },
+    "BASE|coupling": {
+     "spearman": 0.21385046744152772,
+     "jaccard_top": 0.18604651162790697,
+     "gain_complementarite": -0.010645933014354014
+    },
+    "churn|radon": {
+     "spearman": 0.17581118654738453,
+     "jaccard_top": 0.0967741935483871,
+     "gain_complementarite": -0.0051834130781499566
+    },
+    "churn|ruff": {
+     "spearman": 0.10752132250503599,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": -0.021511164274322314
+    },
+    "churn|bandit": {
+     "spearman": 0.1410908666974391,
+     "jaccard_top": 0.14606741573033707,
+     "gain_complementarite": 0.00013955342902693957
+    },
+    "churn|diff": {
+     "spearman": 0.23771543782457688,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": -0.00803429027113245
+    },
+    "churn|process": {
+     "spearman": 0.2576066380787521,
+     "jaccard_top": 0.05154639175257732,
+     "gain_complementarite": 0.002950558213716037
+    },
+    "churn|pylint": {
+     "spearman": 0.13963067706963941,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": 0.0025518341307814163
+    },
+    "churn|vulture": {
+     "spearman": 0.020740307180426954,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": -0.04810606060606071
+    },
+    "churn|mypy": {
+     "spearman": 0.1530622079089876,
+     "jaccard_top": 0.0967741935483871,
+     "gain_complementarite": -0.004625199362041532
+    },
+    "churn|kamei": {
+     "spearman": 0.33288740086011526,
+     "jaccard_top": 0.14606741573033707,
+     "gain_complementarite": 0.03393141945773526
+    },
+    "churn|coupling": {
+     "spearman": 0.1399428975067725,
+     "jaccard_top": 0.1590909090909091,
+     "gain_complementarite": 0.033472886762360377
+    },
+    "radon|ruff": {
+     "spearman": 0.4451639806623623,
+     "jaccard_top": 0.2,
+     "gain_complementarite": 0.009489633173843659
+    },
+    "radon|bandit": {
+     "spearman": -0.1978033856018537,
+     "jaccard_top": 0.2289156626506024,
+     "gain_complementarite": 0.027990430622009566
+    },
+    "radon|diff": {
+     "spearman": 0.18754218369493245,
+     "jaccard_top": 0.12087912087912088,
+     "gain_complementarite": 0.023704146730462505
+    },
+    "radon|process": {
+     "spearman": 0.02832411000214827,
+     "jaccard_top": 0.07368421052631578,
+     "gain_complementarite": 0.03869617224880384
+    },
+    "radon|pylint": {
+     "spearman": 0.5034087283960735,
+     "jaccard_top": 0.275,
+     "gain_complementarite": 0.0008771929824560321
+    },
+    "radon|vulture": {
+     "spearman": 0.23777336363330887,
+     "jaccard_top": 0.18604651162790697,
+     "gain_complementarite": -0.028488835725677952
+    },
+    "radon|mypy": {
+     "spearman": 0.037142955916652134,
+     "jaccard_top": 0.2,
+     "gain_complementarite": 0.006977671451355527
+    },
+    "radon|kamei": {
+     "spearman": 0.14776509237999338,
+     "jaccard_top": 0.12087912087912088,
+     "gain_complementarite": -0.013078149920255244
+    },
+    "radon|coupling": {
+     "spearman": 0.26782590744719403,
+     "jaccard_top": 0.18604651162790697,
+     "gain_complementarite": -0.006778309409888217
+    },
+    "ruff|bandit": {
+     "spearman": -0.09503104909034547,
+     "jaccard_top": 0.2911392405063291,
+     "gain_complementarite": -0.00960925039872429
+    },
+    "ruff|diff": {
+     "spearman": 0.12811861174971365,
+     "jaccard_top": 0.1590909090909091,
+     "gain_complementarite": -0.003907496012759193
+    },
+    "ruff|process": {
+     "spearman": 0.07418896312724126,
+     "jaccard_top": 0.10869565217391304,
+     "gain_complementarite": 0.014972089314194692
+    },
+    "ruff|pylint": {
+     "spearman": 0.4866214221513705,
+     "jaccard_top": 0.3076923076923077,
+     "gain_complementarite": -0.008193779904306364
+    },
+    "ruff|vulture": {
+     "spearman": 0.23010995681215293,
+     "jaccard_top": 0.1724137931034483,
+     "gain_complementarite": -0.025139553429027184
+    },
+    "ruff|mypy": {
+     "spearman": 0.06500568326872352,
+     "jaccard_top": 0.25925925925925924,
+     "gain_complementarite": -0.02466108452950555
+    },
+    "ruff|kamei": {
+     "spearman": 0.09968745502989912,
+     "jaccard_top": 0.12087912087912088,
+     "gain_complementarite": -0.040390749601275866
+    },
+    "ruff|coupling": {
+     "spearman": 0.2859154602700548,
+     "jaccard_top": 0.1724137931034483,
+     "gain_complementarite": -0.004445773524720753
+    },
+    "bandit|diff": {
+     "spearman": 0.03531489014930983,
+     "jaccard_top": 0.18604651162790697,
+     "gain_complementarite": 0.0176834130781498
+    },
+    "bandit|process": {
+     "spearman": 0.13961841467760594,
+     "jaccard_top": 0.0851063829787234,
+     "gain_complementarite": 0.03145933014354052
+    },
+    "bandit|pylint": {
+     "spearman": -0.09047223927979121,
+     "jaccard_top": 0.36,
+     "gain_complementarite": -0.0007775119617224879
+    },
+    "bandit|vulture": {
+     "spearman": 0.010104799289687055,
+     "jaccard_top": 0.25925925925925924,
+     "gain_complementarite": -0.0193181818181819
+    },
+    "bandit|mypy": {
+     "spearman": 0.16077043183722547,
+     "jaccard_top": 0.2911392405063291,
+     "gain_complementarite": 0.015729665071770205
+    },
+    "bandit|kamei": {
+     "spearman": 0.15586208935764256,
+     "jaccard_top": 0.14606741573033707,
+     "gain_complementarite": -0.01074561403508767
+    },
+    "bandit|coupling": {
+     "spearman": -0.0049535425335787125,
+     "jaccard_top": 0.34210526315789475,
+     "gain_complementarite": 0.023604465709729072
+    },
+    "diff|process": {
+     "spearman": 0.14585677142930437,
+     "jaccard_top": 0.0967741935483871,
+     "gain_complementarite": 0.039593301435406736
+    },
+    "diff|pylint": {
+     "spearman": 0.16888240902842955,
+     "jaccard_top": 0.1590909090909091,
+     "gain_complementarite": 0.01214114832535873
+    },
+    "diff|vulture": {
+     "spearman": 0.013845509547321987,
+     "jaccard_top": 0.14606741573033707,
+     "gain_complementarite": -0.014354066985646008
+    },
+    "diff|mypy": {
+     "spearman": 0.1269846247066743,
+     "jaccard_top": 0.2,
+     "gain_complementarite": 0.026395534290270972
+    },
+    "diff|kamei": {
+     "spearman": 0.2561236063273148,
+     "jaccard_top": 0.0967741935483871,
+     "gain_complementarite": -0.023185805422647587
+    },
+    "diff|coupling": {
+     "spearman": 0.18546631346496031,
+     "jaccard_top": 0.14606741573033707,
+     "gain_complementarite": 0.005562200956937824
+    },
+    "process|pylint": {
+     "spearman": 0.09334938484873884,
+     "jaccard_top": 0.0851063829787234,
+     "gain_complementarite": 0.043560606060605966
+    },
+    "process|vulture": {
+     "spearman": 0.015040023221929617,
+     "jaccard_top": 0.05154639175257732,
+     "gain_complementarite": -0.010087719298245479
+    },
+    "process|mypy": {
+     "spearman": -0.00034646448152721317,
+     "jaccard_top": 0.0625,
+     "gain_complementarite": 0.04589314194577343
+    },
+    "process|kamei": {
+     "spearman": 0.2135529015275106,
+     "jaccard_top": 0.05154639175257732,
+     "gain_complementarite": 0.006957735247209107
+    },
+    "process|coupling": {
+     "spearman": 0.0806488618184575,
+     "jaccard_top": 0.0625,
+     "gain_complementarite": 0.02611642743221687
+    },
+    "pylint|vulture": {
+     "spearman": 0.35428598018204666,
+     "jaccard_top": 0.275,
+     "gain_complementarite": -0.05109649122807025
+    },
+    "pylint|mypy": {
+     "spearman": 0.1533702718774397,
+     "jaccard_top": 0.25925925925925924,
+     "gain_complementarite": -0.008692185007974418
+    },
+    "pylint|kamei": {
+     "spearman": 0.14942357765713726,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": -0.01232057416267951
+    },
+    "pylint|coupling": {
+     "spearman": 0.38019459652218107,
+     "jaccard_top": 0.2911392405063291,
+     "gain_complementarite": 0.0016148325358851245
+    },
+    "vulture|mypy": {
+     "spearman": 0.08372525970851472,
+     "jaccard_top": 0.21428571428571427,
+     "gain_complementarite": -0.019796650717703534
+    },
+    "vulture|kamei": {
+     "spearman": -0.04719259494170596,
+     "jaccard_top": 0.0851063829787234,
+     "gain_complementarite": -0.057456140350877205
+    },
+    "vulture|coupling": {
+     "spearman": 0.06255668971914201,
+     "jaccard_top": 0.18604651162790697,
+     "gain_complementarite": -0.06909888357256766
+    },
+    "mypy|kamei": {
+     "spearman": 0.11307434636276474,
+     "jaccard_top": 0.12087912087912088,
+     "gain_complementarite": -0.019537480063795853
+    },
+    "mypy|coupling": {
+     "spearman": 0.20791915237024802,
+     "jaccard_top": 0.24390243902439024,
+     "gain_complementarite": -0.01002791068580522
+    },
+    "kamei|coupling": {
+     "spearman": 0.17159001575989824,
+     "jaccard_top": 0.14606741573033707,
+     "gain_complementarite": 0.029944178628389162
+    }
+   },
+   "part_positifs_vus_par_une_seule_famille": 0.28888888888888886,
+   "n_positifs_vus_top10": 45,
+   "n_positifs": 55
+  },
+  {
+   "seed": 2,
+   "BASE": 0.790139411027569,
+   "concat": 0.8083294172932332,
+   "concat_sans_churn": 0.7979519110275689,
+   "S1": 0.7978540100250627,
+   "S2": 0.7706179511278197,
+   "S1_sans_churn": 0.7947994987468672,
+   "S2_sans_churn": 0.7554041353383459,
+   "familles": {
+    "BASE": 0.790139411027569,
+    "churn": 0.7175164473684209,
+    "radon": 0.6307761591478698,
+    "ruff": 0.5942199248120301,
+    "bandit": 0.5576636904761906,
+    "diff": 0.6395285087719298,
+    "process": 0.6092770989974937,
+    "pylint": 0.5553532268170427,
+    "vulture": 0.6023652882205514,
+    "mypy": 0.5602482769423559,
+    "kamei": 0.7135808270676692,
+    "coupling": 0.6518836152882207
+   },
+   "pairs": {
+    "BASE|churn": {
+     "spearman": 0.3767316889418753,
+     "jaccard_top": 0.21428571428571427,
+     "gain_complementarite": 0.002114661654135208
+    },
+    "BASE|radon": {
+     "spearman": 0.21509288536423157,
+     "jaccard_top": 0.1590909090909091,
+     "gain_complementarite": -0.02815632832080217
+    },
+    "BASE|ruff": {
+     "spearman": 0.14781489295232375,
+     "jaccard_top": 0.14606741573033707,
+     "gain_complementarite": -0.02533677944862167
+    },
+    "BASE|bandit": {
+     "spearman": 0.10439549841290663,
+     "jaccard_top": 0.14606741573033707,
+     "gain_complementarite": -0.06269580200501257
+    },
+    "BASE|diff": {
+     "spearman": 0.4342710083625049,
+     "jaccard_top": 0.1724137931034483,
+     "gain_complementarite": -0.042430294486215714
+    },
+    "BASE|process": {
+     "spearman": 0.20140211655832302,
+     "jaccard_top": 0.0625,
+     "gain_complementarite": -0.021029135338345828
+    },
+    "BASE|pylint": {
+     "spearman": 0.055927976427035564,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": -0.058329417293233154
+    },
+    "BASE|vulture": {
+     "spearman": 0.05608410637271726,
+     "jaccard_top": 0.1590909090909091,
+     "gain_complementarite": -0.025924185463659155
+    },
+    "BASE|mypy": {
+     "spearman": 0.1651100814752877,
+     "jaccard_top": 0.0967741935483871,
+     "gain_complementarite": -0.05985667293233099
+    },
+    "BASE|kamei": {
+     "spearman": 0.4920604861960705,
+     "jaccard_top": 0.275,
+     "gain_complementarite": -0.004327224310777034
+    },
+    "BASE|coupling": {
+     "spearman": 0.22049276611749713,
+     "jaccard_top": 0.14606741573033707,
+     "gain_complementarite": -0.00704887218045136
+    },
+    "churn|radon": {
+     "spearman": 0.14304369201230227,
+     "jaccard_top": 0.1724137931034483,
+     "gain_complementarite": 0.012883771929824706
+    },
+    "churn|ruff": {
+     "spearman": 0.07199070352398211,
+     "jaccard_top": 0.12087912087912088,
+     "gain_complementarite": -0.011043233082706605
+    },
+    "churn|bandit": {
+     "spearman": 0.2208842788580344,
+     "jaccard_top": 0.1724137931034483,
+     "gain_complementarite": -0.051045582706766734
+    },
+    "churn|diff": {
+     "spearman": 0.25032188702275326,
+     "jaccard_top": 0.12087912087912088,
+     "gain_complementarite": 0.0021342418546367314
+    },
+    "churn|process": {
+     "spearman": 0.19702969318663802,
+     "jaccard_top": 0.0625,
+     "gain_complementarite": 0.0010573308270679371
+    },
+    "churn|pylint": {
+     "spearman": 0.12036142151459969,
+     "jaccard_top": 0.1590909090909091,
+     "gain_complementarite": -0.03536184210526305
+    },
+    "churn|vulture": {
+     "spearman": 0.14581757767121464,
+     "jaccard_top": 0.12087912087912088,
+     "gain_complementarite": -0.012041823308270527
+    },
+    "churn|mypy": {
+     "spearman": 0.12800693838619698,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": -0.0401002506265663
+    },
+    "churn|kamei": {
+     "spearman": 0.45258455281784854,
+     "jaccard_top": 0.2,
+     "gain_complementarite": 0.024142387218045402
+    },
+    "churn|coupling": {
+     "spearman": 0.14224496744152706,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": 0.016427788220551576
+    },
+    "radon|ruff": {
+     "spearman": 0.3487464597497882,
+     "jaccard_top": 0.25925925925925924,
+     "gain_complementarite": -0.030701754385965008
+    },
+    "radon|bandit": {
+     "spearman": -0.02112791506412347,
+     "jaccard_top": 0.25925925925925924,
+     "gain_complementarite": -0.028704573934837274
+    },
+    "radon|diff": {
+     "spearman": 0.16040005004684257,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": 0.0307409147869675
+    },
+    "radon|process": {
+     "spearman": 0.08326516499508294,
+     "jaccard_top": 0.0851063829787234,
+     "gain_complementarite": 0.043233082706766846
+    },
+    "radon|pylint": {
+     "spearman": 0.37712213883401025,
+     "jaccard_top": 0.24390243902439024,
+     "gain_complementarite": -0.04806939223057649
+    },
+    "radon|vulture": {
+     "spearman": 0.14782610539254795,
+     "jaccard_top": 0.2289156626506024,
+     "gain_complementarite": 0.002780388471177897
+    },
+    "radon|mypy": {
+     "spearman": 0.032225827675981075,
+     "jaccard_top": 0.18604651162790697,
+     "gain_complementarite": -0.028215068922305853
+    },
+    "radon|kamei": {
+     "spearman": 0.1567023861524398,
+     "jaccard_top": 0.12087912087912088,
+     "gain_complementarite": 0.0017426378446113722
+    },
+    "radon|coupling": {
+     "spearman": 0.12842217098669567,
+     "jaccard_top": 0.2,
+     "gain_complementarite": 0.026394110275689053
+    },
+    "ruff|bandit": {
+     "spearman": 0.0157503286759414,
+     "jaccard_top": 0.25925925925925924,
+     "gain_complementarite": 0.007381735588972371
+    },
+    "ruff|diff": {
+     "spearman": 0.16492667419818643,
+     "jaccard_top": 0.14606741573033707,
+     "gain_complementarite": 0.024729793233082886
+    },
+    "ruff|process": {
+     "spearman": 0.014665367259806215,
+     "jaccard_top": 0.07368421052631578,
+     "gain_complementarite": 0.043193922305764354
+    },
+    "ruff|pylint": {
+     "spearman": 0.4250068521506163,
+     "jaccard_top": 0.25925925925925924,
+     "gain_complementarite": -0.022810933583960025
+    },
+    "ruff|vulture": {
+     "spearman": 0.1467963977524873,
+     "jaccard_top": 0.1724137931034483,
+     "gain_complementarite": 0.034696115288220475
+    },
+    "ruff|mypy": {
+     "spearman": 0.10374682743591782,
+     "jaccard_top": 0.2,
+     "gain_complementarite": -0.015018013784461215
+    },
+    "ruff|kamei": {
+     "spearman": 0.140064921525946,
+     "jaccard_top": 0.10869565217391304,
+     "gain_complementarite": -0.017113095238095233
+    },
+    "ruff|coupling": {
+     "spearman": 0.16383257886415362,
+     "jaccard_top": 0.1724137931034483,
+     "gain_complementarite": -0.007225093984962516
+    },
+    "bandit|diff": {
+     "spearman": -0.08253870822596951,
+     "jaccard_top": 0.12087912087912088,
+     "gain_complementarite": 0.010906171679198162
+    },
+    "bandit|process": {
+     "spearman": 0.15377080842255214,
+     "jaccard_top": 0.0851063829787234,
+     "gain_complementarite": 0.009555137844611483
+    },
+    "bandit|pylint": {
+     "spearman": 0.06851463427229984,
+     "jaccard_top": 0.25925925925925924,
+     "gain_complementarite": 0.02179276315789469
+    },
+    "bandit|vulture": {
+     "spearman": 0.19736412394832398,
+     "jaccard_top": 0.2289156626506024,
+     "gain_complementarite": 0.016760651629072698
+    },
+    "bandit|mypy": {
+     "spearman": 0.2093413402475449,
+     "jaccard_top": 0.2,
+     "gain_complementarite": 0.014606829573934998
+    },
+    "bandit|kamei": {
+     "spearman": 0.19319751619934758,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": -0.05081062030075201
+    },
+    "bandit|coupling": {
+     "spearman": 0.19491493058677745,
+     "jaccard_top": 0.21428571428571427,
+     "gain_complementarite": 0.00503211152882177
+    },
+    "diff|process": {
+     "spearman": 0.08543134165021485,
+     "jaccard_top": 0.0967741935483871,
+     "gain_complementarite": 0.03925830200501257
+    },
+    "diff|pylint": {
+     "spearman": 0.0855280556961556,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": -0.007929981203007475
+    },
+    "diff|vulture": {
+     "spearman": -0.003750641801563787,
+     "jaccard_top": 0.14606741573033707,
+     "gain_complementarite": 0.019051535087719285
+    },
+    "diff|mypy": {
+     "spearman": 0.10047829770372506,
+     "jaccard_top": 0.1590909090909091,
+     "gain_complementarite": 0.006716008771929904
+    },
+    "diff|kamei": {
+     "spearman": 0.2691191686497222,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": -0.0013901942355890595
+    },
+    "diff|coupling": {
+     "spearman": 0.07626735734594105,
+     "jaccard_top": 0.10869565217391304,
+     "gain_complementarite": 0.04327224310776934
+    },
+    "process|pylint": {
+     "spearman": -0.010849724347571933,
+     "jaccard_top": 0.05154639175257732,
+     "gain_complementarite": 0.025885025062656664
+    },
+    "process|vulture": {
+     "spearman": 0.06985364461706282,
+     "jaccard_top": 0.05154639175257732,
+     "gain_complementarite": 0.04615053258145363
+    },
+    "process|mypy": {
+     "spearman": 0.04200252586786135,
+     "jaccard_top": 0.05154639175257732,
+     "gain_complementarite": 0.016251566416040197
+    },
+    "process|kamei": {
+     "spearman": 0.24556248937724565,
+     "jaccard_top": 0.05154639175257732,
+     "gain_complementarite": 0.0005482456140349923
+    },
+    "process|coupling": {
+     "spearman": 0.10046483626361716,
+     "jaccard_top": 0.0851063829787234,
+     "gain_complementarite": 0.033266760651628924
+    },
+    "pylint|vulture": {
+     "spearman": 0.31995633989391087,
+     "jaccard_top": 0.3246753246753247,
+     "gain_complementarite": -0.015546679197994906
+    },
+    "pylint|mypy": {
+     "spearman": 0.05527874455027628,
+     "jaccard_top": 0.2,
+     "gain_complementarite": 0.024710213032581474
+    },
+    "pylint|kamei": {
+     "spearman": 0.11099210363691589,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": -0.03553806390977454
+    },
+    "pylint|coupling": {
+     "spearman": 0.14667755077156508,
+     "jaccard_top": 0.2289156626506024,
+     "gain_complementarite": -0.018973214285714413
+    },
+    "vulture|mypy": {
+     "spearman": 0.11362159458002016,
+     "jaccard_top": 0.21428571428571427,
+     "gain_complementarite": 0.005090852130325896
+    },
+    "vulture|kamei": {
+     "spearman": 0.09293780741458987,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": -0.013118734335839655
+    },
+    "vulture|coupling": {
+     "spearman": 0.08655155121801272,
+     "jaccard_top": 0.2,
+     "gain_complementarite": 0.022399749373433475
+    },
+    "mypy|kamei": {
+     "spearman": 0.17382655820201373,
+     "jaccard_top": 0.10869565217391304,
+     "gain_complementarite": -0.046542136591478656
+    },
+    "mypy|coupling": {
+     "spearman": 0.2678900374458308,
+     "jaccard_top": 0.3076923076923077,
+     "gain_complementarite": -0.017152255639097835
+    },
+    "kamei|coupling": {
+     "spearman": 0.1527450251049407,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": 0.012903352130325785
+    }
+   },
+   "part_positifs_vus_par_une_seule_famille": 0.2608695652173913,
+   "n_positifs_vus_top10": 46,
+   "n_positifs": 56
+  },
+  {
+   "seed": 2,
+   "BASE": 0.815750313283208,
+   "concat": 0.8384829260651628,
+   "concat_sans_churn": 0.8231320488721805,
+   "S1": 0.8230341478696742,
+   "S2": 0.763608239348371,
+   "S1_sans_churn": 0.8101503759398497,
+   "S2_sans_churn": 0.7478070175438597,
+   "familles": {
+    "BASE": 0.815750313283208,
+    "churn": 0.7169877819548873,
+    "radon": 0.5934758771929824,
+    "ruff": 0.5638118734335839,
+    "bandit": 0.5135886591478696,
+    "diff": 0.6513353696741854,
+    "process": 0.6540765977443609,
+    "pylint": 0.6328125,
+    "vulture": 0.5180137844611529,
+    "mypy": 0.57078242481203,
+    "kamei": 0.6395676691729323,
+    "coupling": 0.6894580200501251
+   },
+   "pairs": {
+    "BASE|churn": {
+     "spearman": 0.36903149707092986,
+     "jaccard_top": 0.1724137931034483,
+     "gain_complementarite": 0.0010769110275689053
+    },
+    "BASE|radon": {
+     "spearman": 0.16144958481274166,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": -0.05650845864661658
+    },
+    "BASE|ruff": {
+     "spearman": 0.07820786755124197,
+     "jaccard_top": 0.14606741573033707,
+     "gain_complementarite": -0.06543703007518797
+    },
+    "BASE|bandit": {
+     "spearman": 0.02828825101674942,
+     "jaccard_top": 0.14606741573033707,
+     "gain_complementarite": -0.10146459899749372
+    },
+    "BASE|diff": {
+     "spearman": 0.3206386147148682,
+     "jaccard_top": 0.14606741573033707,
+     "gain_complementarite": -0.03616463032581452
+    },
+    "BASE|process": {
+     "spearman": 0.26634702492845125,
+     "jaccard_top": 0.12087912087912088,
+     "gain_complementarite": -0.012492167919799346
+    },
+    "BASE|pylint": {
+     "spearman": 0.09428635578228625,
+     "jaccard_top": 0.2,
+     "gain_complementarite": -0.031622023809523725
+    },
+    "BASE|vulture": {
+     "spearman": 0.028611402484937664,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": -0.08912907268170434
+    },
+    "BASE|mypy": {
+     "spearman": 0.06977530979216497,
+     "jaccard_top": 0.10869565217391304,
+     "gain_complementarite": -0.06453634085213023
+    },
+    "BASE|kamei": {
+     "spearman": 0.4398652192781404,
+     "jaccard_top": 0.1724137931034483,
+     "gain_complementarite": -0.05637139724310769
+    },
+    "BASE|coupling": {
+     "spearman": 0.19032116090209228,
+     "jaccard_top": 0.1724137931034483,
+     "gain_complementarite": -0.0029761904761904656
+    },
+    "churn|radon": {
+     "spearman": 0.1798305010498151,
+     "jaccard_top": 0.12087912087912088,
+     "gain_complementarite": -0.01820958646616544
+    },
+    "churn|ruff": {
+     "spearman": 0.09313246924436015,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": -0.03806390977443619
+    },
+    "churn|bandit": {
+     "spearman": 0.09861116718049097,
+     "jaccard_top": 0.0851063829787234,
+     "gain_complementarite": -0.07183975563909795
+    },
+    "churn|diff": {
+     "spearman": 0.16124732428140667,
+     "jaccard_top": 0.05154639175257732,
+     "gain_complementarite": 0.01636904761904745
+    },
+    "churn|process": {
+     "spearman": 0.23156019027322658,
+     "jaccard_top": 0.07368421052631578,
+     "gain_complementarite": 0.024064066416040086
+    },
+    "churn|pylint": {
+     "spearman": 0.13356189781965275,
+     "jaccard_top": 0.12087912087912088,
+     "gain_complementarite": 0.008732769423558828
+    },
+    "churn|vulture": {
+     "spearman": 0.13491560147598383,
+     "jaccard_top": 0.14606741573033707,
+     "gain_complementarite": -0.06539786967418548
+    },
+    "churn|mypy": {
+     "spearman": 0.09266447603020408,
+     "jaccard_top": 0.0967741935483871,
+     "gain_complementarite": -0.03510729949874691
+    },
+    "churn|kamei": {
+     "spearman": 0.3857222155205581,
+     "jaccard_top": 0.14606741573033707,
+     "gain_complementarite": -0.005130012531328387
+    },
+    "churn|coupling": {
+     "spearman": 0.17295087500069237,
+     "jaccard_top": 0.14606741573033707,
+     "gain_complementarite": 0.03939536340852123
+    },
+    "radon|ruff": {
+     "spearman": 0.3120259925711614,
+     "jaccard_top": 0.2289156626506024,
+     "gain_complementarite": 0.019227756892230552
+    },
+    "radon|bandit": {
+     "spearman": 0.003521044234158413,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": -0.05893640350877194
+    },
+    "radon|diff": {
+     "spearman": 0.1269942897397143,
+     "jaccard_top": 0.07368421052631578,
+     "gain_complementarite": -0.0008811090225561147
+    },
+    "radon|process": {
+     "spearman": 0.06977318129548896,
+     "jaccard_top": 0.04081632653061224,
+     "gain_complementarite": 0.02030466791979957
+    },
+    "radon|pylint": {
+     "spearman": 0.45576253991664256,
+     "jaccard_top": 0.14606741573033707,
+     "gain_complementarite": -0.003015350877193068
+    },
+    "radon|vulture": {
+     "spearman": 0.17623812273321604,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": -0.03696741854636598
+    },
+    "radon|mypy": {
+     "spearman": 0.08776252015486193,
+     "jaccard_top": 0.12087912087912088,
+     "gain_complementarite": 0.01822916666666674
+    },
+    "radon|kamei": {
+     "spearman": 0.20915302411453146,
+     "jaccard_top": 0.14606741573033707,
+     "gain_complementarite": -0.0005482456140351033
+    },
+    "radon|coupling": {
+     "spearman": 0.10483718135174085,
+     "jaccard_top": 0.12087912087912088,
+     "gain_complementarite": 0.010201284461152982
+    },
+    "ruff|bandit": {
+     "spearman": -0.00015118962711581848,
+     "jaccard_top": 0.1590909090909091,
+     "gain_complementarite": -0.007127192982456121
+    },
+    "ruff|diff": {
+     "spearman": 0.01799943816904849,
+     "jaccard_top": 0.12087912087912088,
+     "gain_complementarite": -0.012962092731829467
+    },
+    "ruff|process": {
+     "spearman": 0.04936623185037242,
+     "jaccard_top": 0.07368421052631578,
+     "gain_complementarite": -0.006363565162907259
+    },
+    "ruff|pylint": {
+     "spearman": 0.3571252844545555,
+     "jaccard_top": 0.1590909090909091,
+     "gain_complementarite": -0.03146538220551376
+    },
+    "ruff|vulture": {
+     "spearman": 0.12694334144797648,
+     "jaccard_top": 0.1724137931034483,
+     "gain_complementarite": -0.019051535087719174
+    },
+    "ruff|mypy": {
+     "spearman": -0.08900971987021832,
+     "jaccard_top": 0.14606741573033707,
+     "gain_complementarite": 0.00755795739348375
+    },
+    "ruff|kamei": {
+     "spearman": 0.11230822187412867,
+     "jaccard_top": 0.12087912087912088,
+     "gain_complementarite": -0.018562030075187974
+    },
+    "ruff|coupling": {
+     "spearman": 0.11735982125539489,
+     "jaccard_top": 0.1724137931034483,
+     "gain_complementarite": -0.015370457393483528
+    },
+    "bandit|diff": {
+     "spearman": -0.09298672609320943,
+     "jaccard_top": 0.10869565217391304,
+     "gain_complementarite": -0.038005169172932285
+    },
+    "bandit|process": {
+     "spearman": 0.09764762401838971,
+     "jaccard_top": 0.07368421052631578,
+     "gain_complementarite": -0.04174498746867161
+    },
+    "bandit|pylint": {
+     "spearman": 0.10869674983165734,
+     "jaccard_top": 0.24390243902439024,
+     "gain_complementarite": -0.051750469924811915
+    },
+    "bandit|vulture": {
+     "spearman": 0.08655703581812071,
+     "jaccard_top": 0.2289156626506024,
+     "gain_complementarite": 0.009574718045112895
+    },
+    "bandit|mypy": {
+     "spearman": 0.1860365250511909,
+     "jaccard_top": 0.2,
+     "gain_complementarite": 0.003093671679198051
+    },
+    "bandit|kamei": {
+     "spearman": 0.013009223955201658,
+     "jaccard_top": 0.14606741573033707,
+     "gain_complementarite": -0.054119674185463595
+    },
+    "bandit|coupling": {
+     "spearman": 0.17434007211370714,
+     "jaccard_top": 0.21428571428571427,
+     "gain_complementarite": -0.06048323934837063
+    },
+    "diff|process": {
+     "spearman": 0.03921487046641173,
+     "jaccard_top": 0.0625,
+     "gain_complementarite": 0.06492794486215536
+    },
+    "diff|pylint": {
+     "spearman": 0.04874481749532077,
+     "jaccard_top": 0.0851063829787234,
+     "gain_complementarite": 0.023829104010025137
+    },
+    "diff|vulture": {
+     "spearman": -0.029595776033001578,
+     "jaccard_top": 0.0967741935483871,
+     "gain_complementarite": -0.040648496240601406
+    },
+    "diff|mypy": {
+     "spearman": 0.008272689032040476,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": 0.005541196741854715
+    },
+    "diff|kamei": {
+     "spearman": 0.20324785399906542,
+     "jaccard_top": 0.04081632653061224,
+     "gain_complementarite": 0.029448621553884835
+    },
+    "diff|coupling": {
+     "spearman": 0.09100110980274613,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": 0.021361998746867283
+    },
+    "process|pylint": {
+     "spearman": 0.03078443450706167,
+     "jaccard_top": 0.0967741935483871,
+     "gain_complementarite": 0.051260964912280715
+    },
+    "process|vulture": {
+     "spearman": 0.029131736274439855,
+     "jaccard_top": 0.0851063829787234,
+     "gain_complementarite": -0.03502897869674182
+    },
+    "process|mypy": {
+     "spearman": 0.00959329391979377,
+     "jaccard_top": 0.0967741935483871,
+     "gain_complementarite": 0.006304824561403577
+    },
+    "process|kamei": {
+     "spearman": 0.17640353628007865,
+     "jaccard_top": 0.0625,
+     "gain_complementarite": 0.04808897243107779
+    },
+    "process|coupling": {
+     "spearman": 0.10919109256349034,
+     "jaccard_top": 0.0967741935483871,
+     "gain_complementarite": 0.05180921052631593
+    },
+    "pylint|vulture": {
+     "spearman": 0.3780034938715579,
+     "jaccard_top": 0.25925925925925924,
+     "gain_complementarite": -0.02582628446115276
+    },
+    "pylint|mypy": {
+     "spearman": 0.10494963276486269,
+     "jaccard_top": 0.1724137931034483,
+     "gain_complementarite": -0.008889411027568905
+    },
+    "pylint|kamei": {
+     "spearman": 0.209180826003176,
+     "jaccard_top": 0.18604651162790697,
+     "gain_complementarite": 0.018385808270676818
+    },
+    "pylint|coupling": {
+     "spearman": 0.3017946248966569,
+     "jaccard_top": 0.2289156626506024,
+     "gain_complementarite": 0.014058583959899895
+    },
+    "vulture|mypy": {
+     "spearman": 0.04142088399483179,
+     "jaccard_top": 0.1724137931034483,
+     "gain_complementarite": -0.022321428571428603
+    },
+    "vulture|kamei": {
+     "spearman": 0.11550115970960256,
+     "jaccard_top": 0.12087912087912088,
+     "gain_complementarite": -0.04998825187969913
+    },
+    "vulture|coupling": {
+     "spearman": 0.18941917459221044,
+     "jaccard_top": 0.2289156626506024,
+     "gain_complementarite": -0.027647243107769337
+    },
+    "mypy|kamei": {
+     "spearman": 0.06483910088873554,
+     "jaccard_top": 0.12087912087912088,
+     "gain_complementarite": -0.00994674185463651
+    },
+    "mypy|coupling": {
+     "spearman": 0.29444099130374934,
+     "jaccard_top": 0.3076923076923077,
+     "gain_complementarite": -0.04877427944862134
+    },
+    "kamei|coupling": {
+     "spearman": 0.1550023744918334,
+     "jaccard_top": 0.1590909090909091,
+     "gain_complementarite": 0.009202694235589282
+    }
+   },
+   "part_positifs_vus_par_une_seule_famille": 0.21951219512195122,
+   "n_positifs_vus_top10": 41,
+   "n_positifs": 56
+  },
+  {
+   "seed": 2,
+   "BASE": 0.8095285458523971,
+   "concat": 0.8315695245673363,
+   "concat_sans_churn": 0.8345733041575492,
+   "S1": 0.8017505470459517,
+   "S2": 0.7520986671971355,
+   "S1_sans_churn": 0.7953053511040381,
+   "S2_sans_churn": 0.7379749353491148,
+   "familles": {
+    "BASE": 0.8095285458523971,
+    "churn": 0.7144420131291027,
+    "radon": 0.5889596180624627,
+    "ruff": 0.583827332405013,
+    "bandit": 0.5924806047344341,
+    "diff": 0.5865924010344142,
+    "process": 0.6071016510841456,
+    "pylint": 0.6289039188382731,
+    "vulture": 0.5067236920628604,
+    "mypy": 0.5348915854386312,
+    "kamei": 0.6813407598965585,
+    "coupling": 0.6486174656852993
+   },
+   "pairs": {
+    "BASE|churn": {
+     "spearman": 0.3541165195497191,
+     "jaccard_top": 0.18604651162790697,
+     "gain_complementarite": -0.007061865924010369
+    },
+    "BASE|radon": {
+     "spearman": 0.10675258803833332,
+     "jaccard_top": 0.10869565217391304,
+     "gain_complementarite": -0.05265565943902928
+    },
+    "BASE|ruff": {
+     "spearman": 0.05404987239329718,
+     "jaccard_top": 0.2,
+     "gain_complementarite": -0.0644320668390691
+    },
+    "BASE|bandit": {
+     "spearman": 0.13503528109033242,
+     "jaccard_top": 0.18604651162790697,
+     "gain_complementarite": -0.06236323851203507
+    },
+    "BASE|diff": {
+     "spearman": 0.36683461429575226,
+     "jaccard_top": 0.2289156626506024,
+     "gain_complementarite": -0.07929182414959213
+    },
+    "BASE|process": {
+     "spearman": 0.1491805460758194,
+     "jaccard_top": 0.0851063829787234,
+     "gain_complementarite": -0.03443405609707584
+    },
+    "BASE|pylint": {
+     "spearman": 0.004967184832593598,
+     "jaccard_top": 0.1724137931034483,
+     "gain_complementarite": -0.03821364630992652
+    },
+    "BASE|vulture": {
+     "spearman": 0.043514326191738686,
+     "jaccard_top": 0.14606741573033707,
+     "gain_complementarite": -0.09301770439626023
+    },
+    "BASE|mypy": {
+     "spearman": 0.09136504923667542,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": -0.087149393276308
+    },
+    "BASE|kamei": {
+     "spearman": 0.41801778979834914,
+     "jaccard_top": 0.3076923076923077,
+     "gain_complementarite": -0.0325044758305153
+    },
+    "BASE|coupling": {
+     "spearman": 0.24383242483933074,
+     "jaccard_top": 0.1590909090909091,
+     "gain_complementarite": -0.02605927988860146
+    },
+    "churn|radon": {
+     "spearman": 0.0962277977310025,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": -0.011537696439227973
+    },
+    "churn|ruff": {
+     "spearman": 0.057915587483573006,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": -0.013825343147006008
+    },
+    "churn|bandit": {
+     "spearman": 0.1720215821372583,
+     "jaccard_top": 0.10869565217391304,
+     "gain_complementarite": -0.023453351899741404
+    },
+    "churn|diff": {
+     "spearman": 0.21431973556940032,
+     "jaccard_top": 0.0851063829787234,
+     "gain_complementarite": -0.01969365426695835
+    },
+    "churn|process": {
+     "spearman": 0.20218638204870096,
+     "jaccard_top": 0.0625,
+     "gain_complementarite": -0.005729063059478623
+    },
+    "churn|pylint": {
+     "spearman": 0.13832959665719496,
+     "jaccard_top": 0.12087912087912088,
+     "gain_complementarite": -0.010562960015914058
+    },
+    "churn|vulture": {
+     "spearman": 0.14008756149696602,
+     "jaccard_top": 0.0967741935483871,
+     "gain_complementarite": -0.07151382534314688
+    },
+    "churn|mypy": {
+     "spearman": 0.10667129338948818,
+     "jaccard_top": 0.1590909090909091,
+     "gain_complementarite": -0.05697234931370587
+    },
+    "churn|kamei": {
+     "spearman": 0.41275022939470335,
+     "jaccard_top": 0.1724137931034483,
+     "gain_complementarite": 0.015337179232146614
+    },
+    "churn|coupling": {
+     "spearman": 0.18121429468411757,
+     "jaccard_top": 0.0967741935483871,
+     "gain_complementarite": 0.017226974338571788
+    },
+    "radon|ruff": {
+     "spearman": 0.4211007698205877,
+     "jaccard_top": 0.2,
+     "gain_complementarite": -0.011716729659836833
+    },
+    "radon|bandit": {
+     "spearman": -0.1608475823276383,
+     "jaccard_top": 0.1590909090909091,
+     "gain_complementarite": 0.020787746170678356
+    },
+    "radon|diff": {
+     "spearman": 0.09590108558464257,
+     "jaccard_top": 0.07368421052631578,
+     "gain_complementarite": 0.02347324447980903
+    },
+    "radon|process": {
+     "spearman": 0.09740417374749522,
+     "jaccard_top": 0.0851063829787234,
+     "gain_complementarite": 0.03198726874875679
+    },
+    "radon|pylint": {
+     "spearman": 0.3176679329500422,
+     "jaccard_top": 0.0967741935483871,
+     "gain_complementarite": -0.004436045355082463
+    },
+    "radon|vulture": {
+     "spearman": 0.09304343609925464,
+     "jaccard_top": 0.12087912087912088,
+     "gain_complementarite": -0.05317286652078779
+    },
+    "radon|mypy": {
+     "spearman": 0.0992380215396805,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": -0.03578675154167499
+    },
+    "radon|kamei": {
+     "spearman": 0.1365416009043513,
+     "jaccard_top": 0.0625,
+     "gain_complementarite": -0.005370996618261348
+    },
+    "radon|coupling": {
+     "spearman": 0.20263913830540034,
+     "jaccard_top": 0.14606741573033707,
+     "gain_complementarite": -0.010523174855778694
+    },
+    "ruff|bandit": {
+     "spearman": -0.03545303469661671,
+     "jaccard_top": 0.2289156626506024,
+     "gain_complementarite": -0.02494529540481405
+    },
+    "ruff|diff": {
+     "spearman": 0.11872819881583767,
+     "jaccard_top": 0.10869565217391304,
+     "gain_complementarite": 0.006385518201710738
+    },
+    "ruff|process": {
+     "spearman": 0.03191972107341408,
+     "jaccard_top": 0.0851063829787234,
+     "gain_complementarite": 0.028864133678138115
+    },
+    "ruff|pylint": {
+     "spearman": 0.42107061134368634,
+     "jaccard_top": 0.275,
+     "gain_complementarite": -0.02900338173861139
+    },
+    "ruff|vulture": {
+     "spearman": 0.11887138699808765,
+     "jaccard_top": 0.21428571428571427,
+     "gain_complementarite": -0.025721106027451812
+    },
+    "ruff|mypy": {
+     "spearman": -0.015842400400805284,
+     "jaccard_top": 0.18604651162790697,
+     "gain_complementarite": -0.037437835687288756
+    },
+    "ruff|kamei": {
+     "spearman": 0.045153324840226564,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": -0.004814004376367587
+    },
+    "ruff|coupling": {
+     "spearman": 0.21962570710488089,
+     "jaccard_top": 0.24390243902439024,
+     "gain_complementarite": -0.01883827332405008
+    },
+    "bandit|diff": {
+     "spearman": 0.03742593954829641,
+     "jaccard_top": 0.1590909090909091,
+     "gain_complementarite": 0.024288840262581934
+    },
+    "bandit|process": {
+     "spearman": 0.11587826646280375,
+     "jaccard_top": 0.0625,
+     "gain_complementarite": 0.025024865725084666
+    },
+    "bandit|pylint": {
+     "spearman": 0.001297972641916979,
+     "jaccard_top": 0.2911392405063291,
+     "gain_complementarite": 0.002446787348319157
+    },
+    "bandit|vulture": {
+     "spearman": 0.17020379431182706,
+     "jaccard_top": 0.24390243902439024,
+     "gain_complementarite": -0.0016510841456136571
+    },
+    "bandit|mypy": {
+     "spearman": 0.06365484041427166,
+     "jaccard_top": 0.24390243902439024,
+     "gain_complementarite": -0.022876467077780016
+    },
+    "bandit|kamei": {
+     "spearman": 0.14616207743687237,
+     "jaccard_top": 0.14606741573033707,
+     "gain_complementarite": -0.01376566540680324
+    },
+    "bandit|coupling": {
+     "spearman": 0.08701588916350801,
+     "jaccard_top": 0.2911392405063291,
+     "gain_complementarite": 0.0022279689675752667
+    },
+    "diff|process": {
+     "spearman": 0.10489403736121129,
+     "jaccard_top": 0.07368421052631578,
+     "gain_complementarite": 0.028804455937935125
+    },
+    "diff|pylint": {
+     "spearman": 0.06302086486135085,
+     "jaccard_top": 0.0967741935483871,
+     "gain_complementarite": 0.01599363437437873
+    },
+    "diff|vulture": {
+     "spearman": 0.09005954787379211,
+     "jaccard_top": 0.0851063829787234,
+     "gain_complementarite": -0.018201710761885814
+    },
+    "diff|mypy": {
+     "spearman": -0.029951828082259893,
+     "jaccard_top": 0.0967741935483871,
+     "gain_complementarite": 0.007459717525363119
+    },
+    "diff|kamei": {
+     "spearman": 0.231211175668501,
+     "jaccard_top": 0.1724137931034483,
+     "gain_complementarite": -0.023612492540282415
+    },
+    "diff|coupling": {
+     "spearman": 0.14810080559712188,
+     "jaccard_top": 0.10869565217391304,
+     "gain_complementarite": 0.007061865924010258
+    },
+    "process|pylint": {
+     "spearman": 0.00964349335478438,
+     "jaccard_top": 0.0967741935483871,
+     "gain_complementarite": 0.03312114581261216
+    },
+    "process|vulture": {
+     "spearman": 0.07949206901808416,
+     "jaccard_top": 0.0851063829787234,
+     "gain_complementarite": -0.031748557787945164
+    },
+    "process|mypy": {
+     "spearman": -0.0317458271106511,
+     "jaccard_top": 0.05154639175257732,
+     "gain_complementarite": -0.014461905709170386
+    },
+    "process|kamei": {
+     "spearman": 0.21354116423516442,
+     "jaccard_top": 0.07368421052631578,
+     "gain_complementarite": 0.003739805052715428
+    },
+    "process|coupling": {
+     "spearman": 0.09312838018053855,
+     "jaccard_top": 0.05154639175257732,
+     "gain_complementarite": 0.03328028645315306
+    },
+    "pylint|vulture": {
+     "spearman": 0.15255978614823915,
+     "jaccard_top": 0.275,
+     "gain_complementarite": -0.033141038392679345
+    },
+    "pylint|mypy": {
+     "spearman": 0.12037164125141976,
+     "jaccard_top": 0.2911392405063291,
+     "gain_complementarite": -0.09098866122936122
+    },
+    "pylint|kamei": {
+     "spearman": 0.004712490509687141,
+     "jaccard_top": 0.14606741573033707,
+     "gain_complementarite": 0.003918838273324066
+    },
+    "pylint|coupling": {
+     "spearman": 0.23521817429931255,
+     "jaccard_top": 0.24390243902439024,
+     "gain_complementarite": 0.03308136065247658
+    },
+    "vulture|mypy": {
+     "spearman": 0.07155708255909873,
+     "jaccard_top": 0.21428571428571427,
+     "gain_complementarite": -0.007758106226377404
+    },
+    "vulture|kamei": {
+     "spearman": 0.057034322398472746,
+     "jaccard_top": 0.0967741935483871,
+     "gain_complementarite": -0.05929978118161916
+    },
+    "vulture|coupling": {
+     "spearman": 0.23448398941165166,
+     "jaccard_top": 0.21428571428571427,
+     "gain_complementarite": -0.06345733041575485
+    },
+    "mypy|kamei": {
+     "spearman": 0.06361590580067857,
+     "jaccard_top": 0.0967741935483871,
+     "gain_complementarite": -0.04481798289238115
+    },
+    "mypy|coupling": {
+     "spearman": 0.030970287132384,
+     "jaccard_top": 0.25925925925925924,
+     "gain_complementarite": -0.043922816789337515
+    },
+    "kamei|coupling": {
+     "spearman": 0.1769098240900803,
+     "jaccard_top": 0.14606741573033707,
+     "gain_complementarite": 0.024288840262582045
+    }
+   },
+   "part_positifs_vus_par_une_seule_famille": 0.1956521739130435,
+   "n_positifs_vus_top10": 46,
+   "n_positifs": 55
+  },
+  {
+   "seed": 2,
+   "BASE": 0.7604066985645932,
+   "concat": 0.8027711323763955,
+   "concat_sans_churn": 0.797328548644338,
+   "S1": 0.7803429027113238,
+   "S2": 0.771232057416268,
+   "S1_sans_churn": 0.7551236044657097,
+   "S2_sans_churn": 0.7497607655502392,
+   "familles": {
+    "BASE": 0.7604066985645932,
+    "churn": 0.7809409888357258,
+    "radon": 0.6796650717703349,
+    "ruff": 0.5057416267942585,
+    "bandit": 0.5887161084529504,
+    "diff": 0.6065789473684211,
+    "process": 0.6033094098883572,
+    "pylint": 0.6095494417862839,
+    "vulture": 0.5424043062200957,
+    "mypy": 0.5755582137161085,
+    "kamei": 0.6906698564593302,
+    "coupling": 0.6632775119617226
+   },
+   "pairs": {
+    "BASE|churn": {
+     "spearman": 0.45162335391283126,
+     "jaccard_top": 0.2,
+     "gain_complementarite": 0.025558213716108225
+    },
+    "BASE|radon": {
+     "spearman": 0.19477612200275732,
+     "jaccard_top": 0.14606741573033707,
+     "gain_complementarite": 0.013018341307815096
+    },
+    "BASE|ruff": {
+     "spearman": 0.18612845189666727,
+     "jaccard_top": 0.0967741935483871,
+     "gain_complementarite": -0.07996411483253574
+    },
+    "BASE|bandit": {
+     "spearman": 0.12635130202387626,
+     "jaccard_top": 0.18604651162790697,
+     "gain_complementarite": -0.05318979266347679
+    },
+    "BASE|diff": {
+     "spearman": 0.40607167742002165,
+     "jaccard_top": 0.10869565217391304,
+     "gain_complementarite": -0.0422049441786283
+    },
+    "BASE|process": {
+     "spearman": 0.1637439124565571,
+     "jaccard_top": 0.04081632653061224,
+     "gain_complementarite": -0.013118022328548529
+    },
+    "BASE|pylint": {
+     "spearman": 0.23263870247524945,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": -0.023165869218500612
+    },
+    "BASE|vulture": {
+     "spearman": 0.1066563201920229,
+     "jaccard_top": 0.07368421052631578,
+     "gain_complementarite": -0.06030701754385959
+    },
+    "BASE|mypy": {
+     "spearman": 0.18022439504292964,
+     "jaccard_top": 0.1590909090909091,
+     "gain_complementarite": -0.04445773524720886
+    },
+    "BASE|kamei": {
+     "spearman": 0.40402409216056984,
+     "jaccard_top": 0.1724137931034483,
+     "gain_complementarite": -0.00033891547049424986
+    },
+    "BASE|coupling": {
+     "spearman": 0.22157030412190862,
+     "jaccard_top": 0.1590909090909091,
+     "gain_complementarite": -0.006539074960127511
+    },
+    "churn|radon": {
+     "spearman": 0.14019439506469047,
+     "jaccard_top": 0.18604651162790697,
+     "gain_complementarite": 0.0077950558213714105
+    },
+    "churn|ruff": {
+     "spearman": 0.1295331646078666,
+     "jaccard_top": 0.10869565217391304,
+     "gain_complementarite": -0.08843700159489642
+    },
+    "churn|bandit": {
+     "spearman": 0.1129120308025032,
+     "jaccard_top": 0.10869565217391304,
+     "gain_complementarite": -0.050717703349282495
+    },
+    "churn|diff": {
+     "spearman": 0.24349971933472178,
+     "jaccard_top": 0.14606741573033707,
+     "gain_complementarite": -0.03967304625199397
+    },
+    "churn|process": {
+     "spearman": 0.26750973912546827,
+     "jaccard_top": 0.0967741935483871,
+     "gain_complementarite": -0.030681818181818366
+    },
+    "churn|pylint": {
+     "spearman": 0.15673976285769567,
+     "jaccard_top": 0.1590909090909091,
+     "gain_complementarite": -0.029306220095693947
+    },
+    "churn|vulture": {
+     "spearman": 0.1454041568794789,
+     "jaccard_top": 0.1590909090909091,
+     "gain_complementarite": -0.0733253588516748
+    },
+    "churn|mypy": {
+     "spearman": 0.08711349180422781,
+     "jaccard_top": 0.0851063829787234,
+     "gain_complementarite": -0.04196570972886782
+    },
+    "churn|kamei": {
+     "spearman": 0.34250693112005365,
+     "jaccard_top": 0.14606741573033707,
+     "gain_complementarite": -0.002591706539075145
+    },
+    "churn|coupling": {
+     "spearman": 0.1800835243324569,
+     "jaccard_top": 0.12087912087912088,
+     "gain_complementarite": 0.0014553429027112097
+    },
+    "radon|ruff": {
+     "spearman": 0.41654069013583284,
+     "jaccard_top": 0.2289156626506024,
+     "gain_complementarite": -0.059629186602870754
+    },
+    "radon|bandit": {
+     "spearman": -0.17277457192589846,
+     "jaccard_top": 0.2289156626506024,
+     "gain_complementarite": 0.02651515151515138
+    },
+    "radon|diff": {
+     "spearman": 0.2674426828229845,
+     "jaccard_top": 0.2289156626506024,
+     "gain_complementarite": -0.006738437001594932
+    },
+    "radon|process": {
+     "spearman": 0.08871269144665032,
+     "jaccard_top": 0.07368421052631578,
+     "gain_complementarite": 0.014812599681020777
+    },
+    "radon|pylint": {
+     "spearman": 0.47016427517778514,
+     "jaccard_top": 0.3783783783783784,
+     "gain_complementarite": -0.023584529505581986
+    },
+    "radon|vulture": {
+     "spearman": 0.29395720810811815,
+     "jaccard_top": 0.18604651162790697,
+     "gain_complementarite": -0.029904306220095545
+    },
+    "radon|mypy": {
+     "spearman": -0.04298000172310198,
+     "jaccard_top": 0.21428571428571427,
+     "gain_complementarite": 0.03281499202551841
+    },
+    "radon|kamei": {
+     "spearman": 0.10361061838815493,
+     "jaccard_top": 0.0851063829787234,
+     "gain_complementarite": 0.044417862838915356
+    },
+    "radon|coupling": {
+     "spearman": 0.2658818614496849,
+     "jaccard_top": 0.25925925925925924,
+     "gain_complementarite": 0.01872009569377997
+    },
+    "ruff|bandit": {
+     "spearman": -0.12252368836318572,
+     "jaccard_top": 0.14606741573033707,
+     "gain_complementarite": 0.005741626794258492
+    },
+    "ruff|diff": {
+     "spearman": 0.13761595674756807,
+     "jaccard_top": 0.12087912087912088,
+     "gain_complementarite": -0.030641945773524748
+    },
+    "ruff|process": {
+     "spearman": 0.033754223886763315,
+     "jaccard_top": 0.0625,
+     "gain_complementarite": -0.02458133971291876
+    },
+    "ruff|pylint": {
+     "spearman": 0.35246930886797023,
+     "jaccard_top": 0.25925925925925924,
+     "gain_complementarite": -0.031160287081339777
+    },
+    "ruff|vulture": {
+     "spearman": 0.30459736026247153,
+     "jaccard_top": 0.2,
+     "gain_complementarite": -0.016846092503987276
+    },
+    "ruff|mypy": {
+     "spearman": -0.1349856213639641,
+     "jaccard_top": 0.2,
+     "gain_complementarite": 0.024222488038277534
+    },
+    "ruff|kamei": {
+     "spearman": 0.10294413133955052,
+     "jaccard_top": 0.12087912087912088,
+     "gain_complementarite": -0.07210925039872418
+    },
+    "ruff|coupling": {
+     "spearman": 0.15989210974452195,
+     "jaccard_top": 0.18604651162790697,
+     "gain_complementarite": -0.040629984051036794
+    },
+    "bandit|diff": {
+     "spearman": -4.034036627009129e-05,
+     "jaccard_top": 0.1724137931034483,
+     "gain_complementarite": 0.03686204146730454
+    },
+    "bandit|process": {
+     "spearman": 0.06330171398283056,
+     "jaccard_top": 0.05154639175257732,
+     "gain_complementarite": 0.024023125996810224
+    },
+    "bandit|pylint": {
+     "spearman": -0.16721402816021563,
+     "jaccard_top": 0.2289156626506024,
+     "gain_complementarite": 0.031419457735247125
+    },
+    "bandit|vulture": {
+     "spearman": 0.013219378242339288,
+     "jaccard_top": 0.275,
+     "gain_complementarite": 0.02551834130781505
+    },
+    "bandit|mypy": {
+     "spearman": 0.3896744518346224,
+     "jaccard_top": 0.2911392405063291,
+     "gain_complementarite": 0.02577751196172262
+    },
+    "bandit|kamei": {
+     "spearman": 0.05404883121073941,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": -0.015370813397129313
+    },
+    "bandit|coupling": {
+     "spearman": 0.1286930449677043,
+     "jaccard_top": 0.2,
+     "gain_complementarite": -0.01674641148325362
+    },
+    "diff|process": {
+     "spearman": 0.03931970590735515,
+     "jaccard_top": 0.0625,
+     "gain_complementarite": 0.04186602870813394
+    },
+    "diff|pylint": {
+     "spearman": 0.2481166675724621,
+     "jaccard_top": 0.14606741573033707,
+     "gain_complementarite": 0.022846889952153115
+    },
+    "diff|vulture": {
+     "spearman": 0.015390979097348942,
+     "jaccard_top": 0.1724137931034483,
+     "gain_complementarite": -0.004884370015949102
+    },
+    "diff|mypy": {
+     "spearman": 0.11806354633461562,
+     "jaccard_top": 0.18604651162790697,
+     "gain_complementarite": 0.02946570972886764
+    },
+    "diff|kamei": {
+     "spearman": 0.21750120139203077,
+     "jaccard_top": 0.0967741935483871,
+     "gain_complementarite": -0.010366826156299913
+    },
+    "diff|coupling": {
+     "spearman": 0.17987075025882435,
+     "jaccard_top": 0.12087912087912088,
+     "gain_complementarite": 0.0165470494417862
+    },
+    "process|pylint": {
+     "spearman": -0.009606793997693302,
+     "jaccard_top": 0.05154639175257732,
+     "gain_complementarite": 0.043620414673046226
+    },
+    "process|vulture": {
+     "spearman": 0.005458674903182146,
+     "jaccard_top": 0.030303030303030304,
+     "gain_complementarite": 0.00015948963317402587
+    },
+    "process|mypy": {
+     "spearman": -0.018507962735602127,
+     "jaccard_top": 0.05154639175257732,
+     "gain_complementarite": 0.026335725677831046
+    },
+    "process|kamei": {
+     "spearman": 0.2211678173342948,
+     "jaccard_top": 0.0851063829787234,
+     "gain_complementarite": 0.01885964912280702
+    },
+    "process|coupling": {
+     "spearman": 0.0159062689009603,
+     "jaccard_top": 0.04081632653061224,
+     "gain_complementarite": 0.03149920255183403
+    },
+    "pylint|vulture": {
+     "spearman": 0.29876661519962927,
+     "jaccard_top": 0.275,
+     "gain_complementarite": -0.002791068580542233
+    },
+    "pylint|mypy": {
+     "spearman": 0.1249280460117643,
+     "jaccard_top": 0.2,
+     "gain_complementarite": -0.00580143540669853
+    },
+    "pylint|kamei": {
+     "spearman": 0.11290743054590256,
+     "jaccard_top": 0.12087912087912088,
+     "gain_complementarite": 0.003389154704944164
+    },
+    "pylint|coupling": {
+     "spearman": 0.2621240031763772,
+     "jaccard_top": 0.25925925925925924,
+     "gain_complementarite": 0.03092105263157896
+    },
+    "vulture|mypy": {
+     "spearman": 0.07557357842756907,
+     "jaccard_top": 0.2,
+     "gain_complementarite": 0.01734449760765555
+    },
+    "vulture|kamei": {
+     "spearman": 0.05255070049003648,
+     "jaccard_top": 0.10869565217391304,
+     "gain_complementarite": -0.03763955342902714
+    },
+    "vulture|coupling": {
+     "spearman": 0.11880785662333218,
+     "jaccard_top": 0.21428571428571427,
+     "gain_complementarite": -0.026315789473684403
+    },
+    "mypy|kamei": {
+     "spearman": 0.15267025873918574,
+     "jaccard_top": 0.0851063829787234,
+     "gain_complementarite": -0.0295255183413079
+    },
+    "mypy|coupling": {
+     "spearman": 0.2525519390129481,
+     "jaccard_top": 0.2289156626506024,
+     "gain_complementarite": -0.012041467304625297
+    },
+    "kamei|coupling": {
+     "spearman": 0.14098126931099747,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": 0.02354465709728859
+    }
+   },
+   "part_positifs_vus_par_une_seule_famille": 0.16666666666666666,
+   "n_positifs_vus_top10": 42,
+   "n_positifs": 55
+  },
+  {
+   "seed": 2,
+   "BASE": 0.780921052631579,
+   "concat": 0.8147926634768738,
+   "concat_sans_churn": 0.8094896331738438,
+   "S1": 0.7964114832535885,
+   "S2": 0.7661682615629984,
+   "S1_sans_churn": 0.780622009569378,
+   "S2_sans_churn": 0.7502392344497607,
+   "familles": {
+    "BASE": 0.780921052631579,
+    "churn": 0.7241626794258373,
+    "radon": 0.64377990430622,
+    "ruff": 0.6065988835725676,
+    "bandit": 0.6204346092503987,
+    "diff": 0.6214712918660287,
+    "process": 0.5796451355661882,
+    "pylint": 0.6342902711323763,
+    "vulture": 0.5812998405103668,
+    "mypy": 0.5374401913875598,
+    "kamei": 0.7059409888357256,
+    "coupling": 0.6687400318979266
+   },
+   "pairs": {
+    "BASE|churn": {
+     "spearman": 0.366042269596097,
+     "jaccard_top": 0.14606741573033707,
+     "gain_complementarite": 0.01971690590111641
+    },
+    "BASE|radon": {
+     "spearman": 0.22545461623344948,
+     "jaccard_top": 0.24390243902439024,
+     "gain_complementarite": -0.014314194577352501
+    },
+    "BASE|ruff": {
+     "spearman": 0.16338818612818745,
+     "jaccard_top": 0.1590909090909091,
+     "gain_complementarite": -0.04581339712918653
+    },
+    "BASE|bandit": {
+     "spearman": 0.1288254219308379,
+     "jaccard_top": 0.18604651162790697,
+     "gain_complementarite": -0.037480063795853225
+    },
+    "BASE|diff": {
+     "spearman": 0.4061204664960765,
+     "jaccard_top": 0.12087912087912088,
+     "gain_complementarite": -0.04346092503987242
+    },
+    "BASE|process": {
+     "spearman": 0.15784372600452776,
+     "jaccard_top": 0.0967741935483871,
+     "gain_complementarite": -0.03546650717703359
+    },
+    "BASE|pylint": {
+     "spearman": 0.1322075944282482,
+     "jaccard_top": 0.21428571428571427,
+     "gain_complementarite": -0.03131977671451358
+    },
+    "BASE|vulture": {
+     "spearman": 0.08326323451730591,
+     "jaccard_top": 0.14606741573033707,
+     "gain_complementarite": -0.05815390749601268
+    },
+    "BASE|mypy": {
+     "spearman": 0.13078468458542236,
+     "jaccard_top": 0.10869565217391304,
+     "gain_complementarite": -0.07328548644338118
+    },
+    "BASE|kamei": {
+     "spearman": 0.5344188521047096,
+     "jaccard_top": 0.275,
+     "gain_complementarite": -0.015570175438596512
+    },
+    "BASE|coupling": {
+     "spearman": 0.24387822027103798,
+     "jaccard_top": 0.12087912087912088,
+     "gain_complementarite": -0.006240031897926657
+    },
+    "churn|radon": {
+     "spearman": 0.2432620037055174,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": 0.0028110047846889863
+    },
+    "churn|ruff": {
+     "spearman": 0.2074205176851287,
+     "jaccard_top": 0.0851063829787234,
+     "gain_complementarite": -0.02406299840510362
+    },
+    "churn|bandit": {
+     "spearman": 0.18509555876813463,
+     "jaccard_top": 0.12087912087912088,
+     "gain_complementarite": -0.016347687400319
+    },
+    "churn|diff": {
+     "spearman": 0.22231829972441863,
+     "jaccard_top": 0.05154639175257732,
+     "gain_complementarite": -0.0031100478468899517
+    },
+    "churn|process": {
+     "spearman": 0.1740527665973712,
+     "jaccard_top": 0.07368421052631578,
+     "gain_complementarite": -0.012420255183413165
+    },
+    "churn|pylint": {
+     "spearman": 0.16741547831687412,
+     "jaccard_top": 0.12087912087912088,
+     "gain_complementarite": 0.0023125996810207106
+    },
+    "churn|vulture": {
+     "spearman": 0.1591832898359076,
+     "jaccard_top": 0.14606741573033707,
+     "gain_complementarite": -0.04694976076555024
+    },
+    "churn|mypy": {
+     "spearman": 0.13699976134902472,
+     "jaccard_top": 0.0967741935483871,
+     "gain_complementarite": -0.0603867623604466
+    },
+    "churn|kamei": {
+     "spearman": 0.307198003985953,
+     "jaccard_top": 0.07368421052631578,
+     "gain_complementarite": 0.038137958532695304
+    },
+    "churn|coupling": {
+     "spearman": 0.20732580032572487,
+     "jaccard_top": 0.07368421052631578,
+     "gain_complementarite": 0.02697368421052626
+    },
+    "radon|ruff": {
+     "spearman": 0.4205816102899466,
+     "jaccard_top": 0.2911392405063291,
+     "gain_complementarite": 0.0010765550239234534
+    },
+    "radon|bandit": {
+     "spearman": -0.11894338285494169,
+     "jaccard_top": 0.18604651162790697,
+     "gain_complementarite": 0.0507974481658694
+    },
+    "radon|diff": {
+     "spearman": 0.13912374924924945,
+     "jaccard_top": 0.0625,
+     "gain_complementarite": 0.02294657097288688
+    },
+    "radon|process": {
+     "spearman": 0.10053243485086001,
+     "jaccard_top": 0.0851063829787234,
+     "gain_complementarite": 0.01271929824561413
+    },
+    "radon|pylint": {
+     "spearman": 0.421892044887837,
+     "jaccard_top": 0.25925925925925924,
+     "gain_complementarite": 0.03038277511961729
+    },
+    "radon|vulture": {
+     "spearman": 0.21938448022682158,
+     "jaccard_top": 0.14606741573033707,
+     "gain_complementarite": -0.01800239234449752
+    },
+    "radon|mypy": {
+     "spearman": 0.13739302366076817,
+     "jaccard_top": 0.14606741573033707,
+     "gain_complementarite": -0.05334928229665059
+    },
+    "radon|kamei": {
+     "spearman": 0.1288119718378386,
+     "jaccard_top": 0.2,
+     "gain_complementarite": 0.01686602870813403
+    },
+    "radon|coupling": {
+     "spearman": 0.30305357531006966,
+     "jaccard_top": 0.18604651162790697,
+     "gain_complementarite": 0.04170653907496025
+    },
+    "ruff|bandit": {
+     "spearman": -0.035966868636422504,
+     "jaccard_top": 0.18604651162790697,
+     "gain_complementarite": 0.012480063795853202
+    },
+    "ruff|diff": {
+     "spearman": 0.2086630081549839,
+     "jaccard_top": 0.10869565217391304,
+     "gain_complementarite": 0.03155901116427429
+    },
+    "ruff|process": {
+     "spearman": -0.0188186493634494,
+     "jaccard_top": 0.05154639175257732,
+     "gain_complementarite": 0.02035486443381196
+    },
+    "ruff|pylint": {
+     "spearman": 0.4673192454836075,
+     "jaccard_top": 0.24390243902439024,
+     "gain_complementarite": 0.03145933014354063
+    },
+    "ruff|vulture": {
+     "spearman": 0.20408022832518619,
+     "jaccard_top": 0.2,
+     "gain_complementarite": 0.006180223285486508
+    },
+    "ruff|mypy": {
+     "spearman": 0.21230610577660808,
+     "jaccard_top": 0.1590909090909091,
+     "gain_complementarite": -0.04114832535885149
+    },
+    "ruff|kamei": {
+     "spearman": 0.13152220788492366,
+     "jaccard_top": 0.10869565217391304,
+     "gain_complementarite": -0.017723285486443308
+    },
+    "ruff|coupling": {
+     "spearman": 0.14022871352948565,
+     "jaccard_top": 0.14606741573033707,
+     "gain_complementarite": 0.032655502392344604
+    },
+    "bandit|diff": {
+     "spearman": 0.006212822049135478,
+     "jaccard_top": 0.18604651162790697,
+     "gain_complementarite": 0.04860446570972887
+    },
+    "bandit|process": {
+     "spearman": 0.1350559362095153,
+     "jaccard_top": 0.07368421052631578,
+     "gain_complementarite": 0.023185805422647365
+    },
+    "bandit|pylint": {
+     "spearman": -0.054254029142235885,
+     "jaccard_top": 0.24390243902439024,
+     "gain_complementarite": 0.02543859649122815
+    },
+    "bandit|vulture": {
+     "spearman": 0.12614466488881193,
+     "jaccard_top": 0.275,
+     "gain_complementarite": 0.015271132376395546
+    },
+    "bandit|mypy": {
+     "spearman": -0.04695595890656451,
+     "jaccard_top": 0.24390243902439024,
+     "gain_complementarite": -0.006240031897926657
+    },
+    "bandit|kamei": {
+     "spearman": 0.1484079033612081,
+     "jaccard_top": 0.14606741573033707,
+     "gain_complementarite": -0.014214513556618846
+    },
+    "bandit|coupling": {
+     "spearman": 0.006141268715468632,
+     "jaccard_top": 0.14606741573033707,
+     "gain_complementarite": 0.05269138755980851
+    },
+    "diff|process": {
+     "spearman": 0.10370120867855273,
+     "jaccard_top": 0.0967741935483871,
+     "gain_complementarite": 0.03104066985645937
+    },
+    "diff|pylint": {
+     "spearman": 0.0819126047227007,
+     "jaccard_top": 0.10869565217391304,
+     "gain_complementarite": 0.042484051036682624
+    },
+    "diff|vulture": {
+     "spearman": 0.12848194168765525,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": 0.015051834130781483
+    },
+    "diff|mypy": {
+     "spearman": 0.10945109174415613,
+     "jaccard_top": 0.10869565217391304,
+     "gain_complementarite": -0.010267145135566147
+    },
+    "diff|kamei": {
+     "spearman": 0.2215877624731967,
+     "jaccard_top": 0.0967741935483871,
+     "gain_complementarite": -0.009589314194577425
+    },
+    "diff|coupling": {
+     "spearman": 0.006397174010387656,
+     "jaccard_top": 0.14606741573033707,
+     "gain_complementarite": 0.03644338118022317
+    },
+    "process|pylint": {
+     "spearman": 0.04816284676407409,
+     "jaccard_top": 0.0625,
+     "gain_complementarite": 0.010865231259968189
+    },
+    "process|vulture": {
+     "spearman": 0.034090957549474284,
+     "jaccard_top": 0.05154639175257732,
+     "gain_complementarite": 0.027850877192982515
+    },
+    "process|mypy": {
+     "spearman": -0.0445160546706188,
+     "jaccard_top": 0.05154639175257732,
+     "gain_complementarite": -0.0014154704944180363
+    },
+    "process|kamei": {
+     "spearman": 0.191416786601048,
+     "jaccard_top": 0.07368421052631578,
+     "gain_complementarite": -0.009409888357256757
+    },
+    "process|coupling": {
+     "spearman": 0.10257482211494547,
+     "jaccard_top": 0.0851063829787234,
+     "gain_complementarite": -0.003907496012759193
+    },
+    "pylint|vulture": {
+     "spearman": 0.29619050057667284,
+     "jaccard_top": 0.24390243902439024,
+     "gain_complementarite": -0.016706539074960114
+    },
+    "pylint|mypy": {
+     "spearman": 0.2172723008604855,
+     "jaccard_top": 0.1724137931034483,
+     "gain_complementarite": -0.08652312599681022
+    },
+    "pylint|kamei": {
+     "spearman": 0.13193012518840475,
+     "jaccard_top": 0.12087912087912088,
+     "gain_complementarite": 0.010526315789473717
+    },
+    "pylint|coupling": {
+     "spearman": 0.2533657133254743,
+     "jaccard_top": 0.21428571428571427,
+     "gain_complementarite": 0.04158692185007973
+    },
+    "vulture|mypy": {
+     "spearman": 0.17326057613008924,
+     "jaccard_top": 0.14606741573033707,
+     "gain_complementarite": 0.0021132376395536223
+    },
+    "vulture|kamei": {
+     "spearman": 0.05650357876356955,
+     "jaccard_top": 0.10869565217391304,
+     "gain_complementarite": -0.02386363636363631
+    },
+    "vulture|coupling": {
+     "spearman": 0.28174700436530015,
+     "jaccard_top": 0.13333333333333333,
+     "gain_complementarite": 0.0022328548644336976
+    },
+    "mypy|kamei": {
+     "spearman": 0.08972483516787727,
+     "jaccard_top": 0.0851063829787234,
+     "gain_complementarite": -0.04481658692185009
+    },
+    "mypy|coupling": {
+     "spearman": 0.15145790790129657,
+     "jaccard_top": 0.1724137931034483,
+     "gain_complementarite": -0.051395534290271105
+    },
+    "kamei|coupling": {
+     "spearman": 0.2214166605390812,
+     "jaccard_top": 0.18604651162790697,
+     "gain_complementarite": 0.024760765550239316
+    }
+   },
+   "part_positifs_vus_par_une_seule_famille": 0.2553191489361702,
+   "n_positifs_vus_top10": 47,
+   "n_positifs": 55
+  }
+ ]
+}

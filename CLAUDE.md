@@ -965,6 +965,51 @@ implémentation) :
      un pour la sélection imbriquée), intégration au `benchmark.py`, §6 mis à jour (positifs ET
      négatifs), `requirements.txt` mis à jour.
 5. **Chantier 5 — croisement et combinaison** (stacking, matrice de désaccord entre modèles).
+
+   **PROTOCOLE PRÉ-ENREGISTRÉ — Chantier 5, v1 (rédigé le 2026-11-05, AVANT toute implémentation ;
+   lancé sur feu vert de l'utilisateur « oui on peut passer au chantier 5 »).**
+   *Question :* les familles de signaux sont-elles **complémentaires** (chacune voit des commits que
+   les autres ne voient pas) au point qu'un stacking par famille batte BASE et « tout empiler » ?
+   Le 4bis a montré que l'empilement en une seule forêt plafonne ; ici on teste l'autre façon de
+   combiner : un modèle par famille, puis un méta-modèle sur leurs sorties.
+   - **Données :** celles du 4bis (`chantier4bis_common.load_all`, label_v2 + détection B, 3198
+     commits → 2558 anciens « dev » / 640 récents « réserve »). 12 familles : BASE, churn, radon,
+     Ruff, Bandit, diff, process, Pylint, Vulture, mypy, Kamei, couplage.
+   - **Apprenants de base :** une forêt (300 arbres, non réglée, `class_weight=balanced`) **par
+     famille, sur les colonnes de cette famille seule** (BASE comprise). Prédictions hors-pli
+     (OOF) par CV interne à 5 plis sur le train seul.
+   - **Méta-modèles (aucun hyperparamètre réglé), fixés maintenant :**
+     **S1** = régression logistique (C=1, défaut) sur les logits des 12 sorties OOF ;
+     **S2** = moyenne des **rangs** percentiles des 12 sorties (aucun ajustement, borne basse de
+     complexité). Pas d'autre méta-modèle (forêt, boosting…) — ce serait une seconde recherche.
+   - **Références, sur les mêmes plis externes (comparaison APPARIÉE — corrige l'écart n°3 du
+     4bis) :** BASE (une forêt), « tout empiler » (une forêt sur les 12 familles concaténées).
+   - **Estimation honnête :** CV imbriquée, externe 5 plis × 3 graines (= 15 plis), stacking
+     refait dans chaque pli externe sur le train seul. Chiffre annoncé = AUC externe moyenne ± écart-
+     type, et **différence appariée** par pli vs BASE et vs « tout empiler ».
+   - **Variante de sensibilité, pré-enregistrée, rapportée sans la substituer :** mêmes mesures
+     **sans la famille churn** (famille suspecte, §6 Chantier 1 et grille 4bis).
+   - **Matrice de désaccord (diagnostic de complémentarité), sur les prédictions OOF externes :**
+     (i) corrélation de Spearman entre sorties de familles, deux à deux ; (ii) recouvrement
+     (Jaccard) des 10 % de commits les mieux classés par chaque paire de familles ; (iii) pour les
+     commits à risque (positifs), part de ceux placés dans le top 10 % par **une seule** famille ;
+     (iv) AUC de la moyenne de deux familles vs la meilleure des deux (gain de complémentarité).
+   - **Seuils de conclusion, fixés maintenant :** *amélioration affirmée* seulement si
+     (a) différence appariée moyenne S1 ou S2 − BASE ≥ **+0,02** (≈ 1 écart-type externe, règle du
+     4bis) **ET** (b) positive dans ≥ **12 plis sur 15**. Même test vs « tout empiler » pour dire si
+     le stacking bat l'empilement. *Complémentarité affirmée* seulement si la corrélation de
+     Spearman médiane entre familles hors BASE est < **0,5** ET que (iv) dépasse **+0,01** pour
+     au moins un tiers des paires. Sinon : « pas d'amélioration / de complémentarité démontrée ».
+   - **Réserve temporelle (20 % récents), évaluée UNE fois,** pour S1, S2, « tout empiler » et BASE,
+     avec IC bootstrap à 95 %. Mêmes limites que le 4bis : ≈ 33 positifs (IC ≈ ±0,08), familles
+     déjà vues en CV complète sur ces données — à ne pas sur-lire.
+   - **Règle de résultat négatif :** si (a)/(b) échouent, documenter en §6 « le stacking par famille
+     ne bat ni BASE ni l'empilement », sans essayer d'autre méta-modèle ni autre sélection.
+   - **Limites d'avance :** 1 jeu de données (Flask), ~33 positifs en réserve, forêts non réglées,
+     12 apprenants sur ~270 positifs de dev : le méta-modèle S1 (12 coefficients) peut sur-ajuster ;
+     S2 existe pour le contrôler. Mémoire : `n_jobs` ≤ 3, exécution seule (§7 point 15).
+   - **Livrables :** `results/chantier5_stacking.py` → `results/chantier5_stacking.json`, §6,
+     journal §9.
 6. **Chantier 6 — validation externe** sur un deuxième dépôt.
 
    **EXTENSION 6A — Transférabilité inter-dépôts et courbe d'apprentissage (AJOUTÉE le

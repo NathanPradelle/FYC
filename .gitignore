@@ -10,3 +10,7 @@ results/github_cache.json
 results/cache_full_v2.pkl
 results/cache_wave1_v2.pkl
 results/cache_grid_v2.json
+repos/
+results/cache_6a_*.pkl
+results/cache_6a_*
+results/dataset_6a.pkl

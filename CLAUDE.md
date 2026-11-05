@@ -461,6 +461,73 @@ commit qui touche du code déjà complexe/volumineux*.
     faits. **Lecture pour le Chantier 5 :** empiler des familles mesurant la même chose ne donne
     rien ; le stacking par famille n'a de chance d'aider que si les familles sont réellement
     complémentaires — ce que la matrice de corrélation du Chantier 4bis ne suggère pas.
+- **✅ T1 validé, ❌ T2 non validé, T3 mesuré — un modèle entraîné sur d'autres dépôts prédit un
+  dépôt jamais vu ; l'avantage du « pré-entraîné + local » au démarrage à froid n'est pas
+  démontré (extension 6A).** Mesuré le 2026-11-05 (`results/chantier6a_dataset.py` →
+  `results/chantier6a_dataset.json` + jeu exporté `results/dataset_6a.csv.gz` ;
+  `results/chantier6a_eval.py` → `results/chantier6a_eval.json`), protocole §8 6A, liste de
+  7 dépôts figée avant toute mesure (commit 97d7284), 7/7 dépôts interprétables (aucun exclu par
+  les garde-fous : part de risque 7,3–18,2 %, 44–147 positifs en queue de test). Leave-one-repo-out,
+  queue de test = 30 % chronologiques récents, RF 300 arbres non réglé, 1 graine.
+
+  | Dépôt | Étiquetés | Risque | Pos. test | AUC G [IC95] | AUC L (tout) | AUC G+L (tout) | Précision top 10 % (G) | Lift |
+  |---|---|---|---|---|---|---|---|---|
+  | flask | 3198 | 9,7 % | 44 | 0,757 [0,677–0,835] | 0,751 | 0,763 | 0,156 | 3,4× |
+  | requests | 4233 | 9,3 % | 51 | 0,669 [0,591–0,749] | 0,663 | 0,659 | 0,126 | 3,2× |
+  | click | 1808 | 12,2 % | 70 | 0,708 [0,649–0,767] | 0,673 | 0,711 | 0,315 | 2,4× |
+  | black | 1976 | 9,5 % | 44 | 0,772 [0,698–0,839] | 0,764 | 0,794 | 0,254 | 3,4× |
+  | tornado | 3446 | 7,3 % | 56 | 0,745 [0,678–0,809] | 0,724 | 0,771 | 0,155 | 2,9× |
+  | pydantic | 4661 | 18,2 % | 147 | 0,779 [0,739–0,818] | 0,789 | 0,791 | 0,352 | 3,4× |
+  | django-rest-framework | 5857 | 11,4 % | 80 | 0,745 [0,686–0,798] | 0,777 | 0,771 | 0,143 | 3,2× |
+
+  (G = modèle global seul, entraîné sur les 6 autres dépôts ; L/G+L « tout » = tous les commits
+  locaux de la partie d'entraînement ; lift = précision top 10 % / prévalence de la queue.)
+  - **T1 (le transfert existe) : ✅ OUI.** Médiane AUC(G) = **0,745** (seuil 0,65). Les 7 dépôts
+    > 0,66 ; le plus faible est requests (0,669, IC 0,59–0,75). Un modèle qui n'a **jamais vu**
+    le dépôt classe ses commits récents à risque nettement au-dessus du hasard, avec les features
+    en rang percentile, sans churn. **Les 4 variantes passent T1** (médianes 0,744–0,755).
+  - **T2 (bénéfice au démarrage à froid) : ❌ ÉCHEC sur la configuration principale.** Médiane de
+    AUC(G+L) − AUC(L) à n = 100 : **+0,009** (seuil +0,05). Variantes, rapportées sans les
+    substituer (règle pré-enregistrée) : brut sans churn **+0,065** (passerait), percentile +
+    churn +0,028, brut + churn +0,025 (échecs). **Le verdict T2 dépend donc de la variante** : à ne
+    pas annoncer comme « le pré-entraînement aide au démarrage » ni comme « il n'aide pas » — il
+    aide nettement dans un dépôt (pydantic : à n = 100, L 0,66 → G+L 0,77), pas dans d'autres
+    (click, tornado, DRF ≈ 0 à n = 100).
+  - **T3 (point de croisement) : mesure, bruitée.** `n*` (premier n où L ≥ G+L) : flask 200,
+    requests 1600, black 800, tornado 100, DRF 200 ; **jamais** pour click et pydantic (G+L ≥ L
+    à tous les n). Médiane où il existe : 200. **À ne pas sur-lire** : les courbes d'apprentissage
+    ne sont pas monotones (ex. tornado L : 0,77 à n = 100, 0,69 à n = 800) — 1 graine, quelques
+    dizaines de positifs en test (IC par dépôt de ± 0,05 à 0,08), un n* de 100 ou de 800 n'est pas
+    distinguable. Ce qui est robuste : **à pleine taille, G+L ≥ L dans 5 dépôts sur 7** et jamais
+    nettement pire (écart le plus défavorable −0,006 pour django-rest-framework, −0,004 pour requests ; le plus favorable +0,047 pour tornado) — ajouter les autres
+    dépôts ne fait pas de mal.
+  - **Normalisation en rang percentile : pas de gain.** Médiane AUC(G) 0,745 (percentile) contre
+    0,755 (brut) ; l'écart vient surtout de requests (0,669 contre 0,705). **Le rang percentile ne
+    rend pas les features plus transférables ici** — écart dans le bruit, mais pas de preuve du
+    contraire de l'hypothèse de conception.
+  - **Le churn n'explique pas le transfert.** Avec/sans churn (percentile) : médiane G 0,754
+    contre 0,745 (+0,009, dans le bruit). La suspicion du Chantier 1 / de la grille 4bis (« le seul
+    gain régulier vient du churn ») ne se confirme pas comme moteur du transfert inter-dépôts.
+  - **Calibration : ❌ les probabilités brutes ne sont pas utilisables telles quelles.** Le Brier
+    du modèle G est **moins bon que le simple prédicteur constant « prévalence réelle »** dans les
+    7 dépôts (ex. flask 0,083 contre 0,044 ; tornado 0,127 contre 0,051 ; click 0,128 contre
+    0,112) — attendu (`class_weight=balanced` gonfle les probabilités de la classe rare). **Le
+    classement fonctionne (AUC, lift ≈ 3×), pas la valeur absolue** : un produit devrait
+    recalibrer sur le taux de base local, ce qui ne demande que quelques dizaines de commits
+    étiquetés, pas un réentraînement. À présenter comme la conclusion pratique du 6A.
+  - **Lecture globale, honnête.** (1) Oui, un modèle global transfère, avec un lift ≈ 3× sur les
+    10 % de commits les mieux classés, y compris sur un dépôt jamais vu — c'est l'argument le plus
+    solide pour l'idée de modèle « pré-entraîné ». (2) Le bénéfice **au démarrage à froid** par
+    rapport à un modèle local n'est pas établi avec ce protocole (T2 échoue sur la principale,
+    passe sur une variante). (3) Les AUC en queue de test (0,67–0,78) sont du même ordre que les
+    0,74 de la réserve 20 % du Chantier 4bis et **inférieures aux ≈ 0,79–0,81 des CV aléatoires** :
+    cohérent avec une évaluation temporelle systématiquement plus dure que la CV mélangée, ce qui
+    **renforce l'hypothèse de dérive** laissée ouverte en §6 (4bis) — **sans la démontrer** (les
+    jeux de features diffèrent).
+  - **Limites propres à ce résultat :** dépôts Python uniquement ; 7 dépôts (médianes peu
+    précises, on donne les valeurs par dépôt) ; pas de dépôt data/ML (§8, critère ≤ 10 000
+    commits) ; 1 graine et 1 queue de test par dépôt ; Flask recalculé à l'identique de la
+    référence (3198 étiquetés, 310 positifs, 0 dépassement radon).
 
 ## 7. Pièges connus et limites assumées
 
@@ -591,6 +658,44 @@ commit qui touche du code déjà complexe/volumineux*.
    - **Couplage : fan-in sous-estimé pour les blobs non parsables** (exclus de l'index) —
      mesuré à **3,8 %** des fichiers d'un arbre en moyenne, donc faible. Vérifié sur un cas : fan-in
      de `flask.globals` au HEAD = 17 avec l'outil et 17 avec `grep`.
+14. **Fichiers générés gigantesques : radon bloquait indéfiniment sur black (6A, 2026-11-04).**
+   Le dépôt `psf/black` versionne des fichiers de benchmark générés (`profiling/mix_huge.py`
+   1,4 Mo, `dict_huge.py` 1,1 Mo, `list_huge.py` 0,9 Mo, `dict_big.py`, `mix_big.py`) : une seule
+   expression littérale géante. Radon met **> 20 s par fichier** (contre 1,2 s pour le plus gros
+   vrai fichier source, `tests/test_black.py`, 187 Ko) ; le calcul de black tournait depuis
+   47 minutes (click, de taille comparable : 5 min) quand j'ai cherché la cause en chronométrant
+   chaque étape et chaque gros fichier séparément (`py-spy` refusé par les permissions, pas
+   contourné). **Correctif global, pas propre à black** : `fyc/features.py::_metriques_radon`
+   plafonne chaque fichier à `RADON_TIMEOUT_S = 10` s (SIGALRM) ; un dépassement vaut échec
+   d'analyse = **NaN** (même règle que le code illisible, point 8), jamais une valeur par défaut ;
+   `RADON_STATS["timeouts"]` compte les dépassements et chaque dépôt les rapporte
+   (`radon_timeouts_fichiers` dans `results/chantier6a_dataset.json`). `diff_features` attrape en
+   plus `RecursionError`/`MemoryError` à l'AST. **Conséquence assumée** : le correctif change
+   `fyc/` pour tous les dépôts ; les 3 dépôts déjà calculés (flask, requests, click) ont été
+   **recalculés** pour que les 7 passent par le même code (aucun mélange de versions). Pour
+   Flask, les chiffres du Chantier 1-4bis ne sont pas recalculés : ils n'ont pas touché de
+   fichier > 10 s (le calcul d'origine s'était terminé normalement) — à confirmer par
+   `radon_timeouts_fichiers` de Flask dans le JSON 6A. **Piège de méthode** : une extraction
+   « qui tourne » n'est pas une extraction « qui progresse » — tout traitement par lot sur un
+   nouveau dépôt devrait journaliser sa progression et plafonner le temps par unité.
+15. **Mémoire : 7 dépôts en parallèle ont fait planter la machine de l'utilisateur ; cause =
+   le JSON de Ruff (6A, 2026-11-05).** Plusieurs « redémarrages de WSL » constatés (`uptime`
+   à 0 min) étaient en réalité des **plantages du PC par saturation mémoire** (l'utilisateur me l'a
+   dit — je les avais d'abord attribués à WSL, hypothèse non vérifiée et fausse). **Mesure** par
+   étape sur click (pic cumulé) : radon 289 Mo, **Ruff + Bandit 1811 Mo**, diff 1811 Mo — soit
+   ~1,5 Go pour 1808 commits et **5,6 Go pour requests** (4233 commits). Cause : `ruff
+   --select=ALL` écrit des millions de violations en JSON, parsées d'un bloc en objets Python.
+   **Correctif** (`fyc/code_lint.py`) : Ruff et Bandit par **lots de 400 fichiers**, agrégation au
+   fil de l'eau. **Équivalence vérifiée** : sur click, ancienne et nouvelle version donnent des
+   tableaux strictement identiques (`assert_frame_equal`, Ruff et Bandit, NaN compris), pour
+   495 Mo de pic au lieu de 1795 Mo, à temps égal — donc les dépôts calculés avant le correctif
+   n'ont pas été recalculés. Pics mesurés ensuite : tornado 0,74 Go, DRF 0,92 Go.
+   **Mesures de protection ajoutées** : exécution **strictement séquentielle** (un dépôt à la
+   fois), garde-fou qui tue le calcul si la mémoire disponible < 900 Mo (déclenché une fois, sur
+   tornado, avant le correctif — il a fait son travail), pic de RAM journalisé
+   (`/usr/bin/time`), points de reprise par étape (`cache_6a_<dépôt>__<étape>.pkl`), évaluation
+   limitée à 3 processus. **Leçon** : mesurer la mémoire par étape **avant** de paralléliser un
+   traitement par lot ; ne pas conclure « WSL redémarre » sans chercher la cause.
 
 ## 8. Prochaines étapes priorisées
 
@@ -820,8 +925,9 @@ implémentation) :
 
    **EXTENSION 6A — Transférabilité inter-dépôts et courbe d'apprentissage (AJOUTÉE le
    2026-11-04 à la demande de l'utilisateur ; PROTOCOLE v1 VALIDÉ par l'utilisateur le
-   2026-11-04 ; implémentation NON COMMENCÉE — prochaine étape : figer et commiter la liste des
-   dépôts, puis le jeu de familles du 4bis, AVANT toute mesure).**
+   2026-11-04 ; liste et jeu de familles figés (commit 97d7284) ; MESURÉE le 2026-11-05 sur les
+   7 dépôts — résultats en §6, verdict : T1 OK, T2 ÉCHEC sur la configuration principale, T3
+   mesuré).**
    *Origine :* idée de produit/agent « pré-entraîné » branchable sur un dépôt d'entreprise, utile
    surtout aux petits dépôts où l'entraînement local est impossible (≈30 positifs pour 500
    commits). *Question de recherche :* **un modèle entraîné sur d'autres dépôts prédit-il les
@@ -884,6 +990,20 @@ implémentation) :
    - **Métriques :** AUC avec IC bootstrap ; **Brier et courbe de calibration** (l'AUC est
      insensible au taux de base, qui varie d'un dépôt à l'autre — or c'est ce qui compte pour un
      produit) ; précision sur les 10 % de commits les mieux classés.
+   - **Précisions d'implémentation pré-enregistrées (2026-11-04, écrites AVANT la première
+     évaluation, après la construction du jeu de données) :**
+     (1) **configuration principale = features en rang percentile, SANS churn** ; les trois
+     autres (brut sans churn, percentile + churn, brut + churn) sont rapportées comme variantes,
+     jamais substituées a posteriori ; T1/T2/T3 se jugent sur la principale ;
+     (2) **un modèle local entraîné sur une seule classe (aucun positif parmi les `n` premiers
+     commits) est un prédicteur constant : son AUC vaut 0,5** (et non « non défini » : ça
+     avantagerait artificiellement le local en le retirant des comparaisons) ;
+     (3) Brier calculé sur les probabilités brutes de la forêt (`class_weight=balanced` les
+     décale par construction) ET comparé à deux références constantes (prévalence
+     d'entraînement, prévalence réelle de la queue) — sans ces références le Brier n'est pas
+     interprétable ; (4) un seul entraînement par cas (graine 42), IC bootstrap (1000 tirages)
+     sur la queue de test ; (5) la queue de test d'un dépôt reste identique pour toutes les
+     variantes (30 % chronologiques récents).
    - **Seuils de conclusion pré-enregistrés :**
      T1 (le transfert existe) : médiane sur les dépôts de AUC(G) ≥ 0,65.
      T2 (bénéfice au démarrage à froid) : à n = 100, médiane de AUC(G+L) − AUC(L) ≥ 0,05.
@@ -1187,3 +1307,24 @@ implémentation) :
 - **Reste à faire :** intégrer les 5 familles dans `results/benchmark.py` (non fait) ; vague 2
   (échantillon) et PySZZ ; commit de cet état ; valider puis démarrer 6A (nécessite de figer le
   jeu de familles du 4bis).
+
+### 2026-11-05 — Session 6 — Extension 6A : construction du jeu multi-dépôts et évaluation
+- Reprise après plusieurs interruptions : les calculs en arrière-plan mouraient avec la machine.
+  L'utilisateur a indiqué la cause réelle (RAM saturée par 7 processus parallèles) ; diagnostic
+  par profilage mémoire par étape → Ruff (§7 point 15). Correctif en lots, équivalence stricte
+  vérifiée sur click, exécution séquentielle avec garde-fou mémoire.
+- Incident antérieur de la même session : radon bloquait sur black (fichiers générés de
+  `profiling/`, > 20 s chacun, §7 point 14) → plafond de 10 s par fichier = NaN, global à tous les
+  dépôts ; flask/requests/click recalculés avec le même code.
+- **Résultats (détail §6) :** T1 ✅ (médiane AUC(G) 0,745), T2 ❌ sur la configuration principale
+  (+0,009 ; +0,065 en brut sans churn), T3 médiane n* = 200 (bruité), normalisation percentile
+  sans gain, churn ne conduit pas le transfert, **probabilités brutes mal calibrées (Brier pire
+  que le prédicteur constant) mais classement bon (lift ≈ 3×)**.
+- Flask retrouve exactement la référence (3198 étiquetés, 310 positifs, 0 dépassement radon).
+- Aucun résultat retouché après coup ; configuration principale et règles de T1/T2/T3 fixées avant
+  la première évaluation (§8 6A, précisions pré-enregistrées).
+- Jeu multi-dépôts exporté pour le cours : `results/dataset_6a.csv.gz` (portable, 25 179 lignes,
+  7 dépôts, 56 colonnes dont les versions `__pct`).
+- **Reste à faire :** intégrer les familles du 4bis dans `results/benchmark.py` ; vague 2 du 4bis
+  (échantillon) et PySZZ ; recalibration locale (la suite logique du 6A : estimer combien de
+  commits étiquetés suffisent à recalibrer) ; Chantier 5 ; Chantier 7.

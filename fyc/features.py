@@ -106,6 +106,18 @@ def churn_fix_correlation(commits, fix_par_fichier):
 
 
 _RADON_CACHE = {}
+# Plafond de temps par fichier (6A, 2026-11-04) : certains depots versionnent des fichiers
+# GENERES gigantesques (ex. black : profiling/mix_huge.py, 1,4 Mo, une seule expression) sur
+# lesquels radon met des minutes -- un seul de ces fichiers bloquait tout le calcul. Depasser
+# le plafond = echec d'analyse = NaN (meme traitement que le code illisible, CLAUDE.md §7 pt 8),
+# jamais une valeur par defaut. Les vrais fichiers source (le plus gros de black : 187 Ko)
+# prennent ~1 s. RADON_STATS compte les depassements, rapportes par depot.
+RADON_TIMEOUT_S = 10
+RADON_STATS = {"timeouts": 0}
+
+
+class _RadonTimeout(Exception):
+    pass
 
 
 def _metriques_radon(src):
@@ -114,9 +126,20 @@ def _metriques_radon(src):
     key = hash(src)
     if key in _RADON_CACHE:
         return _RADON_CACHE[key]
+    import signal
     from radon.complexity import cc_visit
     from radon.metrics import mi_visit
     from radon.raw import analyze
+
+    def _on_alarm(_sig, _frm):
+        raise _RadonTimeout()
+
+    try:
+        old = signal.signal(signal.SIGALRM, _on_alarm)
+        signal.setitimer(signal.ITIMER_REAL, RADON_TIMEOUT_S)
+        armed = True
+    except ValueError:  # pas le thread principal : pas de plafond, comportement d'origine
+        armed = False
     try:
         blocs = cc_visit(src)
         res = {"cc_tot": sum(b.complexity for b in blocs),
@@ -124,8 +147,15 @@ def _metriques_radon(src):
                "mi": mi_visit(src, multi=True),
                "loc": analyze(src).loc,
                "comments": analyze(src).comments}
+    except _RadonTimeout:
+        RADON_STATS["timeouts"] += 1
+        res = None
     except Exception:
         res = None
+    finally:
+        if armed:
+            signal.setitimer(signal.ITIMER_REAL, 0)
+            signal.signal(signal.SIGALRM, old)
     _RADON_CACHE[key] = res
     return res
 

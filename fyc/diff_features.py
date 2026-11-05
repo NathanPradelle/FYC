@@ -40,7 +40,7 @@ def _function_signatures(src):
         return None
     try:
         tree = ast.parse(src)
-    except (SyntaxError, ValueError):
+    except (SyntaxError, ValueError, RecursionError, MemoryError):
         return None
 
     sigs = {}

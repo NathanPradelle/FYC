@@ -56,9 +56,23 @@ def _materialize(tmpdir, par_commit):
     return name_to_commit
 
 
-def _run_ruff(tmpdir):
+# Lots de fichiers (6A, 2026-11-05) : avec --select=ALL, la sortie JSON de Ruff sur tous les
+# fichiers d'un depot (millions de violations) puis son parsing en objets Python prenaient
+# ~1,5 Go pour 1800 commits et ~5,5 Go pour 4200 -- ce qui faisait planter la machine quand
+# plusieurs depots etaient traites en parallele. Chaque fichier est analyse independamment
+# par Ruff et par Bandit : traiter par lots et agreger au fil de l'eau donne le MEME resultat
+# (verifie sur click contre le cache d'origine) avec une memoire bornee.
+LOT_FICHIERS = 400
+
+
+def _lots(noms, taille=LOT_FICHIERS):
+    for k in range(0, len(noms), taille):
+        yield noms[k:k + taille]
+
+
+def _run_ruff(targets):
     r = subprocess.run(
-        ["ruff", "check", "--output-format=json", "--select=ALL", "--no-cache", str(tmpdir)],
+        ["ruff", "check", "--output-format=json", "--select=ALL", "--no-cache", *map(str, targets)],
         capture_output=True, text=True,
     )
     if not r.stdout.strip():
@@ -69,13 +83,13 @@ def _run_ruff(tmpdir):
         raise RuntimeError(f"sortie ruff non-JSON (premiers 200 car.) : {r.stdout[:200]!r}") from e
 
 
-def _run_bandit(tmpdir):
+def _run_bandit(targets):
     # -q : sans elle, bandit ecrit une barre de progression sur STDOUT (pas stderr),
     # avant le JSON -- casse le parsing. Trouve en debogant un bandit_total_avg a 0
     # partout (cf. CLAUDE.md §7) : toujours verifier les sorties "silencieuses" d'un
     # outil externe plutot que de faire confiance a un except qui avale l'erreur.
     r = subprocess.run(
-        ["bandit", "-r", "-q", "-f", "json", str(tmpdir)],
+        ["bandit", "-r", "-q", "-f", "json", *map(str, targets)],
         capture_output=True, text=True,
     )
     if not r.stdout.strip():
@@ -98,19 +112,9 @@ def lint_features(commits, est_risque, repo_dir, max_py_par_commit=5):
     with tempfile.TemporaryDirectory() as tmp:
         tmpdir = Path(tmp)
         name_to_commit = _materialize(tmpdir, par_commit)
-        ruff_violations = _run_ruff(tmpdir)
-        bandit_metrics = _run_bandit(tmpdir)
-
+        noms = sorted(name_to_commit)
         ruff_total = defaultdict(int)
         ruff_security = defaultdict(int)
-        for v in ruff_violations:
-            i = name_to_commit.get(Path(v["filename"]).name)
-            if i is None:
-                continue
-            ruff_total[i] += 1
-            if v["code"].startswith("S"):
-                ruff_security[i] += 1
-
         # Bandit, comme radon (cf. CLAUDE.md §7 point 8), echoue silencieusement sur
         # certains fichiers (vieux code Python 2) : l'entree "metrics" existe mais ne
         # contient alors QUE loc/nosec/skipped_tests, sans les cles SEVERITY.*. Un
@@ -121,15 +125,24 @@ def lint_features(commits, est_risque, repo_dir, max_py_par_commit=5):
         bandit_total = defaultdict(int)
         bandit_high = defaultdict(int)
         bandit_ok_files = defaultdict(int)
-        for path, m in bandit_metrics.items():
-            if path == "_totals" or "SEVERITY.HIGH" not in m:
-                continue
-            i = name_to_commit.get(Path(path).name)
-            if i is None:
-                continue
-            bandit_total[i] += m["SEVERITY.LOW"] + m["SEVERITY.MEDIUM"] + m["SEVERITY.HIGH"]
-            bandit_high[i] += m["SEVERITY.HIGH"]
-            bandit_ok_files[i] += 1
+        for lot in _lots(noms):
+            chemins = [tmpdir / n for n in lot]
+            for v in _run_ruff(chemins):
+                i = name_to_commit.get(Path(v["filename"]).name)
+                if i is None:
+                    continue
+                ruff_total[i] += 1
+                if v["code"].startswith("S"):
+                    ruff_security[i] += 1
+            for path, m in _run_bandit(chemins).items():
+                if path == "_totals" or "SEVERITY.HIGH" not in m:
+                    continue
+                i = name_to_commit.get(Path(path).name)
+                if i is None:
+                    continue
+                bandit_total[i] += m["SEVERITY.LOW"] + m["SEVERITY.MEDIUM"] + m["SEVERITY.HIGH"]
+                bandit_high[i] += m["SEVERITY.HIGH"]
+                bandit_ok_files[i] += 1
 
     ruff_rows, bandit_rows = [], []
     for i in indices:

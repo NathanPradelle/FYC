@@ -32,7 +32,7 @@ SYNTAX_IDS = {"E0001", "E0011", "F0001", "F0002", "F0010"}  # echec de parsing /
 
 def _run_pylint(tmpdir):
     r = subprocess.run(
-        ["pylint", "--output-format=json2", "--jobs=0", "--exit-zero",
+        ["pylint", "--output-format=json2", "--jobs=2", "--exit-zero",
          f"--disable={','.join(DISABLED)}", "--score=n", str(tmpdir)],
         capture_output=True, text=True,
     )

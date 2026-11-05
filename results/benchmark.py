@@ -27,7 +27,8 @@ import pandas as pd
 import radon
 import sklearn
 
-from fyc import code_lint, diff_features, evaluate, features, git_extract, labeling, process_features
+from fyc import (code_lint, coupling, diff_features, evaluate, features, git_extract, jit_kamei, labeling,
+                 mypy_features, process_features, pylint_features, vulture_features)
 
 REPO_DIR = str(REPO_ROOT / "flask")
 FENETRE_JOURS = 90
@@ -75,6 +76,26 @@ def main():
     ruff_df, bandit_df = code_lint.lint_features(commits, est_risque, REPO_DIR)
     print("Construction des features de diff (Chantier 3, jeu curate)...")
     diff_df = diff_features.build_diff_features(commits, est_risque, REPO_DIR)
+    print("Chantier 4bis, vague 1 : Pylint, Vulture, mypy, Kamei, couplage...")
+    # Reutilise le cache de chantier4bis_wave1.py s'il a le meme nombre de lignes (recalculer
+    # Pylint/mypy ici dupliquerait ~5 min et plusieurs Go de RAM).
+    import pickle
+    wave1_cache = Path(__file__).resolve().parent / "cache_wave1_v2.pkl"
+    w = None
+    if wave1_cache.exists():
+        w = pickle.loads(wave1_cache.read_bytes())
+        if not all(len(w["dfs"][n]) == len(base) for n in ("pylint", "vulture", "mypy", "kamei", "coupling")):
+            w = None
+    if w is not None:
+        print("  (cache vague 1 reutilise : results/cache_wave1_v2.pkl)")
+        pylint_df, vulture_df, mypy_df, kamei_df, coupling_df = (
+            w["dfs"][n] for n in ("pylint", "vulture", "mypy", "kamei", "coupling"))
+    else:
+        pylint_df = pylint_features.pylint_features(commits, est_risque, REPO_DIR)
+        vulture_df = vulture_features.vulture_features(commits, est_risque, REPO_DIR)
+        mypy_df = mypy_features.mypy_features(commits, est_risque, REPO_DIR)
+        kamei_df = jit_kamei.build_kamei_features(commits, est_risque)
+        coupling_df = coupling.build_coupling_features(commits, est_risque, REPO_DIR)
     print("Signaux de process GitHub (Chantier 4, cache disque resumable)...")
     process_df, (n_mesures, n_total), mask = process_features.build_process_features(
         commits, est_risque,
@@ -86,7 +107,8 @@ def main():
               f"-- lignes exclues ci-dessous, pas remplies par defaut.")
 
     for name, df in [("churn", churn), ("code", code), ("ruff", ruff_df), ("bandit", bandit_df),
-                      ("diff", diff_df)]:
+                      ("diff", diff_df), ("pylint", pylint_df), ("vulture", vulture_df),
+                      ("mypy", mypy_df), ("kamei", kamei_df), ("coupling", coupling_df)]:
         assert len(df) == len(base), f"desynchronisation {name} ({len(df)} != {len(base)})"
 
     mask = pd.Series(mask).values
@@ -98,17 +120,22 @@ def main():
         ruff_df[mask].reset_index(drop=True), bandit_df[mask].reset_index(drop=True),
         diff_df[mask].reset_index(drop=True),
     )
+    pylint_df, vulture_df, mypy_df, kamei_df, coupling_df = (
+        d[mask].reset_index(drop=True) for d in (pylint_df, vulture_df, mypy_df, kamei_df, coupling_df)
+    )
     assert len(process_df) == len(base), "desynchronisation process (couverture cache GitHub)"
 
     full = pd.concat(
         [base.drop(columns="risky"), is_night, churn, code, ruff_df, bandit_df, diff_df,
-         process_df, base["risky"]],
+         process_df, pylint_df, vulture_df, mypy_df, kamei_df, coupling_df, base["risky"]],
         axis=1,
     )
 
     LINT = code_lint.RUFF_COLS + code_lint.BANDIT_COLS
     DIFF = diff_features.DIFF_COLS  # jeu curate -- avg_hunk_size/test_line_ratio rejetes (§6)
     PROCESS = process_features.PROCESS_COLS
+    PYLINT, VULTURE = pylint_features.PYLINT_COLS, vulture_features.VULTURE_COLS
+    MYPY, KAMEI, COUPLING = mypy_features.MYPY_COLS, jit_kamei.KAMEI_COLS, coupling.COUPLING_COLS
     feature_sets = {
         "BASE": features.BASE_COLS,
         "BASE+is_night": features.BASE_COLS + ["is_night"],
@@ -125,6 +152,17 @@ def main():
         "all_sans_lint_diff_process": features.BASE_COLS + features.CHURN_COLS + features.CODE_COLS,
         "all": (
             features.BASE_COLS + features.CHURN_COLS + features.CODE_COLS + LINT + DIFF + PROCESS
+        ),
+        # Chantier 4bis, vague 1 (2026-11-04) : une famille a la fois sur BASE, puis tout empile.
+        # Resultat attendu et mesure (CLAUDE.md §6) : aucun gain > 1 ecart-type, plateau.
+        "BASE+pylint": features.BASE_COLS + PYLINT,
+        "BASE+vulture": features.BASE_COLS + VULTURE,
+        "BASE+mypy": features.BASE_COLS + MYPY,
+        "BASE+kamei": features.BASE_COLS + KAMEI,
+        "BASE+coupling": features.BASE_COLS + COUPLING,
+        "all_4bis": (
+            features.BASE_COLS + features.CHURN_COLS + features.CODE_COLS + LINT + DIFF + PROCESS
+            + PYLINT + VULTURE + MYPY + KAMEI + COUPLING
         ),
     }
 
@@ -189,6 +227,9 @@ def main():
             "numpy": np.__version__,
             "scikit-learn": sklearn.__version__,
             "radon": radon.__version__,
+            "pylint": __import__("pylint").__version__,
+            "vulture": vulture_features.vulture.__version__,
+            "mypy": __import__("mypy.version", fromlist=["__version__"]).__version__,
         },
         "feature_sets": results,
         "diagnostics": diagnostics,

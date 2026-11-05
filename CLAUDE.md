@@ -528,6 +528,50 @@ commit qui touche du code déjà complexe/volumineux*.
     précises, on donne les valeurs par dépôt) ; pas de dépôt data/ML (§8, critère ≤ 10 000
     commits) ; 1 graine et 1 queue de test par dépôt ; Flask recalculé à l'identique de la
     référence (3198 étiquetés, 310 positifs, 0 dépassement radon).
+- **✅ C1, ⚠️ C2 atteint sur le papier mais sans utilité démontrée, C3 : forte dérive de
+  prévalence — la recalibration locale corrige les probabilités mais ne les rend pas plus
+  informatives que le taux de base (extension 6B).** Mesuré le 2026-11-05
+  (`results/chantier6b_calibration.py` → `results/chantier6b_calibration.json`), protocole §8 6B
+  (figé commit 7ca5564 avant exécution), modèle G de la configuration principale du 6A, 7 dépôts,
+  36 s de calcul.
+  - **Garde-fou AUC (pré-enregistré) :** la correction de prior R1 laisse l'AUC **strictement
+    identique** partout. **Une cellule Platt invalidée** : django-rest-framework, fenêtre
+    ancienne, n = 25 (6 positifs) — la pente estimée est devenue négative et a **inversé le
+    classement** (AUC 0,255 au lieu de 0,757) ; marquée invalide et exclue des médianes
+    (règle du protocole), brute conservée dans le JSON. **Mode de défaillance de Platt sur très
+    peu de positifs, à retenir.**
+  - **C1 ✅ :** Brier médian 0,0905 (brut) → **0,0498** (R1, n = 100, fenêtre récente) : la
+    correction de prior ramène les probabilités au niveau d'un prédicteur calibré.
+  - **C2 : atteint formellement à n = 25** (R1, récente : BSS médian +0,037, positif dans 5 dépôts
+    sur 7) **mais sans portée pratique** : BSS médians +0,037 / +0,009 / +0,003 / +0,014 /
+    +0,017 / +0,044 pour n = 25 / 50 / 100 / 200 / 400 / 800, non monotones, positifs dans 4 à 6
+    dépôts sur 7 — des écarts de 0 à 4 % du Brier de la constante, dans le bruit. **Mon seuil
+    (BSS > 0) était faible ; je le rapporte tel qu'écrit, sans le durcir après coup, et je ne
+    conclus pas à une utilité.** Platt (R2) n'apporte rien de plus que R1 (BSS +0,03 à +0,04,
+    seulement exploitable à n ≥ 200 faute de positifs).
+  - **Plafond intrinsèque (analyse descriptive, non pré-enregistrée) :** même avec la **vraie
+    prévalence du test** (R-oracle), le BSS médian n'est que **+0,012** (Brier 0,0502 contre
+    0,0512 pour la constante oracle). Avec une AUC ≈ 0,75 et 5–10 % de positifs, **le modèle
+    n'ajoute quasiment aucune information probabiliste au taux de base** ; sa valeur est le
+    **classement** (lift ≈ 3×, §6 6A), pas des probabilités par commit. À dire tel quel pour le
+    produit : afficher un rang / un « top 10 % à risque », pas « 23 % de chances d'anomalie ».
+  - **C3 — dérive de prévalence : une limite pratique réelle.** La prévalence des 100 premiers
+    commits est de 22–46 % (flask 35 %, click 46 %, pydantic 40 %) contre 3–13 % dans la queue de
+    test : estimer le taux de base sur les commits **anciens** se trompe de **2,8 à 5 fois** (erreur
+    relative médiane à n = 25–100), sur les commits **récents** de **15 à 50 %**. L'erreur sur la
+    fenêtre récente est minimale vers n = 200 (15 %) et **remonte à 67–75 % pour n = 400–800** :
+    une fenêtre plus large remonte plus loin dans le temps et réintroduit la dérive. **Pratique :
+    recalibrer sur une fenêtre glissante d'environ 100–200 commits étiquetés récents, avec le
+    trou de 90 jours, pas sur tout l'historique.** Cause de la dérive **non établie** (hypothèses :
+    maturation des projets — moins de commits de correction ; évolution des conventions de message
+    de commit qui change la détection de fix) — non testées.
+  - **⚠️ Piège de lecture :** le BSS de la fenêtre « ancienne » (+0,15 à +0,60) est un **artefact**
+    — la constante de comparaison, calée sur une prévalence énorme, est très mauvaise ; ne pas le
+    citer. Seuls les Brier absolus (0,064 → 0,050 selon n) sont comparables entre fenêtres.
+  - **Limites :** 1 graine ; 4–6 dépôts sur 7 positifs sur un BSS de ± 0,01 = bruit ; peu de
+    positifs dans les échantillons récents de 25–100 commits (π̂ estimé sur 1 à 10 positifs, ex.
+    flask n = 100 : 2 positifs). Synthèses descriptives (Brier absolu, erreur de π̂, oracle)
+    ajoutées **après** la première exécution, signalées comme non pré-enregistrées dans le JSON.
 
 ## 7. Pièges connus et limites assumées
 
@@ -1021,7 +1065,8 @@ implémentation) :
      ET négatifs), entrée dans le journal §9.
    **EXTENSION 6B — Recalibration locale d'un modèle global (AJOUTÉE le 2026-11-05 ; ordre
    choisi par moi sur délégation explicite de l'utilisateur : « l'ordre le plus pertinent » ;
-   PROTOCOLE v1 rédigé AVANT toute exécution).**
+   PROTOCOLE v1 rédigé AVANT toute exécution, figé au commit 7ca5564 ; MESURÉE le 2026-11-05,
+   résultats en §6).**
    *Origine :* le 6A montre que le classement du modèle global transfère (lift ≈ 3×) mais que ses
    probabilités brutes sont **moins bonnes que le prédicteur constant « prévalence »** (Brier,
    7 dépôts sur 7). *Question :* **combien de commits étiquetés locaux faut-il pour recalibrer les
@@ -1370,3 +1415,20 @@ implémentation) :
 - **Reste à faire :** intégrer les familles du 4bis dans `results/benchmark.py` ; vague 2 du 4bis
   (échantillon) et PySZZ ; recalibration locale (la suite logique du 6A : estimer combien de
   commits étiquetés suffisent à recalibrer) ; Chantier 5 ; Chantier 7.
+
+### 2026-11-05 — Session 6 (suite) — Extension 6B : recalibration locale
+- Ordre des suites choisi par moi sur délégation (« l'ordre le plus pertinent ») : 6B d'abord
+  (répond à la question produit ouverte par le 6A, calcul quasi gratuit), puis intégration au
+  `benchmark.py`, puis Chantier 5 et PySZZ, vague 2 du 4bis en dernier (Sonar/CodeQL bloqués sur un
+  compte/serveur, gain attendu nul d'après la grille).
+- **Protocole 6B écrit et commité seul avant toute exécution** (`7ca5564`).
+- Garde-fou AUC pré-enregistré déclenché : une cellule Platt (DRF, ancienne, n = 25) avait inversé
+  le classement → invalidée plutôt qu'incluse ; trouvé en lisant la sortie, pas en supposant.
+- Lecture piégeuse écartée : BSS « ancienne » énorme = constante de comparaison mauvaise (prévalence
+  de départ 22–46 %), pas un bon modèle.
+- **Résultats (détail §6) :** C1 ✅ ; C2 formel mais sans utilité démontrée (plafond oracle +0,012) ;
+  C3 dérive de prévalence 2,8–5× sur l'ancien, 15–50 % sur le récent. **Conclusion produit :
+  afficher un classement, pas des probabilités ; recalibrer sur ~100–200 commits étiquetés récents.**
+- Limite à ajouter au 6A (signalée dans le protocole 6B) : les données d'entraînement de G
+  incluent des commits dans les 90 jours précédant le test, dont les étiquettes ont vu un peu de
+  futur dans leur propre dépôt — fuite jugée négligeable pour le dépôt cible.

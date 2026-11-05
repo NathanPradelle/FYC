@@ -1163,6 +1163,53 @@ implémentation) :
    - **Livrables :** `results/chantier4bis_pyszz.py` → `results/chantier4bis_pyszz.json`, §6, §7
      (pièges d'installation), journal §9.
 
+   **VAGUE 2 du 4bis — PROTOCOLE PRÉ-ENREGISTRÉ v1 (rédigé le 2026-11-05, AVANT toute mesure ;
+   lancé sur feu vert de l'utilisateur « tu peux push puis passer à la vague 2 »).**
+   *Statut :* échantillon uniquement, résultats **rapportés à part**, jamais mélangés au tableau
+   pleine échelle ni à `results/benchmark.py` (règle de la vague 2, ci-dessus).
+   - **Outils retenus : Semgrep** (1.183.0, jeux `p/python` + `p/security-audit`, `--metrics=off`,
+     règles du registre public, aucune règle écrite par nous — l'objection du §4 est levée) et
+     **jscpd** (4.x, npm). Les deux sont installés dans des dossiers isolés (hors venv du
+     projet) et vérifiés sur un fichier piégé avant toute mesure (Semgrep : `eval`, `shell=True`,
+     MD5 détectés ; jscpd : clone détecté). **SonarQube et CodeQL NON faits, raison assumée :**
+     Sonar demande un serveur (image Docker de plusieurs Go, ≥ 2 Go de RAM) et CodeQL une base de
+     données construite par version ; la machine a déjà planté par saturation mémoire (§7 point 15)
+     et le gain attendu est nul d'après la grille (§6). Ce n'est pas un résultat négatif sur ces
+     outils, c'est un **non-test**, à présenter comme tel.
+   - **Échantillon (fixé maintenant, graine 0) :** 300 commits parmi les 3198 étiquetés
+     (`label_v2` + détection B) touchant ≥ 1 `.py` récupérable : **120 positifs tirés au hasard
+     + 180 négatifs tirés au hasard** (sur-échantillonnage des positifs pour qu'il y ait assez
+     de positifs ; l'AUC est insensible à la prévalence, mais les chiffres ne se comparent pas
+     aux AUC pleine échelle). Mêmes versions « après » (≤ 5 `.py`/commit) que Ruff/Bandit.
+   - **Features (curatées d'avance) :** Semgrep — `semgrep_total_avg`, `semgrep_error_avg`
+     (sévérité ERROR), `semgrep_warning_avg`, normalisées par le nombre de fichiers **réellement
+     analysés** (leçon Bandit, §7 point 12 : fichier en erreur ou non scanné = exclu du
+     dénominateur, NaN si aucun) ; jscpd — `jscpd_dup_pct` (pourcentage de jetons dupliqués,
+     **un run par commit** : mélanger les versions de commits différents créerait des
+     « doublons » artificiels, même raison que `duplicate-code` désactivé pour Pylint) et
+     `jscpd_clones` (nombre de clones). NaN en cas d'échec, jamais 0.
+   - **Mesures :** coût (temps total et par commit) ; couverture NaN parmi les commits `.py` ;
+     AUC de chaque feature seule avec **IC bootstrap 95 %** ; AUC(BASE) vs AUC(BASE+outil) en
+     CV répétée (5 plis × 5 graines), **différence appariée** ; corrélations avec `loc_avg`
+     (redondance), `ruff_total_avg` et `file_commits_max` (circularité, plancher 0,3), et entre
+     les deux outils ; liste des 10 règles Semgrep les plus déclenchées (illustration).
+   - **Seuils d'abandon (comme la vague 1) :** (a) > 15 min d'extrapolation sur 3200 commits →
+     non extensible à la pleine échelle ; (b) > 50 % de NaN parmi les commits `.py` → non
+     interprétable ; (c) meilleure feature avec |AUC − 0,5| < 0,02 ET corrélation > 0,7 avec une
+     feature existante → rejeté comme redondant/bruit.
+   - **Règle de conclusion :** avec 300 commits (IC d'AUC ≈ ±0,06) **aucun gain n'est affirmé
+     en dessous de +0,05 d'AUC apparié ET positif dans ≥ 80 % des 25 répétitions** ; sinon
+     « pas de gain démontré à cette taille d'échantillon » — ce qui ne dit rien sur la pleine
+     échelle. Si un outil passe, il n'est **pas** intégré au modèle sans repasser par la vague 1
+     (pleine échelle) : la vague 2 sert à décider si ça vaut le coût.
+   - **Limites d'avance :** échantillon de 300 (120 positifs) : puissance faible, c'est une
+     mesure de faisabilité/cohérence, pas un test de gain ; AUC(BASE) sur 300 lignes est plus
+     basse qu'en pleine échelle ; Semgrep OSS = analyse intra-fichier (pas de flux inter-fichiers)
+     sur des fichiers isolés de leur dépôt ; règles du registre évoluant dans le temps
+     (version et date consignées dans le JSON).
+   - **Livrables :** `results/chantier4bis_wave2.py` → `results/chantier4bis_wave2.json`, §6, §7,
+     journal §9.
+
 6. **Chantier 6 — validation externe** sur un deuxième dépôt.
 
    **EXTENSION 6A — Transférabilité inter-dépôts et courbe d'apprentissage (AJOUTÉE le

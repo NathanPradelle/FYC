@@ -1432,3 +1432,22 @@ implémentation) :
 - Limite à ajouter au 6A (signalée dans le protocole 6B) : les données d'entraînement de G
   incluent des commits dans les 90 jours précédant le test, dont les étiquettes ont vu un peu de
   futur dans leur propre dépôt — fuite jugée négligeable pour le dépôt cible.
+
+### 2026-11-05 — Session 6 (suite) — intégration des familles 4bis dans `results/benchmark.py`
+- `results/benchmark.py` calcule maintenant aussi `BASE+pylint`, `BASE+vulture`, `BASE+mypy`,
+  `BASE+kamei`, `BASE+coupling` et `all_4bis` ; `results/results_v2.json` régénéré (commit
+  `640c001`). **Non-régression vérifiée** : comparaison clé par clé avec la sauvegarde, aucun
+  chiffre existant modifié (seule `generated_at` change). `all_4bis` = 0,811 ± 0,025 (CV),
+  `BASE+coupling` = 0,790 ± 0,037 : pas de gain par rapport à `all` (0,811), cohérent avec §6 (grille).
+- **Piège de méthode (mémoire, même famille que §7 point 15)** : deux premières exécutions
+  avortées par le garde-fou (RAM disponible < 900 Mo). Cause : `benchmark.py` recalculait Pylint
+  et mypy déjà produits par `chantier4bis_wave1.py`, avec `pylint --jobs=0` (un worker de ~1 Go
+  par cœur, et des workers orphelins restés vivants après l'arrêt du processus père). Corrections :
+  réutilisation de `results/cache_wave1_v2.pkl` (recalcul seulement si le nombre de lignes diffère),
+  `--jobs=2` dans `fyc/pylint_features.py`. Run final : 370 s, pic 886 Mo. À retenir : après un
+  arrêt forcé, vérifier les processus orphelins du venv avant de relancer.
+- `results/results.json` (label v1, legacy) **non régénéré** avec les familles 4bis.
+- **Reste à faire :** Chantier 5 (stacking par famille, matrice de désaccord), PySZZ (validation
+  du label), vague 2 du 4bis (Semgrep/jscpd faisables ; Sonar/CodeQL demandent un compte/serveur),
+  Chantier 7. Aucun push GitHub tant que l'utilisateur ne le demande pas (commits non poussés :
+  7107f1c, 7ca5564, baea7ff, 640c001 et celui-ci).

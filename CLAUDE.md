@@ -1065,6 +1065,45 @@ implémentation) :
      S2 existe pour le contrôler. Mémoire : `n_jobs` ≤ 3, exécution seule (§7 point 15).
    - **Livrables :** `results/chantier5_stacking.py` → `results/chantier5_stacking.json`, §6,
      journal §9.
+   **SOUS-VOLET 4bis « validation du label » — PROTOCOLE PRÉ-ENREGISTRÉ PySZZ, v1 (rédigé le
+   2026-11-05, AVANT toute exécution de PySZZ sur Flask ; lancé sur feu vert de l'utilisateur).**
+   *Question :* `label_v2` (notre SZZ ligne, `git blame -w -M -C` sur le parent du fix) est-il robuste
+   au choix de l'implémentation SZZ ? Mesure de **robustesse**, pas un candidat de remplacement :
+   adopter un autre label exigerait de repasser par le protocole du Chantier 1.
+   - **Outil :** PySZZ (`grosa1/pyszz`, commit `352c6bf`, juin 2023), cloné dans `repos/pyszz`
+     (gitignore), exécuté dans un **venv séparé** (pydriller 1.15.2, dépendances anciennes — pas
+     de contamination du venv figé du projet) et sur une **copie locale** du clone Flask (l'outil
+     peut modifier le dépôt). srcML non installé : n'est requis que pour C/Java, pas pour Python.
+   - **Variantes :** **B-SZZ** (`conf/bszz.yml`, lignes supprimées) et **MA-SZZ** (`conf/maszz.yml`,
+     ignore renommages/copies/changements de mode et commits > 20 lignes modifiées), configurations
+     **par défaut, sans réglage**. AG-/R-/L-/RA-SZZ non traitées (hors périmètre).
+   - **Mêmes fix en entrée pour tous :** les commits `is_fix` de la détection B (même prédicat que
+     `label_v2`), pour isoler l'algorithme d'attribution. Chaque sortie PySZZ (fix → commits
+     introducteurs) est convertie en `blame_par_commit` et passée à la **même**
+     `make_est_risque_v2` (fenêtre 90 j) : seule l'attribution change.
+   - **Mesures (population = commits étiquetés de `label_v2`) :** (1) `part_risque` de chaque
+     variante ; (2) accord brut et **kappa de Cohen** entre `label_v2` et chaque variante ;
+     (3) Jaccard des ensembles de positifs et part des positifs `label_v2` retrouvés ; (4) au niveau
+     des fix : part de fix où l'ensemble d'introducteurs est identique, part de fix sans
+     introducteur trouvé (par `label_v2` / par PySZZ) ; (5) **robustesse des conclusions** :
+     AUC(BASE) en CV (mêmes réglages que le reste du projet), AUC(churn seul), ratio M2bis
+     churn/BASE, AUC(`all`) sous chaque label.
+   - **Seuils fixés maintenant :** `label_v2` est dit **robuste** si (R1) kappa(v2, MA-SZZ) ≥
+     **0,6** ; (R2) |AUC(BASE, MA-SZZ) − AUC(BASE, v2)| ≤ **0,03** ; (R3) le ratio M2bis sous
+     MA-SZZ reste ≤ **0,9044** (même seuil que le Chantier 1 : la réduction de circularité du churn
+     ne dépend pas de notre implémentation). Garde-fou : `part_risque` ≥ 5 % pour qu'une AUC soit
+     interprétable (sinon on n'interprète pas, on rapporte). B-SZZ rapporté avec les mêmes
+     mesures, sans seuil propre (variante naïve de référence).
+   - **Règle de résultat négatif :** si R1 échoue, on documente le désaccord et on le
+     **caractérise** (où PySZZ et `label_v2` divergent : lignes déplacées, gros commits, fix sans
+     introducteur) sans régler PySZZ ni `label_v2` après coup.
+   - **Limites d'avance :** un seul dépôt ; il n'y a **pas de vérité terrain** — on mesure
+     l'accord entre algorithmes, pas la justesse ; MA-SZZ et `label_v2` partagent l'idée
+     « ignorer les déplacements », leur accord n'est donc pas indépendant à 100 % ; PySZZ date de
+     2023 (versions anciennes de pydriller/gitpython).
+   - **Livrables :** `results/chantier4bis_pyszz.py` → `results/chantier4bis_pyszz.json`, §6, §7
+     (pièges d'installation), journal §9.
+
 6. **Chantier 6 — validation externe** sur un deuxième dépôt.
 
    **EXTENSION 6A — Transférabilité inter-dépôts et courbe d'apprentissage (AJOUTÉE le

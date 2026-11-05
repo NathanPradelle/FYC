@@ -1019,6 +1019,48 @@ implémentation) :
    - **Livrables :** `fyc/` généralisé (le chemin du dépôt est déjà un paramètre partout),
      `results/chantier6a_*.py` datés + JSON, jeu multi-dépôts exporté, §6 mis à jour (positifs
      ET négatifs), entrée dans le journal §9.
+   **EXTENSION 6B — Recalibration locale d'un modèle global (AJOUTÉE le 2026-11-05 ; ordre
+   choisi par moi sur délégation explicite de l'utilisateur : « l'ordre le plus pertinent » ;
+   PROTOCOLE v1 rédigé AVANT toute exécution).**
+   *Origine :* le 6A montre que le classement du modèle global transfère (lift ≈ 3×) mais que ses
+   probabilités brutes sont **moins bonnes que le prédicteur constant « prévalence »** (Brier,
+   7 dépôts sur 7). *Question :* **combien de commits étiquetés locaux faut-il pour recalibrer les
+   probabilités d'un modèle global sans le réentraîner, au point de battre le prédicteur constant ?**
+   - **Modèle de base :** G de la configuration principale du 6A (rang percentile, sans churn),
+     mêmes cibles, même queue de test (30 % récents), mêmes données d'entraînement de G. Le
+     classement (AUC) ne change pas : toute recalibration monotone le laisse intact — vérifié en
+     sortie (garde-fou : tout écart d'AUC > 0,001 invalide la mesure).
+   - **Méthodes (aucun hyperparamètre réglé) :** R0 = brut ; **R1 = correction de prior** (G est
+     entraîné avec `class_weight=balanced`, donc son prior effectif vaut 0,5) :
+     `odds' = odds(s) × π̂/(1−π̂)`, π̂ = (positifs+1)/(n+2) (Laplace) ; **R2 = Platt** (régression
+     logistique à 1 variable sur logit(s)), repli sur R1 si < 5 positifs dans l'échantillon de
+     calibration ; **R-oracle = R1 avec la vraie prévalence du test** (borne haute de ce que la
+     correction de prior peut apporter, jamais une méthode utilisable).
+   - **Échantillon de calibration — deux fenêtres, la première est la principale :**
+     (a) **récente** = les `n` derniers commits étiquetés **antérieurs à (début du test − 90 j)**
+     (le trou de 90 j évite que les étiquettes, calculées avec 90 j de futur, voient la période de
+     test ; c'est la situation d'un vrai déploiement) ; (b) **ancienne** = les `n` premiers
+     commits, diagnostic de dérive de prévalence (la queue de test a une prévalence plus basse que
+     l'historique : flask 4,6 % contre 9,7 %). `n ∈ {25, 50, 100, 200, 400, 800}`.
+   - **Références constantes :** « loyale » = π̂ estimé sur le même échantillon (la vraie
+     concurrente d'un modèle recalibré) ; « oracle » = vraie prévalence du test.
+   - **Métriques :** Brier ; **score de compétence BSS = 1 − Brier(modèle)/Brier(constante
+     loyale)** (> 0 = le modèle recalibré apporte de l'information en plus du taux de base) ; ECE sur
+     5 classes d'effectif égal ; AUC (garde-fou).
+   - **Seuils de conclusion pré-enregistrés :**
+     C1 (la recalibration corrige) : à n = 100, médiane sur les dépôts de Brier(R1) < Brier(R0).
+     C2 (utilité) : plus petit `n` tel que la médiane de BSS(R1 ou R2, fenêtre récente) > 0 ET BSS > 0
+     dans ≥ 5 dépôts sur 7 ; rapporté par dépôt. C3 : comparer fenêtre récente / ancienne — si
+     « ancienne » est nettement pire, la dérive de prévalence est une limite pratique du produit.
+   - **Règle de résultat négatif :** si C2 n'est atteint pour aucun `n`, on documente « la
+     recalibration par prior/Platt ne suffit pas à battre la constante » en §6, sans autre
+     méthode essayée (isotonique, etc.) — elle serait une seconde recherche.
+   - **Limites d'avance :** 1 graine, ~45–150 positifs par queue de test ; Brier bruité à faible
+     prévalence ; les données d'entraînement de G (autres dépôts) incluent des commits dans les
+     90 j précédant le test, dont les étiquettes ont vu un peu de futur *dans leur propre dépôt* —
+     fuite jugée négligeable pour le dépôt cible, à signaler aussi pour le 6A.
+   - **Livrables :** `results/chantier6b_calibration.py` → `results/chantier6b_calibration.json`,
+     §6, journal §9.
 7. **Chantier 7 — restitution** (modules `.py`, `README.md`, synthèse soutenance).
 
 ## 9. Journal des sessions

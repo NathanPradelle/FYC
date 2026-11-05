@@ -676,6 +676,58 @@ commit qui touche du code déjà complexe/volumineux*.
     causes exactes des divergences au niveau du fix **non investiguées** (hypothèses : lignes
     déplacées, gros commits, fichiers non-Python blâmés par PySZZ) ; AG-/R-/L-/RA-SZZ non faits.
 
+- **❌ Vague 2 du 4bis (Semgrep, jscpd) — aucun gain démontré à cette taille d'échantillon, et
+  aucun des deux ne passe le seuil de coût pour la pleine échelle.** Mesuré le 2026-11-05
+  (`results/chantier4bis_wave2.py` → `results/chantier4bis_wave2.json`, 460 s), protocole §8
+  vague 2 v1 figé au commit 7350811 avant mesure. **Échantillon de 300 commits** (graine 0 : 120
+  positifs + 180 négatifs tirés dans le pool des commits étiquetés ayant ≥ 1 `.py` récupérable :
+  232 positifs, 1392 négatifs). **Résultats à part, hors `benchmark.py`.** Semgrep 1.183.0
+  (`p/python` + `p/security-audit`, règles du registre, aucune règle écrite par nous), jscpd 4.3.0.
+
+  | | Semgrep | jscpd |
+  |---|---|---|
+  | temps sur 300 commits / extrapolation 3200 | 211 s / **≈ 38 min** | 197 s / **≈ 35 min** |
+  | NaN parmi les commits `.py` | 0 % (voir réserve ci-dessous) | **17,3 %** (52 commits) |
+  | meilleure feature, AUC seule [IC95] | `semgrep_total_avg` **0,615** [0,552–0,676] ; `warning` 0,610 ; `error` 0,521 | `jscpd_dup_pct` 0,540 [0,491–0,590] (n = 248) |
+  | corrélation (Spearman) avec `loc_avg` / `ruff_total_avg` / `file_commits_max` | 0,48 / **0,66** / 0,13 | 0,17 / 0,30 / 0,03 |
+  | BASE+outil − BASE (CV 5×5 appariée) | **+0,0125 ± 0,019**, positif dans 16 répétitions sur 25 | +0,0004 ± 0,018, 16/25 |
+
+  AUC(BASE) sur l'échantillon = 0,749 ± 0,055 (non comparable aux 0,787 pleine échelle) ;
+  BASE+Semgrep+jscpd = 0,757. Corrélation Semgrep↔jscpd = 0,20.
+  - **Seuils d'abandon pré-enregistrés :** (a) **déclenché pour les deux** (> 15 min
+    d'extrapolation sur ~3200 commits) → ni l'un ni l'autre n'est extensible à la pleine échelle
+    sans parallélisation ou sans changer la méthode ; (b) non déclenché (NaN ≤ 50 %) ; (c) non
+    déclenché (|AUC − 0,5| = 0,115 pour Semgrep, corrélation à Ruff 0,66 < 0,7).
+  - **Règle de conclusion (gain ≥ +0,05 ET ≥ 80 % des répétitions) : échec pour les deux** →
+    « pas de gain démontré à cette taille d'échantillon » — ne dit rien sur la pleine échelle (IC
+    d'AUC ≈ ±0,06). Semgrep est le seul à montrer une tendance (+0,0125, comparable aux +0,011 de
+    Ruff en pleine échelle) mais redondant à 0,66 avec Ruff.
+  - **Ce que Semgrep mesure ici (10 règles les plus déclenchées) :** `flask-url-for-external-true`
+    (137), `render-template-string` (133), `directly-returned-format-string` (96),
+    `missing-autoescape-disabled` (33), `eval-detected` (29), `avoid-pickle`, `debug-enabled`… —
+    des règles **propres à l'écosystème Flask/web** : le signal mesure en partie « ce commit touche
+    la couche web/templates de Flask ». Cela le rend peu transférable à d'autres dépôts (6A) —
+    interprétation, non testée.
+  - **⚠️ Deux échecs silencieux trouvés en vérifiant (§7 point 17).** (1) Semgrep affiche
+    0 fichier en erreur sur 588 alors que 31 d'entre eux (**5,3 %**) ne passent pas `ast.parse`
+    (Python 3.14) : sur un fichier Python 2 de test (`print "x"`, `except E, e`) il ne signale
+    **aucune** erreur et le range dans les fichiers scannés. Son « 0 % de NaN » n'est donc **pas
+    une preuve de parsing complet** : un fichier mal parsé y est indiscernable d'un fichier sans
+    violation — même piège que `has_py`/Bandit. Non corrigé (pas de signal d'échec exploitable) ;
+    effet sur l'AUC non mesuré. (2) jscpd n'écrit **aucun rapport** (code retour 0) pour 17,3 %
+    des commits ; cause reproduite sur un cas : un fichier de 1137 lignes dont les 600 premières
+    lignes passent mais pas le fichier entier, indépendamment de la taille et de l'encodage →
+    échec silencieux du tokenizer sur une partie du contenu (cause exacte non identifiée,
+    probablement syntaxe Python 2). Traité en NaN, conformément à la règle.
+  - **SonarQube et CodeQL : NON FAITS** (serveur Docker ≥ 2 Go de RAM / base de données par
+    version ; la machine a déjà planté par saturation mémoire, §7 point 15). C'est un **non-test**,
+    pas un résultat négatif sur ces outils : la comparaison à un outil industriel de type Sonar
+    reste ouverte et doit être présentée comme telle.
+  - **Limites :** 300 commits (puissance faible, aucune conclusion de gain possible), un dépôt,
+    Semgrep OSS = analyse intra-fichier sur des fichiers isolés, règles du registre dépendant de la
+    date (version 1.183.0 consignée dans le JSON), sur-échantillonnage des positifs (40 % contre
+    ≈ 10 % réels).
+
 ## 7. Pièges connus et limites assumées
 
 1. **Circularité churn/label (r = 0.91).** Toute feature au niveau fichier doit être testée contre
@@ -854,6 +906,19 @@ commit qui touche du code déjà complexe/volumineux*.
    `label_v2`. Sorties brutes conservées dans `results/pyszz_out/` pour rejouer l'analyse sans
    relancer l'outil.
 
+17. **Semgrep et jscpd échouent silencieusement (vague 2, 2026-11-05).** Même famille que
+   `has_py`/Bandit/mypy (points 8, 12, 13). *Semgrep* : un fichier Python 2 n'apparaît ni dans
+   `errors` ni dans `skipped` (vérifié sur un exemple `print "x"` / `except E, e` : listé comme
+   scanné, zéro erreur) ; 5,3 % des fichiers de l'échantillon sont illisibles pour `ast.parse`,
+   donc le taux d'échec rapporté (0 %) est un plancher illusoire. *jscpd* : aucun fichier
+   `jscpd-report.json` et code retour 0 quand son tokenizer échoue sur une partie du contenu
+   (reproduit : 600 premières lignes d'un fichier OK, fichier entier sans rapport) — on ne peut
+   pas distinguer « aucun clone » d'« échec » par le code retour, seulement par l'absence du
+   fichier de rapport ; d'où NaN. **Règle retenue :** pour tout nouvel outil, tester d'abord sur
+   un fichier volontairement cassé et un fichier hors limites, et ne jamais déduire « 0 échec »
+   de l'absence d'erreur rapportée.
+   Installation : Semgrep dans un venv séparé, jscpd en local par npm (hors venv du projet).
+
 ## 8. Prochaines étapes priorisées
 
 Ordre de priorité du prompt de démarrage (à traiter un par un, avec validation avant chaque
@@ -947,7 +1012,8 @@ implémentation) :
    Couverture cache 100 % sur les 3198 commits étiquetés. Intégré dans `results/benchmark.py`
    (`fyc/process_features.py`, jeux `BASE+process`/`process_only`). Réserve documentée sur
    `ci_failed` (signal isolé trop faible, non investigué plus avant).
-4bis. **Chantier 4bis — état de l'art : outils supplémentaires et recherche de la meilleure
+4bis. **Chantier 4bis — vague 1, grille, PySZZ, vague 2 : FAITS (2026-11-05, Sonar/CodeQL non faits) —
+   état de l'art : outils supplémentaires et recherche de la meilleure
    combinaison (AJOUTÉ le 2026-11-04, à traiter avant le Chantier 5, NON COMMENCÉ).**
    *Origine :* l'encadrant a conseillé d'utiliser les outils existants d'analyse de code et de les
    additionner. *Tension à garder en tête et à présenter honnêtement :* nos mesures (Chantier 2)
@@ -1718,3 +1784,16 @@ implémentation) :
   (`tout` 0,772 contre 0,811).
 - **Reste à faire :** vague 2 du 4bis (Semgrep/jscpd ; Sonar/CodeQL bloqués), Chantier 7
   (README, notebook §7.11, extraction des modules), poussée GitHub à la demande.
+
+### 2026-11-05 — Session 6 (suite) — push, puis vague 2 du 4bis
+- Push GitHub réussi du premier coup (sept commits jusqu'à `503801f`).
+- Protocole de la vague 2 écrit et commité avant mesure (`7350811`) ; Semgrep et jscpd installés
+  dans des dossiers isolés et vérifiés sur des fichiers piégés avant toute mesure.
+- `results/chantier4bis_wave2.py` → `chantier4bis_wave2.json` (460 s, pic 629 Mo, garde-fou RAM).
+  **Résultat (§6) :** aucun gain démontré (Semgrep +0,0125 ± 0,019, jscpd +0,0004), seuil de coût
+  (a) déclenché pour les deux (≈ 35–38 min extrapolés), **deux échecs silencieux** trouvés en
+  vérifiant après la mesure et documentés (§7 point 17). Sonar/CodeQL non faits (non-test).
+- Aucun résultat retouché après coup.
+- **Reste à faire :** Chantier 7 (README, notebook §7.11, extraction des modules `.py`, synthèse
+  soutenance) ; poussée GitHub à la demande ; question ouverte : comparaison à un outil
+  industriel (Sonar) si une machine plus grosse devient disponible.

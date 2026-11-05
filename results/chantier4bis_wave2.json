@@ -1,0 +1,183 @@
+{
+ "protocole": "CLAUDE.md \u00a78 vague 2 v1 (commit 7350811)",
+ "generated_at": "2026-11-05T11:03:47.346863+00:00",
+ "echantillon": {
+  "n": 300,
+  "n_pos": 120,
+  "graine": 0,
+  "pool_pos": 232,
+  "pool_neg": 1392
+ },
+ "semgrep_meta": {
+  "secondes": 211.27290272712708,
+  "fichiers": 588,
+  "fichiers_en_erreur_ou_non_scannes": 0,
+  "top10_regles": [
+   [
+    "flask-url-for-external-true",
+    137
+   ],
+   [
+    "render-template-string",
+    133
+   ],
+   [
+    "directly-returned-format-string",
+    96
+   ],
+   [
+    "missing-autoescape-disabled",
+    33
+   ],
+   [
+    "eval-detected",
+    29
+   ],
+   [
+    "avoid-pickle",
+    26
+   ],
+   [
+    "unescaped-template-extension",
+    24
+   ],
+   [
+    "debug-enabled",
+    20
+   ],
+   [
+    "avoid_hardcoded_config_DEBUG",
+    16
+   ],
+   [
+    "insecure-deserialization",
+    13
+   ]
+  ],
+  "n_erreurs_json": 0,
+  "version": "1.183.0"
+ },
+ "jscpd_meta": {
+  "secondes": 197.44780230522156,
+  "echecs": 52
+ },
+ "extrapolation_3200_commits_min": {
+  "semgrep": 37.55962715148926,
+  "jscpd": 35.10183152092827
+ },
+ "nan_part": {
+  "semgrep_total_avg": 0.0,
+  "semgrep_error_avg": 0.0,
+  "semgrep_warning_avg": 0.0,
+  "jscpd_dup_pct": 0.17333333333333334,
+  "jscpd_clones": 0.17333333333333334
+ },
+ "auc_seule": {
+  "semgrep_total_avg": {
+   "n": 300,
+   "auc": 0.6150231481481482,
+   "ic95": [
+    0.5523325414959078,
+    0.6755126761639467
+   ]
+  },
+  "semgrep_error_avg": {
+   "n": 300,
+   "auc": 0.5212962962962963,
+   "ic95": [
+    0.49396666723628374,
+    0.5526244947183065
+   ]
+  },
+  "semgrep_warning_avg": {
+   "n": 300,
+   "auc": 0.6103935185185185,
+   "ic95": [
+    0.5470225906985685,
+    0.6716475529733424
+   ]
+  },
+  "jscpd_dup_pct": {
+   "n": 248,
+   "auc": 0.5403111739745403,
+   "ic95": [
+    0.4912044791606319,
+    0.5900842496470827
+   ]
+  },
+  "jscpd_clones": {
+   "n": 248,
+   "auc": 0.5411530949013268,
+   "ic95": [
+    0.4923141890730534,
+    0.5909585278894963
+   ]
+  }
+ },
+ "correlations_spearman": {
+  "semgrep_total_avg": {
+   "loc_avg": 0.47919728601875194,
+   "ruff_total_avg": 0.6640006770960716,
+   "file_commits_max": 0.12661508322669518
+  },
+  "semgrep_error_avg": {
+   "loc_avg": 0.12536790942095424,
+   "ruff_total_avg": 0.2319636885790822,
+   "file_commits_max": 0.0027500388084249292
+  },
+  "semgrep_warning_avg": {
+   "loc_avg": 0.4903566829282384,
+   "ruff_total_avg": 0.6693665092433391,
+   "file_commits_max": 0.13149149301016816
+  },
+  "jscpd_dup_pct": {
+   "loc_avg": 0.17077102966978472,
+   "ruff_total_avg": 0.29917201455347825,
+   "file_commits_max": 0.0307088039408615
+  },
+  "jscpd_clones": {
+   "loc_avg": 0.17862853415791635,
+   "ruff_total_avg": 0.3109459776337502,
+   "file_commits_max": 0.03388855546543064
+  }
+ },
+ "correlation_semgrep_jscpd": 0.2015143429582937,
+ "cv_repetee_5x5": {
+  "BASE": {
+   "mean": 0.7486342592592592,
+   "std": 0.05497353303822737
+  },
+  "BASE+semgrep": {
+   "mean": 0.7611805555555555,
+   "std": 0.05212773827237943
+  },
+  "BASE+jscpd": {
+   "mean": 0.7490509259259259,
+   "std": 0.05521618955671641
+  },
+  "BASE+semgrep+jscpd": {
+   "mean": 0.7571527777777779,
+   "std": 0.05317852645178305
+  }
+ },
+ "difference_appariee_vs_BASE": {
+  "BASE+semgrep": {
+   "mean": 0.012546296296296288,
+   "std": 0.01902639785029605,
+   "repetitions_positives": 16,
+   "n": 25
+  },
+  "BASE+jscpd": {
+   "mean": 0.00041666666666666073,
+   "std": 0.01842897913471806,
+   "repetitions_positives": 16,
+   "n": 25
+  },
+  "BASE+semgrep+jscpd": {
+   "mean": 0.008518518518518512,
+   "std": 0.021119130218351732,
+   "repetitions_positives": 15,
+   "n": 25
+  }
+ }
+}

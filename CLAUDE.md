@@ -105,8 +105,8 @@ Dépôt étudié : [pallets/flask](https://github.com/pallets/flask) (Python, ~5
   de chaque commit. Ouverture sur Ruff/Bandit/Lizard/Semgrep/SonarQube et sur les signaux de
   process (API GitHub).
 
-Aucun module `.py` réutilisable pour l'instant (todo : Chantier 7, extraire la plomberie du
-notebook au fur et à mesure des chantiers, cf. §8).
+Les modules réutilisables sont dans `fyc/` (voir ci-dessus) ; le notebook appelle `fyc` pour
+les features de code depuis le 2026-11-05 (§7 point 11, résolu). `README.md` ajouté le 2026-11-05.
 
 ## 4. Décisions de conception
 
@@ -804,7 +804,7 @@ commit qui touche du code déjà complexe/volumineux*.
    features de code). **Décision assumée** : pas de correction maintenant — mêmes arguments qu'aux
    points 7-8 (le Chantier 1 va changer le label et invalider ces chiffres). Zéro exception a été
    faite : cette liste doit être reprise avant la restitution finale (Chantier 7), pas oubliée.
-11. **Divergence notebook/`fyc` introduite le 2026-09-09, assumée.** Les cellules 49-53 (Partie 4.3,
+11. **[RÉSOLU en partie le 2026-11-05 — voir fin de ce point]** **Divergence notebook/`fyc` introduite le 2026-09-09, assumée.** Les cellules 49-53 (Partie 4.3,
    code inline du TP original) utilisent encore l'ancien remplissage par défaut sur échec de
    parsing radon (`mi_avg=100.0`, `has_py`) et le `FIX_RE` brut — elles n'ont **pas** été mises à
    jour avec le correctif NaN (§7 point 8) ni la détection de fix assainie (§6, candidat B). Seul
@@ -814,6 +814,17 @@ commit qui touche du code déjà complexe/volumineux*.
    lecteur qui ne lit pas cette note peut croire que cellule 53 (« Modèle final ») produit les
    mêmes chiffres que `results/results_v2.json` — ce n'est plus le cas. À corriger au Chantier 7
    (porter les correctifs dans les cellules inline, ou les faire appeler `fyc` directement).
+   **Résolution partielle (2026-11-05, Chantier 7) :** les cellules 49-51 du notebook appellent
+   maintenant `fyc.features.build_code_features` (NaN sur échec de parsing, `touches_py` et
+   `code_parse_ok` à la place de `has_py`) ; la cellule 52 utilise `fyc_features.CODE_COLS` ;
+   la cellule 56 (exemple Ruff) récupère ses versions via `fyc.git_extract.cat_file_batch`.
+   Notebook ré-exécuté de bout en bout : 58 cellules, 0 erreur ; la cellule 50 retrouve les
+   chiffres du point 8 (1358 commits sans `.py`, 88 illisibles). **Ce qui diverge encore :** les
+   Parties 2-3 gardent le label du TP (SZZ fichier + `FIX_RE` brut) et la cellule 52 lit
+   `results/results.json` (label v1) alors que le défaut du projet est `label_v2` ; les cellules
+   markdown à chiffres en dur (point 10) ne sont pas réécrites. Les chiffres du notebook
+   (ex. `BASE+churn` 0,864) **ne sont donc pas ceux du projet** (§5/§6) : à dire en soutenance.
+
 12. **Bandit échoue silencieusement sur le même code Python 2 que radon — même piège que
    `has_py`/`mi_avg=100.0`, trouvé et corrigé pendant le Chantier 2 (2026-09-09).** Sur un fichier
    non parsable, l'entrée `metrics` de Bandit existe mais ne contient que `loc`/`nosec`/
@@ -1417,7 +1428,10 @@ implémentation) :
      fuite jugée négligeable pour le dépôt cible, à signaler aussi pour le 6A.
    - **Livrables :** `results/chantier6b_calibration.py` → `results/chantier6b_calibration.json`,
      §6, journal §9.
-7. **Chantier 7 — restitution** (modules `.py`, `README.md`, synthèse soutenance).
+7. **Chantier 7 — restitution** (modules `.py`, `README.md`, synthèse soutenance). **EN COURS
+   (2026-11-05) :** `README.md` fait (`77dd914`) ; code de features du notebook branché sur `fyc`
+   (§7 point 11) ; **reste** : cellules markdown à chiffres en dur (§7 point 10), notebook sur
+   `label_v2`, synthèse de soutenance.
 
 ## 9. Journal des sessions
 
@@ -1797,3 +1811,14 @@ implémentation) :
 - **Reste à faire :** Chantier 7 (README, notebook §7.11, extraction des modules `.py`, synthèse
   soutenance) ; poussée GitHub à la demande ; question ouverte : comparaison à un outil
   industriel (Sonar) si une machine plus grosse devient disponible.
+
+### 2026-11-05 — Session 6 (suite) — Chantier 7 : README et notebook branché sur `fyc`
+- Push GitHub réussi (jusqu'à `6c4ab5f`). `README.md` écrit (`77dd914`) : installation,
+  organisation, reproduction, résultats en bref avec réserves, limites.
+- Notebook : cellules 49-51 remplacées par un appel à `fyc.features.build_code_features`, 50 =
+  couverture NaN, 52 = `CODE_COLS` de `fyc` et note de divergence réécrite, 56 = versions via
+  `cat_file_batch`. Deux erreurs corrigées en route en ré-exécutant (variable `contents`
+  supprimée avec la cellule 50 ; `cat_file_batch` renvoie un dict, pas une liste).
+  Ré-exécution : 58 cellules, 0 erreur, 2 min 16.
+- **Reste à faire :** markdown à chiffres en dur (§7 point 10), notebook sur `label_v2`,
+  synthèse de soutenance ; poussée GitHub à la demande.

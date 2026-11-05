@@ -627,6 +627,55 @@ commit qui touche du code déjà complexe/volumineux*.
     sur ≈ 270 positifs (S1 a 12 coefficients, S2 sert de contrôle) ; mêmes familles déjà vues
     en CV complète lors des chantiers 1–4bis .
 
+- **✅ `label_v2` est robuste au choix de l'implémentation SZZ (PySZZ, B-SZZ et MA-SZZ) — avec une
+  réserve sur le seuil M2bis qui n'est pas passé par `label_v2` lui-même.** Mesuré le 2026-11-05
+  (`results/chantier4bis_pyszz.py` → `results/chantier4bis_pyszz.json` ; sorties brutes PySZZ
+  dans `results/pyszz_out/`), protocole §8 sous-volet PySZZ v1 figé au commit 55b13fe avant
+  exécution. PySZZ `352c6bf`, config par défaut, 732 fix (détection B), même fenêtre 90 j et même
+  `make_est_risque_v2` : seule l'attribution diffère. Population : 3198 commits étiquetés.
+
+  | | `label_v2` | B-SZZ | MA-SZZ |
+  |---|---|---|---|
+  | positifs (part) | 310 (9,7 %) | 307 (9,6 %) | 238 (7,4 %) |
+  | accord brut avec v2 | — | 98,7 % | 97,2 % |
+  | **kappa de Cohen avec v2** | — | **0,923** | **0,825** |
+  | positifs v2 retrouvés / précision | — | 92,6 % / 93,5 % | 74,2 % / 96,6 % |
+  | fix à ensemble d'introducteurs identique | — | 70,8 % | 67,2 % |
+  | fix sans introducteur trouvé | 12,0 % | 23,2 % | 34,0 % |
+  | AUC(BASE) CV | 0,7867 ± 0,028 | 0,7730 ± 0,010 | 0,7656 ± 0,034 |
+  | AUC(churn seul) | 0,7158 | 0,6831 | 0,6733 |
+  | ratio M2bis (churn/BASE) | 0,910 | 0,884 | 0,879 |
+  | AUC(tout, 7 familles) | 0,8108 | 0,8066 | 0,7718 |
+
+  - **Verdicts pré-enregistrés (MA-SZZ) : R1 kappa ≥ 0,6 ✅ (0,825) ; R2 écart d'AUC(BASE) ≤ 0,03
+    ✅ (−0,021) ; R3 ratio M2bis ≤ 0,9044 ✅ (0,879) → `label_v2` jugé robuste.**
+  - **Lecture :** à la granularité du *commit étiqueté* (ce qui sert au modèle), nos étiquettes
+    sont presque celles de B-SZZ et très proches de MA-SZZ. Au niveau du *fix*, l'accord est bien
+    plus faible (ensemble d'introducteurs identique pour 67–71 % des fix) : les algorithmes
+    divergent sur les détails mais, une fois agrégés par commit et par fenêtre de 90 j,
+    les positifs sont largement les mêmes. MA-SZZ est plus conservateur (moins de positifs,
+    34 % de fix sans introducteur contre 12 % pour nous) : il élimine les commits de plus de
+    20 lignes modifiées et les renommages/copies, donc des introducteurs que `label_v2`
+    conserve. Nos 12 % de fix sans introducteur sont les fix qui n'ajoutent que des lignes
+    (rien à blâmer).
+  - **⚠️ Réserve à ne pas escamoter :** le ratio M2bis de `label_v2` **avec la détection B** vaut
+    **0,910** (churn seul 0,7158 / BASE 0,7867), donc **au-dessus du seuil 0,9044** du Chantier 1,
+    alors que ce seuil avait été passé (0,846) sur `label_v2` avec la détection d'origine. Les deux
+    SZZ de PySZZ passent (0,879–0,884). Écart de 0,006 au seuil avec des AUC dont le bruit est
+    ±0,03 : **ce n'est pas un échec démontré, mais l'adoption de `label_v2` + détection B ne
+    satisfait pas stricto sensu le critère M2bis du Chantier 1** — à dire en soutenance plutôt
+    que de citer 0,846 (mesure faite avant la détection B). R3 ci-dessus compare à un seuil, pas
+    à `label_v2`.
+  - **Sensibilité de la conclusion finale :** sous MA-SZZ, `AUC(tout)` tombe à 0,772 (contre
+    0,811) tandis que BASE ne perd que 0,021 : le gain des familles d'outils *disparaît* avec le
+    label le plus conservateur (7,4 % de positifs, écart-type de pli 0,038). Cohérent avec le
+    résultat négatif de la grille 4bis (les outils n'ajoutent rien de robuste), non testé plus
+    loin ici (1 graine de CV, un seul dépôt).
+  - **Limites :** pas de vérité terrain, on mesure un accord entre algorithmes, pas la justesse ;
+    MA-SZZ et `label_v2` partagent l'idée « ignorer les déplacements » (accord non indépendant) ;
+    causes exactes des divergences au niveau du fix **non investiguées** (hypothèses : lignes
+    déplacées, gros commits, fichiers non-Python blâmés par PySZZ) ; AG-/R-/L-/RA-SZZ non faits.
+
 ## 7. Pièges connus et limites assumées
 
 1. **Circularité churn/label (r = 0.91).** Toute feature au niveau fichier doit être testée contre
@@ -794,6 +843,16 @@ commit qui touche du code déjà complexe/volumineux*.
    (`/usr/bin/time`), points de reprise par étape (`cache_6a_<dépôt>__<étape>.pkl`), évaluation
    limitée à 3 processus. **Leçon** : mesurer la mémoire par étape **avant** de paralléliser un
    traitement par lot ; ne pas conclure « WSL redémarre » sans chercher la cause.
+
+16. **PySZZ : installation et exécution isolées (2026-11-05).** Dépendances figées de 2020
+   (`pydriller==1.15.2`, `gitpython==3.1.7`, `pyyaml==5.3.1`) : installées dans un **venv séparé**
+   (`pydriller 1.15.2` seulement épinglé, gitpython/pyyaml récents ; fonctionne sous Python 3.14),
+   jamais dans le venv du projet. PySZZ tourne sur une **copie** du clone Flask (arborescence
+   `repos_dir/pallets/flask` exigée), 732 fix en 127 s (B) et 398 s (MA). `srcml` absent mais
+   inutile pour Python (message « file not supported by srcML » sur des `.rst` = bruit). PySZZ
+   blâme **tous** les types de fichiers (y compris `.rst`), pas seulement `.py` — comme notre
+   `label_v2`. Sorties brutes conservées dans `results/pyszz_out/` pour rejouer l'analyse sans
+   relancer l'outil.
 
 ## 8. Prochaines étapes priorisées
 
@@ -1601,3 +1660,14 @@ implémentation) :
   gain tombe à +0,017 sans churn. Réserve : BASE 0,736 ≈ empiler 0,742 > S1 0,680 > S2 0,635.
 - Aucun résultat retouché après coup ; aucun autre méta-modèle essayé (règle négative).
 - **Reste à faire :** PySZZ (validation du label), vague 2 du 4bis, Chantier 7 ; commits non poussés.
+
+### 2026-11-05 — Session 6 (suite) — validation du label par PySZZ
+- Protocole écrit et commité avant exécution (`55b13fe`). PySZZ cloné dans `repos/pyszz`
+  (gitignore), venv séparé (§7 point 16), exécuté sur une copie du clone Flask.
+- `results/chantier4bis_pyszz.py` → `chantier4bis_pyszz.json`. **Résultat (§6) :** `label_v2`
+  robuste (kappa 0,92 avec B-SZZ, 0,83 avec MA-SZZ ; R1-R3 ✅). Réserve trouvée en cours de route
+  et documentée : le ratio M2bis de `label_v2` + détection B vaut 0,910 > 0,9044 (le 0,846 du
+  Chantier 1 datait d'avant la détection B). Sous MA-SZZ le gain des familles d'outils disparaît
+  (`tout` 0,772 contre 0,811).
+- **Reste à faire :** vague 2 du 4bis (Semgrep/jscpd ; Sonar/CodeQL bloqués), Chantier 7
+  (README, notebook §7.11, extraction des modules), poussée GitHub à la demande.

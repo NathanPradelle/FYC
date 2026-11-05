@@ -1,0 +1,116 @@
+{
+ "protocole": "CLAUDE.md \u00a78 sous-volet PySZZ v1 (commit 55b13fe)",
+ "generated_at": "2026-11-05T10:48:21.538099+00:00",
+ "pyszz_commit": "352c6bf4f35fca224bbfba02111f1e852a7aa4ad",
+ "n_fix": 732,
+ "variantes": {
+  "v2": {
+   "part_risque": 0.0969355847404628,
+   "auc": {
+    "BASE": [
+     0.7867104243227814,
+     0.02796024400424551
+    ],
+    "churn_seul": [
+     0.7157658042811244,
+     0.03163208574891213
+    ],
+    "all": [
+     0.8108119107205694,
+     0.028457114524172097
+    ],
+    "M2bis_ratio": 0.9098211770833877
+   }
+  },
+  "b": {
+   "nom": "B-SZZ",
+   "accord": {
+    "n": 3198,
+    "part_risque_ref": 0.0969355847404628,
+    "part_risque_alt": 0.09599749843652283,
+    "n_pos_ref": 310,
+    "n_pos_alt": 307,
+    "n_pos_communs": 287,
+    "accord_brut": 0.9865540963101939,
+    "kappa": 0.922867402651745,
+    "jaccard_positifs": 0.8696969696969697,
+    "positifs_ref_retrouves": 0.9258064516129032,
+    "precision_alt_vs_ref": 0.9348534201954397
+   },
+   "niveau_fix": {
+    "n_fix": 732,
+    "part_identique": 0.7076502732240437,
+    "jaccard_moyen_hors_deux_vides": 0.7570851191851066,
+    "sans_introducteur_ref": 0.12021857923497267,
+    "sans_introducteur_alt": 0.23224043715846995,
+    "ref_vide_alt_non_vide": 14,
+    "ref_non_vide_alt_vide": 96,
+    "alt_sous_ensemble_de_ref": 29
+   },
+   "interpretable": true,
+   "auc": {
+    "BASE": [
+     0.7729815455594002,
+     0.00991396461148954
+    ],
+    "churn_seul": [
+     0.683051812403312,
+     0.02517852413150415
+    ],
+    "all": [
+     0.8066285205994921,
+     0.008541629870571311
+    ],
+    "M2bis_ratio": 0.8836586284980363
+   }
+  },
+  "ma": {
+   "nom": "MA-SZZ",
+   "accord": {
+    "n": 3198,
+    "part_risque_ref": 0.0969355847404628,
+    "part_risque_alt": 0.07442151344590368,
+    "n_pos_ref": 310,
+    "n_pos_alt": 238,
+    "n_pos_communs": 230,
+    "accord_brut": 0.9724828017510945,
+    "kappa": 0.8246518258580985,
+    "jaccard_positifs": 0.7232704402515723,
+    "positifs_ref_retrouves": 0.7419354838709677,
+    "precision_alt_vs_ref": 0.9663865546218487
+   },
+   "niveau_fix": {
+    "n_fix": 732,
+    "part_identique": 0.6721311475409836,
+    "jaccard_moyen_hors_deux_vides": 0.675053661274426,
+    "sans_introducteur_ref": 0.12021857923497267,
+    "sans_introducteur_alt": 0.3401639344262295,
+    "ref_vide_alt_non_vide": 11,
+    "ref_non_vide_alt_vide": 172,
+    "alt_sous_ensemble_de_ref": 34
+   },
+   "interpretable": true,
+   "auc": {
+    "BASE": [
+     0.7655928035748515,
+     0.03383893878325218
+    ],
+    "churn_seul": [
+     0.673256226638873,
+     0.03370505681427868
+    ],
+    "all": [
+     0.7717923375503163,
+     0.03790052730474984
+    ],
+    "M2bis_ratio": 0.8793920521394363
+   }
+  }
+ },
+ "verdict": {
+  "R1_kappa_ge_0.6": true,
+  "R2_ecart_AUC_BASE_le_0.03": true,
+  "R3_M2bis_le_0.9044": true,
+  "label_v2_robuste": true
+ }
+}

@@ -1,0 +1,62 @@
+{
+ "N_detectes": 732,
+ "N_non_detectes_touchant_py": 1638,
+ "echantillons": {
+  "detectes": 100,
+  "non_detectes": 200
+ },
+ "incertain_compte_non_bug": {
+  "bugs_parmi_detectes": 19,
+  "precision_ic95": [
+   0.19,
+   0.1251465399270426,
+   0.27779024070807856
+  ],
+  "bugs_parmi_non_detectes": 7,
+  "taux_non_detectes_ic95": [
+   0.035,
+   0.017055324637357105,
+   0.07047146086668134
+  ],
+  "rappel": 0.7081105850007637,
+  "rappel_ic95_approx": [
+   0.4424627103595869,
+   0.8792081756677075
+  ]
+ },
+ "incertain_compte_bug": {
+  "bugs_parmi_detectes": 26,
+  "precision_ic95": [
+   0.26,
+   0.18404578126986462,
+   0.35371172631861636
+  ],
+  "bugs_parmi_non_detectes": 21,
+  "taux_non_detectes_ic95": [
+   0.105,
+   0.0697069624619373,
+   0.15518138221353622
+  ],
+  "rappel": 0.5252960172228203,
+  "rappel_ic95_approx": [
+   0.3464091726500109,
+   0.6939669626649037
+  ]
+ },
+ "merges_detectes": {
+  "n": 11,
+  "labels": [
+   "bug",
+   "bug",
+   "bug",
+   "bug",
+   "non_bug",
+   "bug",
+   "non_bug",
+   "incertain",
+   "non_bug",
+   "non_bug",
+   "incertain"
+  ]
+ }
+}

@@ -846,6 +846,32 @@ commit qui touche du code déjà complexe/volumineux*.
     projet) ; la prévalence « retravail » mélange corrections et évolutions normales ; 7 dépôts ;
     âge calculé sur les seuls liens retrouvés par `git blame -w -M -C`.
 
+- **⚠️ 8g — audit préliminaire des étiquettes de fix : la détection par mots-clés a une précision
+  faible (≈ 19-26 %) et un rappel moyen (≈ 53-71 %) ; non indépendant, à ne pas lire comme une
+  vérité terrain.** Mesuré le 2026-11-07 (`results/chantier8g_audit.py` →
+  `results/chantier8g_audit.json`, annotations dans `results/audit_fix_labels.csv`), protocole §8
+  Chantier 8 (f7e8489). 100 commits détectés « fix » (sur 732) et 200 non détectés touchant du
+  Python (sur 1638), tirage aléatoire graine 0, mélangés ; annotation par **moi seul, sans voir le
+  groupe**, sur le message seul (critère du protocole : le message dit ou implique la correction
+  d'un comportement incorrect). `label_humain` laissé **vide** pour que l'équipe tranche.
+  - **Précision** : 19/100 = **0,19** [Wilson 0,125-0,278] en comptant les cas incertains comme non
+    bug ; 26/100 = 0,26 [0,184-0,354] en les comptant comme bug. Beaucoup de « fix » détectés sont
+    des doc/typos (hors `typo|docs|changelog` exclus), des fix de tests/CI, des merges de PR.
+    11 des 100 sont des **commits de merge** (0 fichier) qui dupliquent la PR de fix.
+  - **Taux de vrais correctifs parmi les non détectés** : 7/200 = 0,035 [0,017-0,070] (ou 21/200 =
+    0,105 avec les incertains) → **rappel** estimé (deux échantillons) **0,71** [≈ 0,44-0,88]
+    (ou 0,53 [≈ 0,35-0,69]).
+  - **Lecture** : l'étiquette « fix » est bruitée surtout par des **faux positifs** ; le label
+    `label_v2` n'en dépend qu'en partie (SZZ blame les lignes modifiées par ces commits : un faux
+    fix qui touche des lignes introduit de faux positifs). Les AUC mesurées prédisent donc
+    « commit modifié par du travail de type fix » plus que « bug ». Cela relativise tous les
+    chiffres mais ne les invalide pas (le signal est stable entre B-SZZ et MA-SZZ, §6 PySZZ).
+  - **Limites** : annotateur unique, non indépendant, sur le message seul (sans lire le diff) ;
+    critère strict ; 300 messages ; rappel très bruité (3,5 % de 1638 = 57 commits). La justesse des
+    **introducteurs** SZZ reste sans vérité terrain. Piste d'amélioration : exiger que le fix touche
+    du code non-test/non-doc ou exclure les merges ; non testée, à passer par le protocole du
+    Chantier 1.
+
 ## 7. Pièges connus et limites assumées
 
 1. **Circularité churn/label (r = 0.91).** Toute feature au niveau fichier doit être testée contre

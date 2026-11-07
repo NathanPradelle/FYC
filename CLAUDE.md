@@ -790,6 +790,62 @@ commit qui touche du code déjà complexe/volumineux*.
     et inversement) ; 300 commits, Δ à ±0,02 ; le même contrôle n'a pas été fait pour jscpd (qui
     signale son échec par l'absence de rapport, déjà traité en NaN).
 
+- **⚠️ 8d — cause de la dérive de prévalence : pas les conventions de messages ; mécanisme
+  probable = l'âge du code corrigé explose avec l'âge du projet, et la fenêtre fixe de 90 jours ne
+  voit plus que les bugs introduits récemment (verdict pré-enregistré : INDÉTERMINÉ, 7 dépôts sur 7).**
+  Mesuré le 2026-11-07 (`results/chantier8d_drift.py` → `results/chantier8d_drift.json`, 33 min ;
+  analyse descriptive **non pré-enregistrée** `results/chantier8d_posthoc.py` →
+  `results/chantier8d_posthoc.json`, 4 min, ajoutée après avoir vu que le verdict pré-enregistré ne
+  tranchait pas, et signalée comme telle). Protocole §8 Chantier 8 (f7e8489).
+  - **Pré-enregistré (10 tranches chronologiques d'effectif égal, hors 90 derniers jours ;
+    rapport 1re tranche / dernière) :**
+
+    | Dépôt | part de fix par message | prévalence `label_v2` | prévalence « retravail » |
+    |---|---|---|---|
+    | flask | 19,4 % → 12,2 % (×1,6) | 25,1 % → 4,7 % (×5,3) | 63 % → 48 % (×1,3) |
+    | requests | 12,1 % → 12,8 % (×0,9) | 18,7 % → 3,1 % (×6,1) | 69 % → 29 % (×2,4) |
+    | click | 15,4 % → 20,0 % (×0,8) | 39,2 % → 19,9 % (×2,0) | 76 % → 63 % (×1,2) |
+    | black | 15,5 % → 19,2 % (×0,8) | 15,6 % → 5,4 % (×2,9) | 69 % → 66 % (×1,0) |
+    | tornado | 16,2 % → 11,3 % (×1,4) | 6,9 % → 3,9 % (×1,8) | 32 % → 29 % (×1,1) |
+    | pydantic | 17,9 % → 21,1 % (×0,9) | 22,2 % → 10,6 % (×2,1) | 77 % → 47 % (×1,6) |
+    | django-rest-framework | 16,5 % → 18,1 % (×0,9) | 20,4 % → 2,6 % (×7,5) | 66 % → 18 % (×3,7) |
+    | **médiane des rapports** | **×0,91** | **×2,88** | **×1,32** |
+
+    **H3 (conventions de messages) est contredite** : la part de commits reconnus « fix » par
+    message est **stable** (médiane ×0,91, aucun dépôt ne la voit baisser d'un facteur 2) alors
+    que la prévalence `label_v2` s'effondre. Les règles H1 (les deux mesures baissent ≥ 1,5×) et H3
+    (message ≥ 2× et retravail < 1,5×) ne sont satisfaites par **aucun** dépôt → « indéterminé »,
+    sur chaque dépôt et sur les médianes. Les variantes H2 (sans les 3 premières tranches / sans les
+    90 premiers jours d'historique) sont également indéterminées partout.
+  - **Descriptif non pré-enregistré — l'âge du code corrigé** (par couple fix / commit
+    introducteur, 10 tranches de dates de fix) :
+
+    | Dépôt | âge médian du code corrigé | part des liens d'âge ≤ 90 j |
+    |---|---|---|
+    | flask | 19 j → **1702 j** | 85 % → 8 % |
+    | requests | 24 j → 687 j | 86 % → 18 % |
+    | click | 18 j → 471 j | 99 % → 32 % |
+    | black | 6 j → 630 j | 97 % → 23 % |
+    | tornado | 196 j → 3242 j | 37 % → 3 % |
+    | pydantic | 128 j → 594 j | 44 % → 20 % |
+    | django-rest-framework | 67 j → 3384 j | 60 % → 4 % |
+
+    Médianes : l'âge du code corrigé est multiplié par ≈ **29** et la part des liens que la fenêtre
+    de 90 jours peut transformer en positifs est divisée par ≈ **4,9**. *Lecture (hypothèse
+    mécaniste, non testée causalement) :* un jeune dépôt ne contient que du code jeune, donc tout
+    fix blâme du code récent et presque tout commit est « positif » ; un dépôt mûr corrige surtout
+    du **vieux** code introduit hors de la fenêtre. La baisse de la prévalence est donc en grande
+    partie un **effet mécanique de la fenêtre fixe de 90 jours**, pas un changement du taux de
+    défauts ni des conventions. Un label « à fenêtre fixe » mesure ainsi en partie l'âge du projet.
+  - **Conséquences :** (1) le conseil du 6B (recalibrer sur une fenêtre glissante de ≈ 100-200
+    commits récents) est **renforcé**, pas modifié ; (2) la prévalence élevée du début d'historique
+    (22-46 %) est un artefact de l'étiquette, pas un signal sur le risque réel ; (3) les AUC
+    « en CV mélangée » mêlent des régimes d'étiquette très différents selon l'époque — une piste
+    pour expliquer l'écart CV mélangée / queue temporelle, **sans la démontrer**.
+  - **Limites :** pas d'expérience causale (par exemple une fenêtre qui grandit avec l'âge du
+    projet) ; la prévalence « retravail » mélange corrections et évolutions normales ; 7 dépôts ;
+    âge calculé sur les seuls liens retrouvés par `git blame -w -M -C`.
+
 ## 7. Pièges connus et limites assumées
 
 1. **Circularité churn/label (r = 0.91).** Toute feature au niveau fichier doit être testée contre

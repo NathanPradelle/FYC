@@ -1,0 +1,416 @@
+{
+ "statut": "descriptif, NON pre-enregistre, ajoute apres chantier8d_drift.json",
+ "generated_at": "2026-11-07T17:20:15.508143+00:00",
+ "mediane": {
+  "ratio_part_le_90j_premiere_sur_derniere": 4.89436270457927,
+  "ratio_age_median_derniere_sur_premiere": 28.843233201223914
+ },
+ "depots": {
+  "flask": {
+   "n_liens": 1987,
+   "n_fix": 732,
+   "tranches": [
+    {
+     "n_liens": 199,
+     "part_age_le_90j": 0.8542713567839196,
+     "age_median_jours": 18.66027777777778
+    },
+    {
+     "n_liens": 199,
+     "part_age_le_90j": 0.36683417085427134,
+     "age_median_jours": 308.6182060185185
+    },
+    {
+     "n_liens": 199,
+     "part_age_le_90j": 0.23618090452261306,
+     "age_median_jours": 416.0321412037037
+    },
+    {
+     "n_liens": 199,
+     "part_age_le_90j": 0.37185929648241206,
+     "age_median_jours": 336.04483796296296
+    },
+    {
+     "n_liens": 199,
+     "part_age_le_90j": 0.25125628140703515,
+     "age_median_jours": 703.270011574074
+    },
+    {
+     "n_liens": 199,
+     "part_age_le_90j": 0.20603015075376885,
+     "age_median_jours": 797.9726851851852
+    },
+    {
+     "n_liens": 199,
+     "part_age_le_90j": 0.1708542713567839,
+     "age_median_jours": 744.919837962963
+    },
+    {
+     "n_liens": 198,
+     "part_age_le_90j": 0.2474747474747475,
+     "age_median_jours": 749.2880150462963
+    },
+    {
+     "n_liens": 198,
+     "part_age_le_90j": 0.14646464646464646,
+     "age_median_jours": 744.577037037037
+    },
+    {
+     "n_liens": 198,
+     "part_age_le_90j": 0.07575757575757576,
+     "age_median_jours": 1702.3703877314815
+    }
+   ],
+   "ratio_part_le_90j_premiere_sur_derniere": 11.27638190954774,
+   "ratio_age_median_derniere_sur_premiere": 91.22963805816474
+  },
+  "requests": {
+   "n_liens": 2621,
+   "n_fix": 770,
+   "tranches": [
+    {
+     "n_liens": 263,
+     "part_age_le_90j": 0.8593155893536122,
+     "age_median_jours": 23.82693287037037
+    },
+    {
+     "n_liens": 262,
+     "part_age_le_90j": 0.5648854961832062,
+     "age_median_jours": 64.74308449074074
+    },
+    {
+     "n_liens": 262,
+     "part_age_le_90j": 0.4351145038167939,
+     "age_median_jours": 120.92207175925925
+    },
+    {
+     "n_liens": 262,
+     "part_age_le_90j": 0.20610687022900764,
+     "age_median_jours": 536.5753703703704
+    },
+    {
+     "n_liens": 262,
+     "part_age_le_90j": 0.03816793893129771,
+     "age_median_jours": 877.925931712963
+    },
+    {
+     "n_liens": 262,
+     "part_age_le_90j": 0.030534351145038167,
+     "age_median_jours": 1270.6934490740741
+    },
+    {
+     "n_liens": 262,
+     "part_age_le_90j": 0.2480916030534351,
+     "age_median_jours": 193.4384201388889
+    },
+    {
+     "n_liens": 262,
+     "part_age_le_90j": 0.0,
+     "age_median_jours": 908.0426157407408
+    },
+    {
+     "n_liens": 262,
+     "part_age_le_90j": 0.0,
+     "age_median_jours": 1733.1582002314815
+    },
+    {
+     "n_liens": 262,
+     "part_age_le_90j": 0.17557251908396945,
+     "age_median_jours": 687.24578125
+    }
+   ],
+   "ratio_part_le_90j_premiere_sur_derniere": 4.89436270457927,
+   "ratio_age_median_derniere_sur_premiere": 28.843233201223914
+  },
+  "click": {
+   "n_liens": 2732,
+   "n_fix": 504,
+   "tranches": [
+    {
+     "n_liens": 274,
+     "part_age_le_90j": 0.9927007299270073,
+     "age_median_jours": 17.704635416666665
+    },
+    {
+     "n_liens": 274,
+     "part_age_le_90j": 0.20802919708029197,
+     "age_median_jours": 416.0155266203704
+    },
+    {
+     "n_liens": 273,
+     "part_age_le_90j": 0.10256410256410256,
+     "age_median_jours": 1448.809560185185
+    },
+    {
+     "n_liens": 273,
+     "part_age_le_90j": 0.1575091575091575,
+     "age_median_jours": 809.216875
+    },
+    {
+     "n_liens": 273,
+     "part_age_le_90j": 0.047619047619047616,
+     "age_median_jours": 771.0571412037037
+    },
+    {
+     "n_liens": 273,
+     "part_age_le_90j": 0.0,
+     "age_median_jours": 2535.0986805555553
+    },
+    {
+     "n_liens": 273,
+     "part_age_le_90j": 0.014652014652014652,
+     "age_median_jours": 1971.8774537037036
+    },
+    {
+     "n_liens": 273,
+     "part_age_le_90j": 0.01098901098901099,
+     "age_median_jours": 3320.388622685185
+    },
+    {
+     "n_liens": 273,
+     "part_age_le_90j": 0.11721611721611722,
+     "age_median_jours": 1806.1123842592592
+    },
+    {
+     "n_liens": 273,
+     "part_age_le_90j": 0.315018315018315,
+     "age_median_jours": 470.6436458333333
+    }
+   ],
+   "ratio_part_le_90j_premiere_sur_derniere": 3.1512476659310815,
+   "ratio_age_median_derniere_sur_premiere": 26.583074700893423
+  },
+  "black": {
+   "n_liens": 1138,
+   "n_fix": 507,
+   "tranches": [
+    {
+     "n_liens": 114,
+     "part_age_le_90j": 0.9736842105263158,
+     "age_median_jours": 5.753877314814815
+    },
+    {
+     "n_liens": 114,
+     "part_age_le_90j": 0.20175438596491227,
+     "age_median_jours": 197.13684027777776
+    },
+    {
+     "n_liens": 114,
+     "part_age_le_90j": 0.3508771929824561,
+     "age_median_jours": 175.81721064814815
+    },
+    {
+     "n_liens": 114,
+     "part_age_le_90j": 0.2543859649122807,
+     "age_median_jours": 317.98891782407406
+    },
+    {
+     "n_liens": 114,
+     "part_age_le_90j": 0.32456140350877194,
+     "age_median_jours": 192.31740162037036
+    },
+    {
+     "n_liens": 114,
+     "part_age_le_90j": 0.18421052631578946,
+     "age_median_jours": 570.4338773148148
+    },
+    {
+     "n_liens": 114,
+     "part_age_le_90j": 0.24561403508771928,
+     "age_median_jours": 599.3605555555556
+    },
+    {
+     "n_liens": 114,
+     "part_age_le_90j": 0.07894736842105263,
+     "age_median_jours": 819.4533449074074
+    },
+    {
+     "n_liens": 113,
+     "part_age_le_90j": 0.2831858407079646,
+     "age_median_jours": 734.9166087962963
+    },
+    {
+     "n_liens": 113,
+     "part_age_le_90j": 0.23008849557522124,
+     "age_median_jours": 629.8207407407407
+    }
+   ],
+   "ratio_part_le_90j_premiere_sur_derniere": 4.231781376518219,
+   "ratio_age_median_derniere_sur_premiere": 109.46023112434247
+  },
+  "tornado": {
+   "n_liens": 3545,
+   "n_fix": 758,
+   "tranches": [
+    {
+     "n_liens": 355,
+     "part_age_le_90j": 0.36901408450704226,
+     "age_median_jours": 195.5428587962963
+    },
+    {
+     "n_liens": 355,
+     "part_age_le_90j": 0.30985915492957744,
+     "age_median_jours": 220.20482638888888
+    },
+    {
+     "n_liens": 355,
+     "part_age_le_90j": 0.17464788732394365,
+     "age_median_jours": 776.5832407407407
+    },
+    {
+     "n_liens": 355,
+     "part_age_le_90j": 0.14647887323943662,
+     "age_median_jours": 1183.6030902777777
+    },
+    {
+     "n_liens": 355,
+     "part_age_le_90j": 0.08169014084507042,
+     "age_median_jours": 2868.1141666666667
+    },
+    {
+     "n_liens": 354,
+     "part_age_le_90j": 0.0,
+     "age_median_jours": 2801.7355266203704
+    },
+    {
+     "n_liens": 354,
+     "part_age_le_90j": 0.0,
+     "age_median_jours": 4541.351527777778
+    },
+    {
+     "n_liens": 354,
+     "part_age_le_90j": 0.005649717514124294,
+     "age_median_jours": 2917.540324074074
+    },
+    {
+     "n_liens": 354,
+     "part_age_le_90j": 0.0,
+     "age_median_jours": 3400.7536458333334
+    },
+    {
+     "n_liens": 354,
+     "part_age_le_90j": 0.02824858757062147,
+     "age_median_jours": 3242.2453819444445
+    }
+   ],
+   "ratio_part_le_90j_premiere_sur_derniere": 13.063098591549297,
+   "ratio_age_median_derniere_sur_premiere": 16.580740416207185
+  },
+  "pydantic": {
+   "n_liens": 6827,
+   "n_fix": 1230,
+   "tranches": [
+    {
+     "n_liens": 683,
+     "part_age_le_90j": 0.4407027818448023,
+     "age_median_jours": 127.9890162037037
+    },
+    {
+     "n_liens": 683,
+     "part_age_le_90j": 0.5724743777452416,
+     "age_median_jours": 14.903078703703704
+    },
+    {
+     "n_liens": 683,
+     "part_age_le_90j": 0.7628111273792094,
+     "age_median_jours": 62.62513888888889
+    },
+    {
+     "n_liens": 683,
+     "part_age_le_90j": 0.5300146412884333,
+     "age_median_jours": 86.98165509259259
+    },
+    {
+     "n_liens": 683,
+     "part_age_le_90j": 0.46412884333821375,
+     "age_median_jours": 144.3359722222222
+    },
+    {
+     "n_liens": 683,
+     "part_age_le_90j": 0.48316251830161056,
+     "age_median_jours": 100.21300925925927
+    },
+    {
+     "n_liens": 683,
+     "part_age_le_90j": 0.46266471449487556,
+     "age_median_jours": 97.22892361111111
+    },
+    {
+     "n_liens": 682,
+     "part_age_le_90j": 0.2375366568914956,
+     "age_median_jours": 207.8700173611111
+    },
+    {
+     "n_liens": 682,
+     "part_age_le_90j": 0.3020527859237537,
+     "age_median_jours": 348.8886284722222
+    },
+    {
+     "n_liens": 682,
+     "part_age_le_90j": 0.20087976539589442,
+     "age_median_jours": 594.3448206018519
+    }
+   ],
+   "ratio_part_le_90j_premiere_sur_derniere": 2.193863483344199,
+   "ratio_age_median_derniere_sur_premiere": 4.643717392560542
+  },
+  "django-rest-framework": {
+   "n_liens": 5313,
+   "n_fix": 1458,
+   "tranches": [
+    {
+     "n_liens": 532,
+     "part_age_le_90j": 0.5977443609022557,
+     "age_median_jours": 67.28135416666667
+    },
+    {
+     "n_liens": 532,
+     "part_age_le_90j": 0.8383458646616542,
+     "age_median_jours": 25.044265046296296
+    },
+    {
+     "n_liens": 532,
+     "part_age_le_90j": 0.4417293233082707,
+     "age_median_jours": 113.53186342592592
+    },
+    {
+     "n_liens": 531,
+     "part_age_le_90j": 0.2787193973634652,
+     "age_median_jours": 453.3110185185185
+    },
+    {
+     "n_liens": 531,
+     "part_age_le_90j": 0.009416195856873822,
+     "age_median_jours": 448.83793981481483
+    },
+    {
+     "n_liens": 531,
+     "part_age_le_90j": 0.0,
+     "age_median_jours": 722.8957060185185
+    },
+    {
+     "n_liens": 531,
+     "part_age_le_90j": 0.2693032015065913,
+     "age_median_jours": 132.92061342592592
+    },
+    {
+     "n_liens": 531,
+     "part_age_le_90j": 0.2222222222222222,
+     "age_median_jours": 292.44458333333336
+    },
+    {
+     "n_liens": 531,
+     "part_age_le_90j": 0.18455743879472694,
+     "age_median_jours": 747.7854398148148
+    },
+    {
+     "n_liens": 531,
+     "part_age_le_90j": 0.04143126177024482,
+     "age_median_jours": 3383.725949074074
+    }
+   ],
+   "ratio_part_le_90j_premiere_sur_derniere": 14.427375256322625,
+   "ratio_age_median_derniere_sur_premiere": 50.29217962367469
+  }
+ }
+}

@@ -1,0 +1,684 @@
+{
+ "protocole": "CLAUDE.md \u00a78 Chantier 8d (f7e8489)",
+ "generated_at": "2026-11-07T17:16:08.358036+00:00",
+ "depots": {
+  "flask": {
+   "n_commits_etiquetes_hors_90j": 3189,
+   "tranches": [
+    {
+     "debut": 1270552377,
+     "n": 319,
+     "part_fix_message": 0.19444444444444445,
+     "prevalence_v2": 0.2507836990595611,
+     "prevalence_retravail": 0.6332288401253918
+    },
+    {
+     "debut": 1279375341,
+     "n": 319,
+     "part_fix_message": 0.19035532994923857,
+     "prevalence_v2": 0.13166144200626959,
+     "prevalence_retravail": 0.3385579937304075
+    },
+    {
+     "debut": 1314305390,
+     "n": 319,
+     "part_fix_message": 0.18829516539440203,
+     "prevalence_v2": 0.09090909090909091,
+     "prevalence_retravail": 0.2946708463949843
+    },
+    {
+     "debut": 1365923438,
+     "n": 319,
+     "part_fix_message": 0.20448877805486285,
+     "prevalence_v2": 0.09717868338557993,
+     "prevalence_retravail": 0.3166144200626959
+    },
+    {
+     "debut": 1409765268,
+     "n": 319,
+     "part_fix_message": 0.14016172506738545,
+     "prevalence_v2": 0.08463949843260188,
+     "prevalence_retravail": 0.30094043887147337
+    },
+    {
+     "debut": 1464529778,
+     "n": 319,
+     "part_fix_message": 0.15384615384615385,
+     "prevalence_v2": 0.11285266457680251,
+     "prevalence_retravail": 0.3761755485893417
+    },
+    {
+     "debut": 1497467305,
+     "n": 319,
+     "part_fix_message": 0.17357512953367876,
+     "prevalence_v2": 0.06583072100313479,
+     "prevalence_retravail": 0.4043887147335423
+    },
+    {
+     "debut": 1559328843,
+     "n": 319,
+     "part_fix_message": 0.08595988538681948,
+     "prevalence_v2": 0.034482758620689655,
+     "prevalence_retravail": 0.47962382445141066
+    },
+    {
+     "debut": 1620769816,
+     "n": 319,
+     "part_fix_message": 0.16052631578947368,
+     "prevalence_v2": 0.05642633228840126,
+     "prevalence_retravail": 0.4169278996865204
+    },
+    {
+     "debut": 1674251115,
+     "n": 318,
+     "part_fix_message": 0.12154696132596685,
+     "prevalence_v2": 0.04716981132075472,
+     "prevalence_retravail": 0.4811320754716981
+    }
+   ],
+   "ratio_premiere_sur_derniere": {
+    "part_fix_message": 1.599747474747475,
+    "prevalence_v2": 5.316614420062695,
+    "prevalence_retravail": 1.3161226873194418
+   },
+   "verdict": "indetermine",
+   "H2_sans_3_premieres_tranches_ratio_4eme_sur_derniere": {
+    "part_fix_message": 1.682384946724099,
+    "prevalence_v2": 2.060188087774294,
+    "prevalence_retravail": 0.6580613436597209
+   },
+   "H2_verdict_sans_3_premieres": "indetermine",
+   "H2_sans_90_premiers_jours": {
+    "part_fix_message": 1.7120487168334058,
+    "prevalence_v2": 2.56259204712813,
+    "prevalence_retravail": 0.6983219203852811
+   },
+   "H2_verdict_sans_90_premiers_jours": "indetermine",
+   "secondes": 239.87519907951355
+  },
+  "requests": {
+   "n_commits_etiquetes_hors_90j": 4225,
+   "tranches": [
+    {
+     "debut": 1297622478,
+     "n": 423,
+     "part_fix_message": 0.12058212058212059,
+     "prevalence_v2": 0.1867612293144208,
+     "prevalence_retravail": 0.6903073286052009
+    },
+    {
+     "debut": 1313565691,
+     "n": 423,
+     "part_fix_message": 0.08639308855291576,
+     "prevalence_v2": 0.16312056737588654,
+     "prevalence_retravail": 0.574468085106383
+    },
+    {
+     "debut": 1321112734,
+     "n": 423,
+     "part_fix_message": 0.12783505154639174,
+     "prevalence_v2": 0.07801418439716312,
+     "prevalence_retravail": 0.5319148936170213
+    },
+    {
+     "debut": 1334049158,
+     "n": 423,
+     "part_fix_message": 0.15737051792828685,
+     "prevalence_v2": 0.12056737588652482,
+     "prevalence_retravail": 0.5484633569739953
+    },
+    {
+     "debut": 1355743547,
+     "n": 423,
+     "part_fix_message": 0.17704280155642024,
+     "prevalence_v2": 0.10874704491725769,
+     "prevalence_retravail": 0.41371158392434987
+    },
+    {
+     "debut": 1383122154,
+     "n": 422,
+     "part_fix_message": 0.13168724279835392,
+     "prevalence_v2": 0.07582938388625593,
+     "prevalence_retravail": 0.4028436018957346
+    },
+    {
+     "debut": 1429806550,
+     "n": 422,
+     "part_fix_message": 0.12989690721649486,
+     "prevalence_v2": 0.07345971563981042,
+     "prevalence_retravail": 0.3933649289099526
+    },
+    {
+     "debut": 1478167859,
+     "n": 422,
+     "part_fix_message": 0.14919354838709678,
+     "prevalence_v2": 0.06872037914691943,
+     "prevalence_retravail": 0.466824644549763
+    },
+    {
+     "debut": 1504555447,
+     "n": 422,
+     "part_fix_message": 0.08061002178649238,
+     "prevalence_v2": 0.02132701421800948,
+     "prevalence_retravail": 0.4052132701421801
+    },
+    {
+     "debut": 1568796978,
+     "n": 422,
+     "part_fix_message": 0.128099173553719,
+     "prevalence_v2": 0.030805687203791468,
+     "prevalence_retravail": 0.2938388625592417
+    }
+   ],
+   "ratio_premiere_sur_derniere": {
+    "part_fix_message": 0.9413184897055866,
+    "prevalence_v2": 6.062556828514276,
+    "prevalence_retravail": 2.3492717150918936
+   },
+   "verdict": "indetermine",
+   "H2_sans_3_premieres_tranches_ratio_4eme_sur_derniere": {
+    "part_fix_message": 1.228505333504691,
+    "prevalence_v2": 3.9138025095471902,
+    "prevalence_retravail": 1.866544650346984
+   },
+   "H2_verdict_sans_3_premieres": "indetermine",
+   "H2_sans_90_premiers_jours": {
+    "part_fix_message": 0.7982261640798226,
+    "prevalence_v2": 5.846153846153847,
+    "prevalence_retravail": 2.188034188034188
+   },
+   "H2_verdict_sans_90_premiers_jours": "indetermine",
+   "secondes": 141.34571647644043
+  },
+  "click": {
+   "n_commits_etiquetes_hors_90j": 1760,
+   "tranches": [
+    {
+     "debut": 1398333115,
+     "n": 176,
+     "part_fix_message": 0.15384615384615385,
+     "prevalence_v2": 0.39204545454545453,
+     "prevalence_retravail": 0.7556818181818182
+    },
+    {
+     "debut": 1400918570,
+     "n": 176,
+     "part_fix_message": 0.1813953488372093,
+     "prevalence_v2": 0.23863636363636365,
+     "prevalence_retravail": 0.5454545454545454
+    },
+    {
+     "debut": 1407847732,
+     "n": 176,
+     "part_fix_message": 0.251063829787234,
+     "prevalence_v2": 0.07386363636363637,
+     "prevalence_retravail": 0.3068181818181818
+    },
+    {
+     "debut": 1459619032,
+     "n": 176,
+     "part_fix_message": 0.251063829787234,
+     "prevalence_v2": 0.07386363636363637,
+     "prevalence_retravail": 0.29545454545454547
+    },
+    {
+     "debut": 1538099003,
+     "n": 176,
+     "part_fix_message": 0.1065989847715736,
+     "prevalence_v2": 0.028409090909090908,
+     "prevalence_retravail": 0.32386363636363635
+    },
+    {
+     "debut": 1591690468,
+     "n": 176,
+     "part_fix_message": 0.03825136612021858,
+     "prevalence_v2": 0.017045454545454544,
+     "prevalence_retravail": 0.5681818181818182
+    },
+    {
+     "debut": 1619643268,
+     "n": 176,
+     "part_fix_message": 0.1111111111111111,
+     "prevalence_v2": 0.03409090909090909,
+     "prevalence_retravail": 0.4090909090909091
+    },
+    {
+     "debut": 1667936669,
+     "n": 176,
+     "part_fix_message": 0.17757009345794392,
+     "prevalence_v2": 0.06818181818181818,
+     "prevalence_retravail": 0.5
+    },
+    {
+     "debut": 1733333185,
+     "n": 176,
+     "part_fix_message": 0.16981132075471697,
+     "prevalence_v2": 0.11363636363636363,
+     "prevalence_retravail": 0.39204545454545453
+    },
+    {
+     "debut": 1758681889,
+     "n": 176,
+     "part_fix_message": 0.2,
+     "prevalence_v2": 0.19886363636363635,
+     "prevalence_retravail": 0.625
+    }
+   ],
+   "ratio_premiere_sur_derniere": {
+    "part_fix_message": 0.7692307692307693,
+    "prevalence_v2": 1.9714285714285715,
+    "prevalence_retravail": 1.2090909090909092
+   },
+   "verdict": "indetermine",
+   "H2_sans_3_premieres_tranches_ratio_4eme_sur_derniere": {
+    "part_fix_message": 1.25531914893617,
+    "prevalence_v2": 0.37142857142857144,
+    "prevalence_retravail": 0.4727272727272728
+   },
+   "H2_verdict_sans_3_premieres": "indetermine",
+   "H2_sans_90_premiers_jours": {
+    "part_fix_message": 1.0309017223910841,
+    "prevalence_v2": 0.3212826797385621,
+    "prevalence_retravail": 0.38903207331042383
+   },
+   "H2_verdict_sans_90_premiers_jours": "indetermine",
+   "secondes": 130.3645100593567
+  },
+  "black": {
+   "n_commits_etiquetes_hors_90j": 1854,
+   "tranches": [
+    {
+     "debut": 1521057332,
+     "n": 186,
+     "part_fix_message": 0.15454545454545454,
+     "prevalence_v2": 0.15591397849462366,
+     "prevalence_retravail": 0.6881720430107527
+    },
+    {
+     "debut": 1525904816,
+     "n": 186,
+     "part_fix_message": 0.16591928251121077,
+     "prevalence_v2": 0.08064516129032258,
+     "prevalence_retravail": 0.41397849462365593
+    },
+    {
+     "debut": 1544429757,
+     "n": 186,
+     "part_fix_message": 0.19480519480519481,
+     "prevalence_v2": 0.10215053763440861,
+     "prevalence_retravail": 0.3978494623655914
+    },
+    {
+     "debut": 1585330090,
+     "n": 186,
+     "part_fix_message": 0.20512820512820512,
+     "prevalence_v2": 0.15053763440860216,
+     "prevalence_retravail": 0.4838709677419355
+    },
+    {
+     "debut": 1616267755,
+     "n": 185,
+     "part_fix_message": 0.18141592920353983,
+     "prevalence_v2": 0.14594594594594595,
+     "prevalence_retravail": 0.5783783783783784
+    },
+    {
+     "debut": 1636995116,
+     "n": 185,
+     "part_fix_message": 0.14351851851851852,
+     "prevalence_v2": 0.05945945945945946,
+     "prevalence_retravail": 0.4648648648648649
+    },
+    {
+     "debut": 1656376415,
+     "n": 185,
+     "part_fix_message": 0.17410714285714285,
+     "prevalence_v2": 0.05945945945945946,
+     "prevalence_retravail": 0.5027027027027027
+    },
+    {
+     "debut": 1688513919,
+     "n": 185,
+     "part_fix_message": 0.2094017094017094,
+     "prevalence_v2": 0.08648648648648649,
+     "prevalence_retravail": 0.5513513513513514
+    },
+    {
+     "debut": 1707747565,
+     "n": 185,
+     "part_fix_message": 0.27734375,
+     "prevalence_v2": 0.06486486486486487,
+     "prevalence_retravail": 0.3891891891891892
+    },
+    {
+     "debut": 1762817008,
+     "n": 185,
+     "part_fix_message": 0.19213973799126638,
+     "prevalence_v2": 0.05405405405405406,
+     "prevalence_retravail": 0.6594594594594595
+    }
+   ],
+   "ratio_premiere_sur_derniere": {
+    "part_fix_message": 0.8043388429752065,
+    "prevalence_v2": 2.8844086021505375,
+    "prevalence_retravail": 1.0435395734179447
+   },
+   "verdict": "indetermine",
+   "H2_sans_3_premieres_tranches_ratio_4eme_sur_derniere": {
+    "part_fix_message": 1.0675990675990676,
+    "prevalence_v2": 2.7849462365591395,
+    "prevalence_retravail": 0.7337387625594923
+   },
+   "H2_verdict_sans_3_premieres": "indetermine",
+   "H2_sans_90_premiers_jours": {
+    "part_fix_message": 1.1036649214659686,
+    "prevalence_v2": 0.9936305732484075,
+    "prevalence_retravail": 0.5692675159235668
+   },
+   "H2_verdict_sans_90_premiers_jours": "indetermine",
+   "secondes": 160.4317672252655
+  },
+  "tornado": {
+   "n_commits_etiquetes_hors_90j": 3315,
+   "tranches": [
+    {
+     "debut": 1252472484,
+     "n": 332,
+     "part_fix_message": 0.16161616161616163,
+     "prevalence_v2": 0.06927710843373494,
+     "prevalence_retravail": 0.32228915662650603
+    },
+    {
+     "debut": 1298158537,
+     "n": 332,
+     "part_fix_message": 0.15736040609137056,
+     "prevalence_v2": 0.08433734939759036,
+     "prevalence_retravail": 0.5060240963855421
+    },
+    {
+     "debut": 1322324464,
+     "n": 332,
+     "part_fix_message": 0.1761786600496278,
+     "prevalence_v2": 0.08734939759036145,
+     "prevalence_retravail": 0.39759036144578314
+    },
+    {
+     "debut": 1353273573,
+     "n": 332,
+     "part_fix_message": 0.16791979949874686,
+     "prevalence_v2": 0.15963855421686746,
+     "prevalence_retravail": 0.5
+    },
+    {
+     "debut": 1370053622,
+     "n": 332,
+     "part_fix_message": 0.15949367088607594,
+     "prevalence_v2": 0.06626506024096386,
+     "prevalence_retravail": 0.44879518072289154
+    },
+    {
+     "debut": 1401133498,
+     "n": 331,
+     "part_fix_message": 0.20048309178743962,
+     "prevalence_v2": 0.07250755287009064,
+     "prevalence_retravail": 0.3776435045317221
+    },
+    {
+     "debut": 1428637812,
+     "n": 331,
+     "part_fix_message": 0.14025974025974025,
+     "prevalence_v2": 0.03323262839879154,
+     "prevalence_retravail": 0.29607250755287007
+    },
+    {
+     "debut": 1482265942,
+     "n": 331,
+     "part_fix_message": 0.17866004962779156,
+     "prevalence_v2": 0.07854984894259819,
+     "prevalence_retravail": 0.3595166163141994
+    },
+    {
+     "debut": 1532196891,
+     "n": 331,
+     "part_fix_message": 0.13577023498694518,
+     "prevalence_v2": 0.03927492447129909,
+     "prevalence_retravail": 0.2809667673716012
+    },
+    {
+     "debut": 1659351094,
+     "n": 331,
+     "part_fix_message": 0.1126005361930295,
+     "prevalence_v2": 0.03927492447129909,
+     "prevalence_retravail": 0.29003021148036257
+    }
+   ],
+   "ratio_premiere_sur_derniere": {
+    "part_fix_message": 1.4353054353054353,
+    "prevalence_v2": 1.7639017608897127,
+    "prevalence_retravail": 1.1112261546184738
+   },
+   "verdict": "indetermine",
+   "H2_sans_3_premieres_tranches_ratio_4eme_sur_derniere": {
+    "part_fix_message": 1.4912877431674423,
+    "prevalence_v2": 4.064643188137164,
+    "prevalence_retravail": 1.7239583333333333
+   },
+   "H2_verdict_sans_3_premieres": "indetermine",
+   "H2_sans_90_premiers_jours": {
+    "part_fix_message": 1.454979129397734,
+    "prevalence_v2": 2.0,
+    "prevalence_retravail": 1.15625
+   },
+   "H2_verdict_sans_90_premiers_jours": "indetermine",
+   "secondes": 367.9001121520996
+  },
+  "pydantic": {
+   "n_commits_etiquetes_hors_90j": 4456,
+   "tranches": [
+    {
+     "debut": 1493846621,
+     "n": 446,
+     "part_fix_message": 0.17863720073664824,
+     "prevalence_v2": 0.2219730941704036,
+     "prevalence_retravail": 0.773542600896861
+    },
+    {
+     "debut": 1571822091,
+     "n": 446,
+     "part_fix_message": 0.2529313232830821,
+     "prevalence_v2": 0.13228699551569506,
+     "prevalence_retravail": 0.6973094170403588
+    },
+    {
+     "debut": 1639161697,
+     "n": 446,
+     "part_fix_message": 0.181651376146789,
+     "prevalence_v2": 0.33408071748878926,
+     "prevalence_retravail": 0.8587443946188341
+    },
+    {
+     "debut": 1663671531,
+     "n": 446,
+     "part_fix_message": 0.17863720073664824,
+     "prevalence_v2": 0.3654708520179372,
+     "prevalence_retravail": 0.7623318385650224
+    },
+    {
+     "debut": 1681915142,
+     "n": 446,
+     "part_fix_message": 0.17863720073664824,
+     "prevalence_v2": 0.27802690582959644,
+     "prevalence_retravail": 0.7937219730941704
+    },
+    {
+     "debut": 1688122901,
+     "n": 446,
+     "part_fix_message": 0.23235800344234078,
+     "prevalence_v2": 0.13228699551569506,
+     "prevalence_retravail": 0.6345291479820628
+    },
+    {
+     "debut": 1695900777,
+     "n": 445,
+     "part_fix_message": 0.24448217317487267,
+     "prevalence_v2": 0.08089887640449438,
+     "prevalence_retravail": 0.5415730337078651
+    },
+    {
+     "debut": 1714523230,
+     "n": 445,
+     "part_fix_message": 0.21099290780141844,
+     "prevalence_v2": 0.14382022471910114,
+     "prevalence_retravail": 0.6247191011235955
+    },
+    {
+     "debut": 1731357201,
+     "n": 445,
+     "part_fix_message": 0.19529837251356238,
+     "prevalence_v2": 0.0898876404494382,
+     "prevalence_retravail": 0.5617977528089888
+    },
+    {
+     "debut": 1758271378,
+     "n": 445,
+     "part_fix_message": 0.21099290780141844,
+     "prevalence_v2": 0.10561797752808989,
+     "prevalence_retravail": 0.47415730337078654
+    }
+   ],
+   "ratio_premiere_sur_derniere": {
+    "part_fix_message": 0.8466502623148706,
+    "prevalence_v2": 2.1016601469325447,
+    "prevalence_retravail": 1.631405011370157
+   },
+   "verdict": "indetermine",
+   "H2_sans_3_premieres_tranches_ratio_4eme_sur_derniere": {
+    "part_fix_message": 0.8466502623148706,
+    "prevalence_v2": 3.460309130808129,
+    "prevalence_retravail": 1.6077614604807344
+   },
+   "H2_verdict_sans_3_premieres": "indetermine",
+   "H2_sans_90_premiers_jours": {
+    "part_fix_message": 0.8439569602796619,
+    "prevalence_v2": 1.507189351986787,
+    "prevalence_retravail": 1.6326276463262765
+   },
+   "H2_verdict_sans_90_premiers_jours": "indetermine",
+   "secondes": 532.8240973949432
+  },
+  "django-rest-framework": {
+   "n_commits_etiquetes_hors_90j": 5816,
+   "tranches": [
+    {
+     "debut": 1293651477,
+     "n": 582,
+     "part_fix_message": 0.1649928263988522,
+     "prevalence_v2": 0.20446735395189003,
+     "prevalence_retravail": 0.6597938144329897
+    },
+    {
+     "debut": 1346945291,
+     "n": 582,
+     "part_fix_message": 0.18601398601398603,
+     "prevalence_v2": 0.21305841924398625,
+     "prevalence_retravail": 0.6529209621993127
+    },
+    {
+     "debut": 1355436885,
+     "n": 582,
+     "part_fix_message": 0.19390581717451524,
+     "prevalence_v2": 0.14776632302405499,
+     "prevalence_retravail": 0.5601374570446735
+    },
+    {
+     "debut": 1368001047,
+     "n": 582,
+     "part_fix_message": 0.16857142857142857,
+     "prevalence_v2": 0.0859106529209622,
+     "prevalence_retravail": 0.3848797250859107
+    },
+    {
+     "debut": 1389698770,
+     "n": 582,
+     "part_fix_message": 0.1478770131771596,
+     "prevalence_v2": 0.16323024054982818,
+     "prevalence_retravail": 0.5154639175257731
+    },
+    {
+     "debut": 1415919944,
+     "n": 582,
+     "part_fix_message": 0.18143459915611815,
+     "prevalence_v2": 0.11168384879725086,
+     "prevalence_retravail": 0.44329896907216493
+    },
+    {
+     "debut": 1432054819,
+     "n": 581,
+     "part_fix_message": 0.18169014084507043,
+     "prevalence_v2": 0.08089500860585198,
+     "prevalence_retravail": 0.35800344234079173
+    },
+    {
+     "debut": 1463557098,
+     "n": 581,
+     "part_fix_message": 0.20082530949105915,
+     "prevalence_v2": 0.06540447504302926,
+     "prevalence_retravail": 0.306368330464716
+    },
+    {
+     "debut": 1510303263,
+     "n": 581,
+     "part_fix_message": 0.19193324061196107,
+     "prevalence_v2": 0.04647160068846816,
+     "prevalence_retravail": 0.25301204819277107
+    },
+    {
+     "debut": 1601322330,
+     "n": 581,
+     "part_fix_message": 0.18053596614950634,
+     "prevalence_v2": 0.025817555938037865,
+     "prevalence_retravail": 0.17728055077452667
+    }
+   ],
+   "ratio_premiere_sur_derniere": {
+    "part_fix_message": 0.9139055774748923,
+    "prevalence_v2": 7.919702176403208,
+    "prevalence_retravail": 3.7217495746171556
+   },
+   "verdict": "indetermine",
+   "H2_sans_3_premieres_tranches_ratio_4eme_sur_derniere": {
+    "part_fix_message": 0.9337276785714286,
+    "prevalence_v2": 3.327605956471936,
+    "prevalence_retravail": 2.171020585193341
+   },
+   "H2_verdict_sans_3_premieres": "indetermine",
+   "H2_sans_90_premiers_jours": {
+    "part_fix_message": 0.9287634408602151,
+    "prevalence_v2": 7.453613053613053,
+    "prevalence_retravail": 3.7410211148075225
+   },
+   "H2_verdict_sans_90_premiers_jours": "indetermine",
+   "secondes": 380.0827534198761
+  }
+ },
+ "synthese": {
+  "verdicts_par_depot": {
+   "flask": "indetermine",
+   "requests": "indetermine",
+   "click": "indetermine",
+   "black": "indetermine",
+   "tornado": "indetermine",
+   "pydantic": "indetermine",
+   "django-rest-framework": "indetermine"
+  },
+  "comptes": {
+   "indetermine": 7
+  },
+  "mediane_ratios_premiere_sur_derniere": {
+   "part_fix_message": 0.9139055774748923,
+   "prevalence_v2": 2.8844086021505375,
+   "prevalence_retravail": 1.3161226873194418
+  },
+  "verdict_sur_medianes": "indetermine"
+ }
+}

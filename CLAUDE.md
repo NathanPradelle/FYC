@@ -1721,6 +1721,58 @@ implémentation) :
      seule la mise en commun de dépôts (6A/6C) l'atténue ; (iii) **SonarQube/CodeQL** : traités à
      la toute fin sur demande de l'utilisateur (point 2).
 
+9. **Chantier 9 — pistes d'amélioration issues du Chantier 8 (AJOUTÉ le 2026-11-07 à la demande
+   de l'utilisateur : « fais les étapes 1 à 4 que tu m'as données comme améliorations »).**
+   **PROTOCOLE PRÉ-ENREGISTRÉ v1, rédigé le 2026-11-07 AVANT toute mesure de ce chantier.**
+   Même discipline que le Chantier 8 (script daté → JSON daté → §6, séquentiel, garde-fou RAM).
+   - **9a — Détection de fix plus stricte : exclure les merges, exiger du vrai code (Flask).**
+     *Motivation (issue de l'audit 8g, donc non indépendante de lui) :* précision de la détection B ≈
+     0,19 ; 11 des 100 fix audités sont des commits de merge (0 fichier) qui dupliquent une PR ; beaucoup
+     d'autres ne touchent que doc/tests/CI. *Variantes, fixées maintenant :* **B** (référence) ;
+     **B1** = B ET le commit touche ≥ 1 fichier (exclut les merges) ; **B2** = B1 ET touche ≥ 1
+     fichier `.py` dont le chemin ne contient ni `test` ni `docs/` ni `examples/`. Pas d'autre variante.
+     Label = `label_v2` (SZZ ligne, fenêtre 90 j) recalculé pour chaque variante.
+     *Mesures :* nombre de fix, `part_risque`, n étiquetés ; sur les 100 fix audités (8g,
+     annotation assistant « bug » seul, cas incertains comptés non bug) : précision parmi les fix
+     retenus et part des « vrais bugs » **hors doublons de merge** conservés ; AUC(BASE) CV
+     (5 plis × 5 graines, RF 300) ; ratio M2bis (churn seul/BASE) sur 20 graines.
+     *Règle d'adoption :* B1 ou B2 remplace B seulement si (i) `part_risque` ≥ 5 % ; (ii) ≥ 80 % des
+     vrais bugs hors merges de l'audit sont conservés ET la précision sur l'audit gagne ≥ +0,10 en
+     absolu ; (iii) AUC(BASE) ne baisse pas de plus de 0,03 par rapport à B. Sinon B reste le défaut
+     et on documente. **Biais déclaré :** les variantes ont été conçues en regardant l'audit, et la
+     précision est mesurée sur le même échantillon : elle est optimiste ; une adoption serait donc
+     dite **provisoire** tant que `label_humain` n'est pas rempli. Aucun réglage a posteriori.
+   - **9b — Annotation humaine :** je ne peux pas la remplir à la place de l'équipe. Livrable :
+     `results/audit_kappa.py` (calcule kappa d'accord assistant/humain, binaire bug / non-bug, dès
+     que `label_humain` est rempli ; échoue proprement si la colonne est vide). Rien d'autre.
+   - **9c — Extension 6D : plus de dépôts pour réduire le bruit.** Dépôts de **réserve** du 6A, déjà
+     annoncés avant toute mesure : `python-poetry/poetry` (3900 commits au 2026-11-07) et
+     `fastapi/fastapi` (8011) ; mêmes règles que 6A/8f (label_v2 + B sans réglage, garde-fou
+     `part_risque` ≥ 5 % et ≥ 40 positifs en queue de test, sinon exclu des conclusions et
+     rapporté ; aucun remplaçant après coup). Ensemble de **11 dépôts** (7 du 6A, `datasets`,
+     `ignite`, `poetry`, `fastapi`) ; pour chaque cible, **G11** = forêt (config principale : rang
+     percentile, sans churn) entraînée sur tous les **autres** dépôts avant le début de la queue
+     de test de la cible (nouveau G, différent de celui du 6A et du 8f, qui ne sont pas
+     modifiés). *Mesures :* AUC(G11) par dépôt avec IC bootstrap, lift sur le top 10 % ; **médiane
+     des AUC sur les dépôts interprétables avec IC par rééchantillonnage des dépôts** (10 000
+     tirages) ; nombre total de positifs de test. *Seuil :* T1 par dépôt (AUC ≥ 0,65) et médiane
+     ≥ 0,65 avec borne basse de l'IC > 0,5. Un résultat négatif est documenté tel quel.
+   - **9d — Fenêtre de label adaptative (test de l'hypothèse issue du 8d).** Sur les 7 dépôts du 6A :
+     label_v2 + B, fenêtre fixe de 90 j contre fenêtres **W(t) = max(90 j, f × âge du dépôt à t)**
+     avec **f = 0,1** et **f = 0,25** (deux valeurs, fixées maintenant, aucune autre). Les commits
+     dont ts + W(t) dépasse le dernier commit sont exclus (étiquette non observable). *Mesures :*
+     prévalence par décile (10 tranches d'effectif égal), rapport 1re/dernière tranche par dépôt et
+     médiane ; `part_risque`. *Sur Flask uniquement* : AUC(BASE) en CV (5×5) et AUC(BASE) sur la
+     queue temporelle de 30 % (entraînement sur le reste), M2bis (20 graines). *Verdict
+     pré-enregistré :* la fenêtre adaptative **réduit la dérive** si la médiane des rapports 1re/dernière
+     tranche passe de la valeur à 90 j à ≤ 2,0 ET `part_risque` ≥ 5 % dans ≥ 6 dépôts sur 7 ; elle est dite
+     **acceptable pour le modèle** seulement si l'AUC(BASE) de la queue temporelle de Flask ne baisse
+     pas de plus de 0,03. Aucune adoption comme label par défaut sans repasser par le protocole du
+     Chantier 1 (M2bis, M3) ; ici c'est un test de la cause de la dérive. Limite : mélange les effets
+     de fenêtre et de censure ; la prévalence « plus uniforme » n'est pas une meilleure étiquette.
+   - **Livrables :** `results/chantier9a_fix_strict.py`, `chantier9c_more_repos.py`,
+     `chantier9d_adaptive_window.py`, `audit_kappa.py` + JSON, §6, journal §9.
+
 ## 9. Journal des sessions
 
 ### 2026-09-09 — Session 1 (Étape 0)

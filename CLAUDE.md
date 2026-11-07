@@ -728,6 +728,50 @@ commit qui touche du code déjà complexe/volumineux*.
     date (version 1.183.0 consignée dans le JSON), sur-échantillonnage des positifs (40 % contre
     ≈ 10 % réels).
 
+- **✅ 8a — `results/results.json` (label v1) régénéré avec les familles 4bis ; ⚠️ 8b — M2bis
+  INDÉTERMINÉ, M1 expliqué par la popularité des fichiers (Chantier 8, 2026-11-07).** Protocole
+  §8 Chantier 8 figé au commit f7e8489 avant mesure.
+  - **8a :** `python results/benchmark.py --label v1` (304 s, pic 885 Mo). **0 différence sur les
+    clés existantes** ; 6 jeux ajoutés. *Observation descriptive :* sous le label v1 circulaire les
+    outils « gagnent » beaucoup plus que sous v2 — `BASE+pylint` 0,833 (+0,065 sur BASE = 0,768),
+    `BASE+vulture` 0,823, `BASE+coupling` 0,817, `BASE+mypy` 0,816, `all_4bis` 0,886 — contre +0,009
+    / +0,001 / +0,003 / +0,007 sous v2. Cohérent avec l'idée que les métriques de fichier captaient
+    de la popularité de fichier sous v1, pas du risque de commit (non testé directement).
+  - **8b (i) M2bis multi-graines** (ratio AUC(churn seul)/AUC(BASE), 20 graines de CV, RF 300) :
+
+    | Label | n | part risque | ratio moyen ± σ | IC95 (graines) | graines ≤ 0,9044 |
+    |---|---|---|---|---|---|
+    | label_v2 + détection **B** (défaut) | 3198 | 9,7 % | **0,9127** ± 0,011 | [0,908 ; 0,918] | 15 % |
+    | label_v2 + détection **A** (Chantier 1) | — | — | **0,8612** ± 0,011 | [0,857 ; 0,866] | 100 % |
+    | B-SZZ (PySZZ) | 3198 | 9,6 % | 0,9050 ± 0,011 | [0,900 ; 0,910] | 40 % |
+    | MA-SZZ (PySZZ) | 3198 | 7,4 % | 0,8954 ± 0,013 | [0,890 ; 0,901] | 85 % |
+
+    **Lecture :** la variance de graine est faible (σ ≈ 0,011) et place le ratio de `label_v2`+B
+    **légèrement au-dessus** du seuil (0,9127 contre 0,9044) ; le passage de la détection A à B
+    **fait monter le ratio de 0,861 à 0,913**, c'est-à-dire que retirer les fix `typo|docs|changelog`
+    rend le churn *relativement* plus prédictif — effet de la détection, pas de la granularité.
+    Les deux implémentations PySZZ sont au seuil ou en dessous.
+  - **8b (ii) M2bis, bootstrap des prédictions hors-pli** (1000 tirages, graine de CV 0) :
+    ratio ponctuel 0,910, **IC95 [0,873 ; 0,955]** → **verdict pré-enregistré : INDÉTERMINÉ**
+    (le seuil 0,9044 est dans l'IC). La variance d'échantillonnage des données (≈ ±0,04) est
+    ≈ 4 fois celle des graines : **les écarts de ±0,01 autour du seuil ne sont pas interprétables**.
+    *Écart au protocole, déclaré avant exécution :* bootstrap des prédictions hors-pli et non des
+    commits avant entraînement (les doublons entre plis gonfleraient l'AUC) — mesure la variance
+    d'évaluation, pas d'entraînement.
+  - **Conclusion M2bis :** le critère n'est **ni satisfait ni échoué** avec `label_v2`+B ; il l'était
+    (largement) avec la détection A. On ne peut pas l'écrire comme « passé » sans nuance.
+  - **8b (iii) M1 contre un modèle nul de popularité :** même procédure de blame (`-w -M -C`) avec
+    732 « fix » tirés **au hasard** (parmi les 3216 commits ayant des lignes supprimées et un
+    parent), 20 tirages. Pearson nul : moyenne **0,894**, IC [0,875 ; 0,910]. **r réel (label_v2+B)
+    = 0,789 (Spearman 0,758)** : **en dessous du nul**. *Conclusion :* la corrélation de 0,79-0,81
+    qui échouait le seuil M1 (< 0,5) **mesure la popularité des fichiers** (n'importe quelle
+    désignation de « fix » donne ≈ 0,89) ; les vrais fix sont **moins** liés à la popularité que
+    le hasard. M1 était un seuil mal calibré, pas un signe de contamination résiduelle.
+    **Réserves :** le nul détruit aussi la sélection par message (il borne la popularité, il ne
+    prouve pas l'absence de contamination) ; le r_v1 = 0,910 vient de `build_fix_index` (événement
+    « fix qui touche le fichier »), pas de la même définition d'événement que ce nul — **non
+    directement comparable**, on ne dit pas que v1 « égalait le nul ».
+
 ## 7. Pièges connus et limites assumées
 
 1. **Circularité churn/label (r = 0.91).** Toute feature au niveau fichier doit être testée contre

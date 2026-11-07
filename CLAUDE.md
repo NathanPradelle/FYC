@@ -1434,6 +1434,99 @@ implémentation) :
    (ses chiffres en texte ne sont pas ceux du projet) ; **reste, non fait, décision d'équipe** :
    réécrire les cellules markdown à chiffres en dur (§7 point 10) et passer tout le notebook sur
    `label_v2` — ce qui modifierait le récit écrit par l'encadrant.
+8. **Chantier 8 — clôture des points ouverts de la recherche (AJOUTÉ le 2026-11-07 à la demande
+   de l'utilisateur : « les points 2 à 7 sont des priorités ; seul le point 2 peut attendre la
+   fin » ; le notebook est mis en PAUSE par l'utilisateur jusqu'à la fin de la recherche).**
+   **PROTOCOLE PRÉ-ENREGISTRÉ v1, rédigé le 2026-11-07 AVANT toute mesure de ce chantier.**
+   Chaque sous-chantier : script daté → JSON daté sous `results/` → §6 ; pièges en §7 ; journal §9.
+   Exécution strictement séquentielle, garde-fou RAM (§7 point 15). Rien n'est retouché après coup.
+   - **8a — `results/results.json` (label v1) sans les familles 4bis.** Régénérer
+     `python results/benchmark.py --label v1`. Règle : les clés existantes ne doivent pas changer
+     (comparaison clé par clé avec la sauvegarde, comme pour `results_v2.json`).
+   - **8b — Réserve M2bis et M1 (Chantier 1).** *Question :* l'échec de justesse du ratio M2bis
+     (0,910 contre le seuil 0,9044, label_v2 + détection B) est-il dans le bruit ? M1 (r = 0,81
+     sous v2) mesure-t-il la contamination du label ou seulement la popularité des fichiers ?
+     (i) **M2bis multi-graines :** ratio r = AUC(churn seul)/AUC(BASE) pour 20 graines de CV
+     (RF 300 arbres, graines de CV 0 à 19) ; moyenne, écart-type, IC = moyenne ± 1,96·σ/√20 ;
+     idem sous label_v2 + détection A (celle du Chantier 1), B-SZZ et MA-SZZ (sorties
+     `results/pyszz_out/`). (ii) **M2bis bootstrap sur les commits :** 100 rééchantillonnages
+     de commits (RF 100 arbres, CV 5 plis, graine 0) — la variance de CV ne mesure pas la variance
+     d'échantillonnage des données. *Règle de verdict, fixée maintenant :* **satisfait** si la
+     borne haute de l'IC (bootstrap) ≤ 0,9044 ; **échoué** si la borne basse > 0,9044 ;
+     **indéterminé** sinon (c'est le résultat attendu vu les écarts-types de ≈ 0,03).
+     Le seuil 0,9044 n'est pas modifié. (iii) **M1 contre un modèle nul de popularité :** refaire
+     M1 (corrélation de Pearson commits-du-fichier / événements de blame par fichier) sous
+     label_v2 + détection B, puis sous **20 tirages nuls** où l'on désigne comme « fix » le même
+     nombre de commits tirés au hasard (même procédure de blame ensuite). Conclusion : si r réel
+     est dans l'intervalle [2,5 %–97,5 %] des r nuls, M1 ne mesure que la popularité des fichiers ;
+     s'il est au-dessus, il reste un lien au-delà de la popularité. Limite assumée : le nul détruit
+     aussi la sélection par message, donc il borne la popularité, il ne prouve pas l'absence de
+     contamination.
+   - **8c — Effet de l'échec silencieux de Semgrep (vague 2).** Rejouer Semgrep sur le **même**
+     échantillon de 300 commits (graine 0), en journalisant les résultats **par fichier**.
+     Mesurer : (i) nombre de violations par fichier selon que le fichier passe ou non
+     `ast.parse` (Python 3.14) ; (ii) refaire les features avec les fichiers non parsables
+     **exclus** (NaN si aucun fichier restant) et recalculer le Δ apparié BASE+Semgrep − BASE (CV
+     5×5). *Règle :* on rapporte l'écart au +0,0125 déjà mesuré ; la conclusion « pas de gain
+     démontré » est révisée seulement si le Δ corrigé atteint +0,05 avec ≥ 80 % de répétitions
+     positives (seuil de la vague 2, inchangé).
+   - **8d — Cause de la dérive de prévalence (6B, C3).** Hypothèses fixées maintenant :
+     **H1 maturation** (le projet corrige moins souvent des fautes récentes, ou le code frais est
+     moins retravaillé) ; **H2 effets de bord** (jeunes dépôts : les premiers commits sont
+     retravaillés vite ; fin d'historique : étiquettes censurées par le manque de futur) ;
+     **H3 conventions de messages** (la détection par mots-clés rate de plus en plus de fix).
+     Pour chacun des 7 dépôts, découpage de l'historique en 10 tranches d'effectif égal (par
+     rang chronologique) ; trois mesures par tranche : (a) part de commits `is_fix` (message) ;
+     (b) prévalence `label_v2` ; (c) **prévalence « retravail », indépendante des messages** :
+     part de commits dont au moins une ligne est blâmée (`git blame -w -M -C` sur le parent) par
+     un commit **quelconque** (fix ou non) dans les 90 jours qui suivent, calculée comme `label_v2`
+     mais en désignant **tous** les commits comme sources de blame. *Règles de lecture fixées
+     maintenant :* **H3 retenue** si, entre la 1re et la dernière tranche (hors 90 derniers
+     jours), (a) baisse d'au moins un facteur 2 ET (c) baisse de moins d'un facteur 1,5 ;
+     **H1 retenue** si (a) ET (c) baissent chacune d'au moins un facteur 1,5 ; **H2** examinée
+     en excluant les 3 premières et les 90 derniers jours ; sinon « indéterminé ». Médiane et
+     par dépôt. Limite : la prévalence « retravail » mélange corrections et évolutions normales.
+   - **8e — Multi-graines du 6A.** Rejouer l'évaluation 6A (mêmes dépôts, mêmes variantes, même
+     queue de test) avec **5 graines de forêt** (42 déjà faite, plus 0, 1, 2, 3) et 5 graines de
+     bootstrap. Rapporter T1/T2/T3 par graine, médiane et étendue. *Règle :* un verdict est dit
+     **stable** s'il est identique dans au moins 4 graines sur 5 ; sinon « dépend de la graine »,
+     ce qui ôte toute portée au verdict d'origine. Aussi : variance de graine de forêt sur la
+     réserve du 4bis/5 (20 graines, BASE contre « tout empiler »).
+   - **8f — Extension 6C : dépôts data/ML (limite « aucun dépôt data/ML » du 6A).** *Question :*
+     le modèle global G de la configuration principale 6A (entraîné sur les 7 dépôts d'origine,
+     restreints aux commits antérieurs au début de la queue de test de la cible) transfère-t-il
+     à des dépôts d'un autre domaine ? **Liste figée maintenant** (nombres de commits lus via
+     l'API GitHub le 2026-11-07) : `huggingface/datasets` (4404, données/ML) et `pytorch/ignite`
+     (2057, entraînement ML). Écartés pour taille (> 10 000 commits) : optuna 21 879, mlflow
+     14 397, pytorch-lightning 11 136, spaCy, statsmodels ; `huggingface/accelerate` (2085) et
+     `dmlc/xgboost` (8177, surtout C++) non retenus (un seul dépôt par sous-domaine, jugé à l'œil).
+     Mêmes règles que le 6A : label_v2 + détection B sans réglage, queue de test = 30 % récents,
+     garde-fou (`part_risque` ≥ 5 % et ≥ 40 positifs en queue de test, sinon dépôt rapporté mais
+     exclu des conclusions), T1 : AUC(G) ≥ 0,65 par dépôt. Les 7 dépôts d'origine ne sont **pas**
+     modifiés ni ré-entraînés avec les nouveaux. Un dépôt qui échoue le garde-fou n'est pas
+     remplacé après coup. Pas de T2/T3 (pas de courbe d'apprentissage ici), seulement G, plus AUC,
+     lift sur le top 10 % et Brier contre les constantes.
+   - **8g — Vérité terrain partielle des étiquettes (limite « pas de vérité terrain »).**
+     Sondage préalable (hors protocole, faisabilité) : le label GitHub « bug » est inutilisable
+     comme proxy sur Flask (0 PR « bug » sur 120 échantillonnées) → abandonné, ne pas le refaire.
+     À la place, **audit des messages de commit** : 100 commits détectés « fix » (tirage
+     aléatoire, graine 0) et 200 commits non détectés tirés au hasard parmi ceux qui touchent
+     du Python. Critère de « vrai correctif de bug », fixé maintenant : le message dit ou implique
+     la correction d'un comportement incorrect (plantage, résultat faux, régression) ; ne sont
+     **pas** des correctifs : doc/typo, refactorisation, nouvelle fonctionnalité, CI, dépendances,
+     style. Estimation de la **précision** de la détection par mots-clés (parmi les détectés) et
+     du **rappel** (part des vrais correctifs détectés, par la formule des deux échantillons),
+     avec IC de Wilson. **Limite assumée, sans détour :** l'audit est fait par moi seul (un
+     assistant), pas indépendant ; j'écris le fichier `results/audit_fix_labels.csv` avec une
+     colonne `label_humain` **vide** pour que l'équipe puisse trancher les cas et qu'un kappa
+     humain/assistant soit calculable ensuite. Les chiffres sont à présenter comme « audit
+     préliminaire », jamais comme une vérité terrain. La justesse des **introducteurs** SZZ (quel
+     commit a introduit le bug) reste, elle, **sans vérité terrain** et non traitée.
+   - **8h — Points écartés de ce chantier, avec raison :** (i) les deux dépôts de réserve du 6A
+     (poetry, fastapi) n'ont pas été utilisés parce que les 7 dépôts ont tous passé les garde-fous :
+     rien à faire ; (ii) **peu de positifs sur Flask** : irréductible (c'est l'historique réel),
+     seule la mise en commun de dépôts (6A/6C) l'atténue ; (iii) **SonarQube/CodeQL** : traités à
+     la toute fin sur demande de l'utilisateur (point 2).
 
 ## 9. Journal des sessions
 

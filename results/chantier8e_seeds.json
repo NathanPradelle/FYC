@@ -1,0 +1,509 @@
+{
+ "protocole": "CLAUDE.md \u00a78 Chantier 8e (f7e8489)",
+ "generated_at": "2026-11-07T18:18:39.953655+00:00",
+ "graines": [
+  42,
+  0,
+  1,
+  2,
+  3
+ ],
+ "par_graine": {
+  "0": {
+   "pct_sans_churn": {
+    "T1_mediane_auc_G": 0.7538,
+    "T1_ok": true,
+    "T2_mediane_GL_moins_L_n100": 0.013799999999999923,
+    "T2_ok": false,
+    "T3_mediane": 800.0,
+    "T3_depots_sans_croisement": [
+     "click",
+     "pydantic"
+    ],
+    "auc_G_par_depot": {
+     "flask": 0.759,
+     "requests": 0.667,
+     "click": 0.7137,
+     "black": 0.765,
+     "tornado": 0.7538,
+     "pydantic": 0.78,
+     "django-rest-framework": 0.7435
+    }
+   },
+   "brut_sans_churn": {
+    "T1_mediane_auc_G": 0.7484,
+    "T1_ok": true,
+    "T2_mediane_GL_moins_L_n100": 0.05919999999999992,
+    "T2_ok": true,
+    "T3_mediane": 825.0,
+    "T3_depots_sans_croisement": [
+     "requests",
+     "click",
+     "black"
+    ],
+    "auc_G_par_depot": {
+     "flask": 0.7484,
+     "requests": 0.7053,
+     "click": 0.7133,
+     "black": 0.7938,
+     "tornado": 0.7681,
+     "pydantic": 0.7741,
+     "django-rest-framework": 0.7322
+    }
+   },
+   "pct_avec_churn": {
+    "T1_mediane_auc_G": 0.7494,
+    "T1_ok": true,
+    "T2_mediane_GL_moins_L_n100": 0.016100000000000003,
+    "T2_ok": false,
+    "T3_mediane": 300.0,
+    "T3_depots_sans_croisement": [
+     "click",
+     "black",
+     "pydantic"
+    ],
+    "auc_G_par_depot": {
+     "flask": 0.7683,
+     "requests": 0.6665,
+     "click": 0.7241,
+     "black": 0.7811,
+     "tornado": 0.7494,
+     "pydantic": 0.7803,
+     "django-rest-framework": 0.7446
+    }
+   },
+   "brut_avec_churn": {
+    "T1_mediane_auc_G": 0.7521,
+    "T1_ok": true,
+    "T2_mediane_GL_moins_L_n100": 0.04590000000000005,
+    "T2_ok": false,
+    "T3_mediane": 75.0,
+    "T3_depots_sans_croisement": [
+     "click"
+    ],
+    "auc_G_par_depot": {
+     "flask": 0.7521,
+     "requests": 0.6654,
+     "click": 0.6848,
+     "black": 0.7726,
+     "tornado": 0.7583,
+     "pydantic": 0.7719,
+     "django-rest-framework": 0.7323
+    }
+   }
+  },
+  "1": {
+   "pct_sans_churn": {
+    "T1_mediane_auc_G": 0.7564,
+    "T1_ok": true,
+    "T2_mediane_GL_moins_L_n100": 0.017699999999999938,
+    "T2_ok": false,
+    "T3_mediane": 200.0,
+    "T3_depots_sans_croisement": [
+     "click",
+     "black",
+     "pydantic"
+    ],
+    "auc_G_par_depot": {
+     "flask": 0.7624,
+     "requests": 0.663,
+     "click": 0.7211,
+     "black": 0.7635,
+     "tornado": 0.7564,
+     "pydantic": 0.7745,
+     "django-rest-framework": 0.7516
+    }
+   },
+   "brut_sans_churn": {
+    "T1_mediane_auc_G": 0.7579,
+    "T1_ok": true,
+    "T2_mediane_GL_moins_L_n100": 0.06669999999999998,
+    "T2_ok": true,
+    "T3_mediane": 50.0,
+    "T3_depots_sans_croisement": [
+     "requests",
+     "click",
+     "black",
+     "pydantic"
+    ],
+    "auc_G_par_depot": {
+     "flask": 0.7579,
+     "requests": 0.7005,
+     "click": 0.7087,
+     "black": 0.7906,
+     "tornado": 0.7615,
+     "pydantic": 0.7659,
+     "django-rest-framework": 0.7306
+    }
+   },
+   "pct_avec_churn": {
+    "T1_mediane_auc_G": 0.7522,
+    "T1_ok": true,
+    "T2_mediane_GL_moins_L_n100": 0.017100000000000004,
+    "T2_ok": false,
+    "T3_mediane": 300.0,
+    "T3_depots_sans_croisement": [
+     "black"
+    ],
+    "auc_G_par_depot": {
+     "flask": 0.7733,
+     "requests": 0.6757,
+     "click": 0.7294,
+     "black": 0.7727,
+     "tornado": 0.7522,
+     "pydantic": 0.7769,
+     "django-rest-framework": 0.7456
+    }
+   },
+   "brut_avec_churn": {
+    "T1_mediane_auc_G": 0.7337,
+    "T1_ok": true,
+    "T2_mediane_GL_moins_L_n100": 0.04039999999999999,
+    "T2_ok": false,
+    "T3_mediane": 100.0,
+    "T3_depots_sans_croisement": [
+     "requests",
+     "click",
+     "black",
+     "pydantic"
+    ],
+    "auc_G_par_depot": {
+     "flask": 0.7633,
+     "requests": 0.6794,
+     "click": 0.6821,
+     "black": 0.761,
+     "tornado": 0.7337,
+     "pydantic": 0.7756,
+     "django-rest-framework": 0.7266
+    }
+   }
+  },
+  "2": {
+   "pct_sans_churn": {
+    "T1_mediane_auc_G": 0.7476,
+    "T1_ok": true,
+    "T2_mediane_GL_moins_L_n100": 0.009600000000000053,
+    "T2_ok": false,
+    "T3_mediane": 400.0,
+    "T3_depots_sans_croisement": [
+     "requests",
+     "click",
+     "pydantic"
+    ],
+    "auc_G_par_depot": {
+     "flask": 0.7554,
+     "requests": 0.6645,
+     "click": 0.7151,
+     "black": 0.7713,
+     "tornado": 0.7476,
+     "pydantic": 0.7747,
+     "django-rest-framework": 0.7446
+    }
+   },
+   "brut_sans_churn": {
+    "T1_mediane_auc_G": 0.755,
+    "T1_ok": true,
+    "T2_mediane_GL_moins_L_n100": 0.0696,
+    "T2_ok": true,
+    "T3_mediane": 425.0,
+    "T3_depots_sans_croisement": [
+     "requests",
+     "click",
+     "pydantic"
+    ],
+    "auc_G_par_depot": {
+     "flask": 0.755,
+     "requests": 0.7135,
+     "click": 0.7033,
+     "black": 0.7929,
+     "tornado": 0.7725,
+     "pydantic": 0.7753,
+     "django-rest-framework": 0.7289
+    }
+   },
+   "pct_avec_churn": {
+    "T1_mediane_auc_G": 0.7474,
+    "T1_ok": true,
+    "T2_mediane_GL_moins_L_n100": 0.01649999999999996,
+    "T2_ok": false,
+    "T3_mediane": 400.0,
+    "T3_depots_sans_croisement": [
+     "black",
+     "pydantic"
+    ],
+    "auc_G_par_depot": {
+     "flask": 0.7665,
+     "requests": 0.6724,
+     "click": 0.7281,
+     "black": 0.7847,
+     "tornado": 0.7453,
+     "pydantic": 0.7707,
+     "django-rest-framework": 0.7474
+    }
+   },
+   "brut_avec_churn": {
+    "T1_mediane_auc_G": 0.7416,
+    "T1_ok": true,
+    "T2_mediane_GL_moins_L_n100": 0.03370000000000006,
+    "T2_ok": false,
+    "T3_mediane": 100.0,
+    "T3_depots_sans_croisement": [
+     "requests",
+     "click",
+     "black",
+     "pydantic"
+    ],
+    "auc_G_par_depot": {
+     "flask": 0.7538,
+     "requests": 0.6866,
+     "click": 0.6724,
+     "black": 0.772,
+     "tornado": 0.7416,
+     "pydantic": 0.7701,
+     "django-rest-framework": 0.7308
+    }
+   }
+  },
+  "3": {
+   "pct_sans_churn": {
+    "T1_mediane_auc_G": 0.7559,
+    "T1_ok": true,
+    "T2_mediane_GL_moins_L_n100": 0.012800000000000034,
+    "T2_ok": false,
+    "T3_mediane": 100.0,
+    "T3_depots_sans_croisement": [
+     "requests",
+     "click",
+     "pydantic"
+    ],
+    "auc_G_par_depot": {
+     "flask": 0.7652,
+     "requests": 0.6709,
+     "click": 0.7239,
+     "black": 0.783,
+     "tornado": 0.7559,
+     "pydantic": 0.7718,
+     "django-rest-framework": 0.7443
+    }
+   },
+   "brut_sans_churn": {
+    "T1_mediane_auc_G": 0.7501,
+    "T1_ok": true,
+    "T2_mediane_GL_moins_L_n100": 0.06640000000000001,
+    "T2_ok": true,
+    "T3_mediane": 75.0,
+    "T3_depots_sans_croisement": [
+     "requests",
+     "click",
+     "black",
+     "tornado",
+     "pydantic"
+    ],
+    "auc_G_par_depot": {
+     "flask": 0.7501,
+     "requests": 0.7059,
+     "click": 0.7077,
+     "black": 0.7923,
+     "tornado": 0.7712,
+     "pydantic": 0.7772,
+     "django-rest-framework": 0.7406
+    }
+   },
+   "pct_avec_churn": {
+    "T1_mediane_auc_G": 0.7456,
+    "T1_ok": true,
+    "T2_mediane_GL_moins_L_n100": 0.023399999999999976,
+    "T2_ok": false,
+    "T3_mediane": 200.0,
+    "T3_depots_sans_croisement": [
+     "click",
+     "black"
+    ],
+    "auc_G_par_depot": {
+     "flask": 0.7634,
+     "requests": 0.6674,
+     "click": 0.7296,
+     "black": 0.7823,
+     "tornado": 0.7443,
+     "pydantic": 0.783,
+     "django-rest-framework": 0.7456
+    }
+   },
+   "brut_avec_churn": {
+    "T1_mediane_auc_G": 0.7467,
+    "T1_ok": true,
+    "T2_mediane_GL_moins_L_n100": 0.029100000000000015,
+    "T2_ok": false,
+    "T3_mediane": 75.0,
+    "T3_depots_sans_croisement": [
+     "requests",
+     "click",
+     "pydantic"
+    ],
+    "auc_G_par_depot": {
+     "flask": 0.7661,
+     "requests": 0.6731,
+     "click": 0.6938,
+     "black": 0.7674,
+     "tornado": 0.7467,
+     "pydantic": 0.7747,
+     "django-rest-framework": 0.7227
+    }
+   }
+  },
+  "42": {
+   "pct_sans_churn": {
+    "T1_mediane_auc_G": 0.7453,
+    "T1_ok": true,
+    "T2_mediane_GL_moins_L_n100": 0.009,
+    "T2_ok": false
+   },
+   "brut_sans_churn": {
+    "T1_mediane_auc_G": 0.7554,
+    "T1_ok": true,
+    "T2_mediane_GL_moins_L_n100": 0.0651,
+    "T2_ok": true
+   },
+   "pct_avec_churn": {
+    "T1_mediane_auc_G": 0.7543,
+    "T1_ok": true,
+    "T2_mediane_GL_moins_L_n100": 0.0279,
+    "T2_ok": false
+   },
+   "brut_avec_churn": {
+    "T1_mediane_auc_G": 0.7437,
+    "T1_ok": true,
+    "T2_mediane_GL_moins_L_n100": 0.0252,
+    "T2_ok": false
+   }
+  }
+ },
+ "synthese": {
+  "pct_sans_churn": {
+   "T1_auc_G_par_graine": [
+    0.7538,
+    0.7564,
+    0.7476,
+    0.7559,
+    0.7453
+   ],
+   "T1_etendue": [
+    0.7453,
+    0.7564
+   ],
+   "T1_ok_sur_5": 5,
+   "T1_stable": true,
+   "T2_par_graine": [
+    0.013799999999999923,
+    0.017699999999999938,
+    0.009600000000000053,
+    0.012800000000000034,
+    0.009
+   ],
+   "T2_etendue": [
+    0.009,
+    0.017699999999999938
+   ],
+   "T2_ok_sur_5": 0,
+   "T2_stable": true
+  },
+  "brut_sans_churn": {
+   "T1_auc_G_par_graine": [
+    0.7484,
+    0.7579,
+    0.755,
+    0.7501,
+    0.7554
+   ],
+   "T1_etendue": [
+    0.7484,
+    0.7579
+   ],
+   "T1_ok_sur_5": 5,
+   "T1_stable": true,
+   "T2_par_graine": [
+    0.05919999999999992,
+    0.06669999999999998,
+    0.0696,
+    0.06640000000000001,
+    0.0651
+   ],
+   "T2_etendue": [
+    0.05919999999999992,
+    0.0696
+   ],
+   "T2_ok_sur_5": 5,
+   "T2_stable": true
+  },
+  "pct_avec_churn": {
+   "T1_auc_G_par_graine": [
+    0.7494,
+    0.7522,
+    0.7474,
+    0.7456,
+    0.7543
+   ],
+   "T1_etendue": [
+    0.7456,
+    0.7543
+   ],
+   "T1_ok_sur_5": 5,
+   "T1_stable": true,
+   "T2_par_graine": [
+    0.016100000000000003,
+    0.017100000000000004,
+    0.01649999999999996,
+    0.023399999999999976,
+    0.0279
+   ],
+   "T2_etendue": [
+    0.016100000000000003,
+    0.0279
+   ],
+   "T2_ok_sur_5": 0,
+   "T2_stable": true
+  },
+  "brut_avec_churn": {
+   "T1_auc_G_par_graine": [
+    0.7521,
+    0.7337,
+    0.7416,
+    0.7467,
+    0.7437
+   ],
+   "T1_etendue": [
+    0.7337,
+    0.7521
+   ],
+   "T1_ok_sur_5": 5,
+   "T1_stable": true,
+   "T2_par_graine": [
+    0.04590000000000005,
+    0.04039999999999999,
+    0.03370000000000006,
+    0.029100000000000015,
+    0.0252
+   ],
+   "T2_etendue": [
+    0.0252,
+    0.04590000000000005
+   ],
+   "T2_ok_sur_5": 0,
+   "T2_stable": true
+  }
+ },
+ "reserve_variance_graine_20": {
+  "BASE": {
+   "moyenne": 0.7250461784234437,
+   "ecart_type": 0.007120253996660837,
+   "min": 0.7136188907193849,
+   "max": 0.7364834506514902
+  },
+  "tout_empiler": {
+   "moyenne": 0.7460436323698267,
+   "ecart_type": 0.010032433291492341,
+   "min": 0.7293445160001997,
+   "max": 0.7669362488143378
+  }
+ }
+}

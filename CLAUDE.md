@@ -846,6 +846,29 @@ commit qui touche du code déjà complexe/volumineux*.
     projet) ; la prévalence « retravail » mélange corrections et évolutions normales ; 7 dépôts ;
     âge calculé sur les seuls liens retrouvés par `git blame -w -M -C`.
 
+- **✅ 8e — les verdicts T1 et T2 du 6A sont stables sur 5 graines de forêt ; la variance de graine
+  est petite devant le bruit de données.** Mesuré le 2026-11-07 (`results/chantier8e_seeds.py` →
+  `results/chantier8e_seeds.json`, 58 min), graines 42 (déjà faite) + 0,1,2,3, mêmes dépôts,
+  variantes et queue de test ; règle : verdict stable si identique dans ≥ 4 graines sur 5.
+  - **T1 : stable, OK dans 5/5 graines pour les 4 variantes** (médiane AUC(G) 0,745-0,758 selon
+    graine et variante ; le plus bas : 0,7337, brut + churn).
+  - **T2 (G+L − L à n = 100, seuil +0,05) : stable pour chaque variante, mais variante-dépendant,
+    comme annoncé en 6A :** percentile sans churn **+0,009 à +0,018 (0/5 OK)** — la configuration
+    principale échoue de façon stable ; **brut sans churn +0,059 à +0,070 (5/5 OK)** ; percentile
+    avec churn +0,016 à +0,028 (0/5) ; brut avec churn +0,025 à +0,046 (0/5). Le verdict « T2
+    échoue sur la principale » n'est donc **pas un artefact de graine** ; la dépendance à la
+    variante, elle, est réelle (la normalisation en percentile retire l'avantage du global au
+    démarrage à froid).
+  - **T3 : instable** (médiane de n* de 50 à 825 selon graine/variante, plusieurs dépôts sans
+    croisement) : confirme qu'il ne faut pas l'interpréter.
+  - **Variance de graine sur la réserve temporelle 4bis/5 (20 graines de forêt, AUC) :** BASE
+    **0,725 ± 0,007**, tout empiler **0,746 ± 0,010** (min-max 0,714-0,736 contre 0,729-0,767) ;
+    la différence moyenne +0,021 est ≈ 2-3 fois l'écart-type de graine mais **très inférieure à l'IC
+    de données (±0,08, 33 positifs)** : les valeurs à une graine (0,736 / 0,742) étaient dans la
+    plage ; « BASE et empilement indiscernables » reste vrai au niveau de la donnée.
+  - **Limites :** graines de forêt seulement (pas de nouveau tirage de données) ; bootstrap de
+    queue de test non rejoué à part.
+
 - **⚠️ 8g — audit préliminaire des étiquettes de fix : la détection par mots-clés a une précision
   faible (≈ 19-26 %) et un rappel moyen (≈ 53-71 %) ; non indépendant, à ne pas lire comme une
   vérité terrain.** Mesuré le 2026-11-07 (`results/chantier8g_audit.py` →

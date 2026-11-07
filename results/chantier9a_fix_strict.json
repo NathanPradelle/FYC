@@ -1,0 +1,65 @@
+{
+ "protocole": "CLAUDE.md \u00a78 Chantier 9a (91990a2)",
+ "generated_at": "2026-11-07T19:25:58.363628+00:00",
+ "variantes": {
+  "B": {
+   "n_fix": 732,
+   "n_etiquetes": 3198,
+   "part_risque": 0.0969355847404628,
+   "audit_fix_retenus": 100,
+   "audit_precision_parmi_retenus": 0.19,
+   "audit_vrais_bugs_hors_merge_total": 14,
+   "audit_vrais_bugs_conserves": 14,
+   "part_vrais_bugs_conserves": 1.0,
+   "AUC_BASE_cv_moy": 0.7834711241351173,
+   "AUC_BASE_cv_std_graines": 0.004461159402175968,
+   "AUC_BASE_queue30": 0.7452610162763001,
+   "M2bis_ratio_moyen": 0.9127174318144162,
+   "M2bis_ratio_std": 0.010902909825511356
+  },
+  "B1": {
+   "n_fix": 626,
+   "n_etiquetes": 3198,
+   "part_risque": 0.09255784865540963,
+   "audit_fix_retenus": 88,
+   "audit_precision_parmi_retenus": 0.14772727272727273,
+   "audit_vrais_bugs_hors_merge_total": 14,
+   "audit_vrais_bugs_conserves": 13,
+   "part_vrais_bugs_conserves": 0.9285714285714286,
+   "AUC_BASE_cv_moy": 0.7848983566351907,
+   "AUC_BASE_cv_std_graines": 0.004813345067598594,
+   "AUC_BASE_queue30": 0.7467424087142397,
+   "M2bis_ratio_moyen": 0.9051570244912182,
+   "M2bis_ratio_std": 0.010508376356298135,
+   "regle_adoption": {
+    "i_part_risque_ge_5pct": true,
+    "ii_vrais_bugs_ge_80pct": true,
+    "ii_precision_gain_ge_0_10": false,
+    "iii_AUC_BASE_pas_de_chute_gt_0_03": true
+   },
+   "adoptable": false
+  },
+  "B2": {
+   "n_fix": 295,
+   "n_etiquetes": 3529,
+   "part_risque": 0.046472088410314534,
+   "audit_fix_retenus": 40,
+   "audit_precision_parmi_retenus": 0.225,
+   "audit_vrais_bugs_hors_merge_total": 14,
+   "audit_vrais_bugs_conserves": 9,
+   "part_vrais_bugs_conserves": 0.6428571428571429,
+   "AUC_BASE_cv_moy": 0.8226896894277095,
+   "AUC_BASE_cv_std_graines": 0.004368729216859598,
+   "AUC_BASE_queue30": 0.8411742487829444,
+   "M2bis_ratio_moyen": 0.9391416751053271,
+   "M2bis_ratio_std": 0.008991492637937488,
+   "regle_adoption": {
+    "i_part_risque_ge_5pct": false,
+    "ii_vrais_bugs_ge_80pct": false,
+    "ii_precision_gain_ge_0_10": false,
+    "iii_AUC_BASE_pas_de_chute_gt_0_03": true
+   },
+   "adoptable": false
+  }
+ }
+}

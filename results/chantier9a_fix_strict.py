@@ -67,11 +67,11 @@ def main():
         df = pd.concat([base, churn], axis=1).loc[:, lambda d: ~d.columns.duplicated()]
         assert len(df) == len(idx)
         bcols, ccols = features.BASE_COLS, features.CHURN_COLS
-        by_hash = {c["hash"]: c for c in commits}
-        kept = [r for r in audit if by_hash[r["hash"]]["is_fix"]]
+        by_hash = {c["hash"][:10]: c for c in commits}
+        kept = [r for r in audit if by_hash[r["hash"][:10]]["is_fix"]]
         bug = lambda r: r["label_assistant"] == "bug"
         real_bugs = [r for r in audit if bug(r) and not r["sujet"].startswith("Merge")]
-        kept_real = [r for r in real_bugs if by_hash[r["hash"]]["is_fix"]]
+        kept_real = [r for r in real_bugs if by_hash[r["hash"][:10]]["is_fix"]]
         bs = Parallel(n_jobs=3)(delayed(cv_aucs)(df, bcols, s) for s in range(20))
         cs = Parallel(n_jobs=3)(delayed(cv_aucs)(df, ccols, s) for s in range(20))
         bs5 = bs[:5]

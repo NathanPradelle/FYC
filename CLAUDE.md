@@ -846,6 +846,82 @@ commit qui touche du code déjà complexe/volumineux*.
     projet) ; la prévalence « retravail » mélange corrections et évolutions normales ; 7 dépôts ;
     âge calculé sur les seuls liens retrouvés par `git blame -w -M -C`.
 
+- **❌ 9a — exclure les merges ou exiger du vrai code ne rend pas la détection de fix plus précise
+  (aucune variante adoptée, B reste le défaut).** Mesuré le 2026-11-07
+  (`results/chantier9a_fix_strict.py` → `results/chantier9a_fix_strict.json`), protocole §8
+  Chantier 9 (91990a2). Flask, label_v2, fenêtre 90 j.
+
+  | Variante | n fix | part_risque | précision audit | vrais bugs hors merge conservés | AUC(BASE) CV | AUC(BASE) queue 30 % | ratio M2bis |
+  |---|---|---|---|---|---|---|---|
+  | B (défaut) | 732 | 9,7 % | 0,19 (0,14 hors doublons de merge) | 14/14 | 0,783 | 0,745 | 0,913 |
+  | B1 = B sans merges | 626 | 9,3 % | 0,148 | 13/14 (93 %) | 0,785 | 0,747 | 0,905 |
+  | B2 = B1 + vrai code `.py` | 295 | **4,6 %** | 0,225 | 9/14 (64 %) | 0,823 | 0,841 | 0,939 |
+
+  **Règle d'adoption pré-enregistrée : B1 échoue (gain de précision < +0,10), B2 échoue
+  (part_risque < 5 %, vrais bugs conservés < 80 %, gain < +0,10).** Lecture : retirer les merges
+  enlève 106 « fix » mais pas les faux positifs de fond (la précision ne bouge pas : 0,14 → 0,148
+  une fois les doublons de merge comptés comme non-bug des deux côtés) ; la précision de la
+  détection est limitée par le **message** (doc, CI, refactor contenant « fix »), pas par les merges.
+  B2 fait **monter** l'AUC(BASE) à 0,82-0,84 mais avec 4,6 % de positifs et 9 vrais bugs conservés
+  sur 14 : le gain est celui d'une tâche différente (queue de test ≠), pas une meilleure étiquette
+  — exactement le piège déjà vu aux candidats C/D du Chantier 1 ; **non retenu**. *Biais
+  déclaré avant :* variantes conçues à partir de l'audit, mesurées dessus (optimiste) — le résultat
+  négatif n'en est que plus net. *Limites :* 14 vrais bugs hors merge dans l'échantillon audité,
+  annotateur unique ; la précision de B annoncée en 8g (0,19) inclut 5 doublons de merge annotés
+  « bug ». Pas de test d'une détection fondée sur autre chose que le message (ex. lien PR avec
+  label, liste de tests ajoutés) — piste ouverte.
+
+- **✅ 9c — extension 6D : le transfert tient sur 10 dépôts interprétables (médiane AUC 0,755, IC
+  95 % bootstrap sur les dépôts [0,717 ; 0,788]) ; un dépôt de réserve exclu par le garde-fou.**
+  Mesuré le 2026-11-07 (`results/chantier9c_more_repos.py` → `chantier9c_more_repos.json`,
+  17 min, pic 0,5 Go pour l'évaluation), protocole §8 Chantier 9 (91990a2). G11 = forêt (percentile,
+  sans churn) entraînée sur tous les **autres** dépôts avant la queue de test de la cible.
+
+  | Dépôt | Pos. test | AUC G11 [IC95] | Lift top 10 % |
+  |---|---|---|---|
+  | flask | 44 | 0,765 [0,683-0,846] | 3,4× |
+  | requests | 51 | 0,670 [0,591-0,749] | 3,1× |
+  | click | 70 | 0,731 [0,666-0,792] | 2,6× |
+  | black | 44 | 0,792 [0,723-0,854] | 3,9× |
+  | tornado | 56 | 0,745 [0,678-0,809] | 2,9× |
+  | pydantic | 147 | 0,777 [0,738-0,816] | 3,1× |
+  | django-rest-framework | 80 | 0,745 [0,686-0,798] | 3,1× |
+  | datasets | 99 | 0,792 [0,748-0,842] | 4,0× |
+  | ignite | 43 | 0,690 [0,594-0,782] | 3,3× |
+  | poetry | 80 | 0,788 [0,740-0,830] | 3,4× |
+  | *fastapi (exclu)* | 59 | *0,901* | *6,8×* |
+
+  **T1 OK sur 10/10 dépôts interprétables et pour la médiane** (borne basse de l'IC 0,717 > 0,5 ;
+  714 positifs de test au total). **fastapi exclu par le garde-fou** (`part_risque` = **2,9 %**,
+  < 5 %) comme le protocole l'imposait : son AUC de 0,90 n'est **pas** interprétable (peu de
+  positifs, dépôt dominé par docs/traductions) et n'est pas utilisé. Lecture : l'IC sur la
+  médiane est de ±0,035, bien plus serré que les ±0,08 d'un dépôt seul : l'affirmation « un modèle
+  global classe mieux que le hasard sur un dépôt jamais vu » est maintenant étayée sur 10
+  dépôts, dont deux data/ML. *Limites :* Python, 10 dépôts choisis à l'œil, 1 graine ; G11 et G
+  du 6A diffèrent (plus de données d'entraînement) — les chiffres du 6A ne sont pas remplacés.
+
+- **⚠️ 9d — une fenêtre de label qui grandit avec l'âge du dépôt supprime l'essentiel de la dérive
+  de prévalence (confirme le mécanisme du 8d) ; aucune adoption comme label par défaut.** Mesuré le
+  2026-11-07 (`results/chantier9d_adaptive_window.py` → `chantier9d_adaptive_window.json`),
+  protocole §8 Chantier 9 (91990a2). W(t) = max(90 j, f × âge du dépôt), f = 0,10 et 0,25 ; 7 dépôts.
+  - **Rapport de prévalence 1re/dernière tranche (médiane des 7 dépôts) : 2,88 (90 j fixes) → 1,40
+    (f = 0,10) et 1,76 (f = 0,25)** ; `part_risque` ≥ 5 % dans 7/7 dépôts pour les trois fenêtres.
+    **Verdict pré-enregistré « réduit la dérive » : oui pour les deux** (≤ 2,0). Cela renforce
+    l'explication du 8d (la dérive est en grande partie un effet de la fenêtre fixe), sans la rendre
+    causale pour autant : une prévalence plus uniforme n'est pas une meilleure étiquette.
+  - **Flask :** AUC(BASE) CV 0,784 (90 j) / 0,783 / 0,787 : inchangée. Queue temporelle 30 % :
+    0,744 / 0,769 / 0,783, mais **les queues ne sont pas comparables** (n de 3189 → 3119 → 2950
+    commits, positifs de queue 44 → 77 → 105 : la fenêtre change la tâche et la censure) ; seul le
+    critère « pas de chute > 0,03 » est utilisé (✅ « acceptable »), ne pas lire +0,04 comme un gain.
+    Ratio M2bis moyen (20 graines) : 0,912 / 0,883 / 0,856 : la fenêtre adaptative abaisse le ratio
+    (churn relativement moins prédictif), cohérent avec une moindre contamination par la popularité
+    mais **hypothèse non testée**.
+  - **Conséquence pour le produit :** ne pas figer 90 j sur un dépôt mûr ; mais changer de
+    fenêtre change la population étiquetée (censure en fin d'historique plus longue) : adoption
+    seulement après M1/M2bis/M3 du Chantier 1 sous cette fenêtre — non faite.
+  - *Limites :* f choisi à deux valeurs seulement ; 7 dépôts ; prévalence par tranche d'effectif
+    égal (les tranches de fin sont raccourcies par l'exclusion des commits non observables).
+
 - **✅ 8f — extension 6C : le modèle global transfère aussi à deux dépôts data/ML (T1 OK 2/2), avec
   le même défaut de calibration.** Mesuré le 2026-11-07 (`results/chantier8f_6c.py` →
   `results/chantier8f_6c.json`, 22 min, pic 1,86 Go), protocole §8 8f (f7e8489), liste figée
@@ -1723,7 +1799,9 @@ implémentation) :
 
 9. **Chantier 9 — pistes d'amélioration issues du Chantier 8 (AJOUTÉ le 2026-11-07 à la demande
    de l'utilisateur : « fais les étapes 1 à 4 que tu m'as données comme améliorations »).**
-   **PROTOCOLE PRÉ-ENREGISTRÉ v1, rédigé le 2026-11-07 AVANT toute mesure de ce chantier.**
+   **PROTOCOLE PRÉ-ENREGISTRÉ v1, rédigé le 2026-11-07 AVANT toute mesure de ce chantier ; MESURÉ le
+   2026-11-07 — 9a ❌ (aucune variante adoptée), 9b non faisable par moi (kappa prêt), 9c ✅ (10 dépôts,
+   médiane 0,755), 9d ⚠️ (dérive réduite, pas d'adoption) : détail en §6.**
    Même discipline que le Chantier 8 (script daté → JSON daté → §6, séquentiel, garde-fou RAM).
    - **9a — Détection de fix plus stricte : exclure les merges, exiger du vrai code (Flask).**
      *Motivation (issue de l'audit 8g, donc non indépendante de lui) :* précision de la détection B ≈
@@ -2189,3 +2267,13 @@ implémentation) :
 - **Reste à faire :** SonarQube/CodeQL (point 2, en dernier, contrainte RAM) ; remplir
   `label_humain` ; refonte du notebook (en pause) ; poussée GitHub à la demande (commits non
   poussés depuis `71e780f`).
+
+### 2026-11-07 — Session 7 (fin) — Chantier 9 : pistes d'amélioration
+- Protocole écrit et commité avant mesure (`91990a2`), scripts commités avant exécution (`dda1432`).
+- 9a : détection de fix sans merges / avec vrai code : précision inchangée, aucune variante adoptée.
+  Bug de script trouvé et corrigé en route (hash de l'audit abrégés à 10 caractères → `KeyError`),
+  puis relancé ; aucun résultat retouché. 9c : 10 dépôts interprétables, fastapi exclu (2,9 % de
+  risque). 9d : fenêtre adaptative, dérive ÷2 (médiane 2,88 → 1,4-1,8), non adoptée.
+- 9b : `label_humain` reste à remplir par l'équipe ; `results/audit_kappa.py` prêt.
+- **Reste à faire :** annotation humaine ; SonarQube/CodeQL (non fait) ; refonte du notebook (en
+  pause) ; poussée GitHub à la demande.

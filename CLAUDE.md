@@ -1430,8 +1430,10 @@ implémentation) :
      §6, journal §9.
 7. **Chantier 7 — restitution** (modules `.py`, `README.md`, synthèse soutenance). **EN COURS
    (2026-11-05) :** `README.md` fait (`77dd914`) ; code de features du notebook branché sur `fyc`
-   (§7 point 11) ; **reste** : cellules markdown à chiffres en dur (§7 point 10), notebook sur
-   `label_v2`, synthèse de soutenance.
+   (§7 point 11) ; `SYNTHESE_SOUTENANCE.md` écrite (2026-11-07) ; note de lecture ajoutée en tête du notebook
+   (ses chiffres en texte ne sont pas ceux du projet) ; **reste, non fait, décision d'équipe** :
+   réécrire les cellules markdown à chiffres en dur (§7 point 10) et passer tout le notebook sur
+   `label_v2` — ce qui modifierait le récit écrit par l'encadrant.
 
 ## 9. Journal des sessions
 
@@ -1822,3 +1824,11 @@ implémentation) :
   Ré-exécution : 58 cellules, 0 erreur, 2 min 16.
 - **Reste à faire :** markdown à chiffres en dur (§7 point 10), notebook sur `label_v2`,
   synthèse de soutenance ; poussée GitHub à la demande.
+
+### 2026-11-07 — Session 7 — Chantier 7 : synthèse de soutenance
+- `SYNTHESE_SOUTENANCE.md` : 5 messages, résultats négatifs, pièges de reproductibilité, limites
+  (dont la réserve M2bis 0,910 > 0,9044), questions probables. Chiffres recopiés de §5-§6.
+- Cellule 0 du notebook : note de lecture signalant que les chiffres de texte sont ceux du TP
+  d'origine. **Choix de ne pas réécrire** les cellules markdown à chiffres en dur ni de passer le
+  notebook sur `label_v2` sans accord : cela change le récit de l'encadrant (§7 point 10).
+- **Reste à faire :** décision de l'équipe sur ce dernier point ; poussée GitHub à la demande.

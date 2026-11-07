@@ -772,6 +772,24 @@ commit qui touche du code déjà complexe/volumineux*.
     « fix qui touche le fichier »), pas de la même définition d'événement que ce nul — **non
     directement comparable**, on ne dit pas que v1 « égalait le nul ».
 
+- **✅ 8c — l'échec silencieux de Semgrep est confirmé et sa correction renforce (sans la
+  rendre concluante) la tendance de la vague 2.** Mesuré le 2026-11-07
+  (`results/chantier8c_semgrep.py` → `results/chantier8c_semgrep.json`), même échantillon de 300
+  commits que la vague 2, protocole §8 Chantier 8 (f7e8489).
+  - **Les 31 fichiers non parsables (`ast.parse`, Python 3.14) ont tous 0 violation Semgrep** (31/31,
+    et 0 erreur rapportée par Semgrep) contre 1,005 violation en moyenne par fichier parsable
+    (71 % de fichiers à zéro). Un fichier que Semgrep ne comprend pas est donc rendu comme « propre » :
+    confirmation directe du piège §7 point 17.
+  - **Features recalculées en excluant ces fichiers** (NaN si un commit n'en a plus aucun : 10
+    commits) : Δ apparié BASE+Semgrep − BASE = **+0,0197 ± 0,020, positif dans 23 répétitions sur
+    25** (AUC 0,7486 → 0,7683), contre +0,0125 (16/25) sans correction. **Seuil de la vague 2
+    (+0,05 et ≥ 80 % de répétitions positives) toujours non atteint : « pas de gain démontré »
+    inchangé** ; mais le zéro silencieux **diluait** le signal (le Δ gagne ≈ +0,007 et la
+    régularité passe de 64 % à 92 % des répétitions).
+  - **Limites :** `ast.parse` est un proxy (un fichier qu'`ast` accepte peut échouer côté Semgrep,
+    et inversement) ; 300 commits, Δ à ±0,02 ; le même contrôle n'a pas été fait pour jscpd (qui
+    signale son échec par l'absence de rapport, déjà traité en NaN).
+
 ## 7. Pièges connus et limites assumées
 
 1. **Circularité churn/label (r = 0.91).** Toute feature au niveau fichier doit être testée contre

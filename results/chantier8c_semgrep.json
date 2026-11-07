@@ -1,0 +1,31 @@
+{
+ "protocole": "CLAUDE.md \u00a78 Chantier 8c (f7e8489)",
+ "generated_at": "2026-11-07T16:42:31.319251+00:00",
+ "secondes_semgrep": 99.19612860679626,
+ "n_erreurs_json_semgrep": 0,
+ "parsables_ast": {
+  "n_fichiers": 557,
+  "violations_moyenne_par_fichier": 1.0053859964093357,
+  "part_fichiers_zero_violation": 0.7109515260323159
+ },
+ "non_parsables_ast": {
+  "n_fichiers": 31,
+  "violations_moyenne_par_fichier": 0.0,
+  "part_fichiers_zero_violation": 1.0
+ },
+ "commits_sans_aucun_fichier_parsable": 10,
+ "delta_BASE_plus_semgrep_corrige": {
+  "moyenne": 0.01967592592592592,
+  "ecart_type": 0.020198002853573822,
+  "repetitions_positives": 23,
+  "n": 25,
+  "AUC_BASE": 0.7486342592592592,
+  "AUC_BASE_semgrep": 0.7683101851851852
+ },
+ "delta_reference_vague2_non_corrige": {
+  "moyenne": 0.012546,
+  "repetitions_positives": 16,
+  "n": 25
+ },
+ "conclusion_inchangee": true
+}

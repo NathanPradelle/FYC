@@ -2,7 +2,13 @@
 
 Porte a l'identique la logique des cellules 6 et 49-50 du notebook.
 """
+import re
 import subprocess
+
+# Le nom d'auteur peut contenir '|' (trouve sur pytorch/ignite, Chantier 8f) : on ancre sur le
+# timestamp numerique plutot que de decouper aveuglement. Pour les depots sans '|' dans les
+# auteurs, le resultat est identique a l'ancien split.
+_COMMIT_RE = re.compile(r"^COMMIT\|(\w+)\|(.*?)\|(\d{9,11})\|(.*)$")
 
 
 def extraire_commits(repo_dir):
@@ -18,7 +24,7 @@ def extraire_commits(repo_dir):
         if line.startswith("COMMIT|"):
             if cur:
                 commits.append(cur)
-            _, h, author, ts, msg = line.split("|", 4)
+            h, author, ts, msg = _COMMIT_RE.match(line).groups()
             cur = {"hash": h, "author": author, "ts": int(ts),
                    "msg": msg, "files": [], "add": 0, "del": 0, "file_stats": []}
         elif line.strip() and cur is not None:

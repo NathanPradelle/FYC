@@ -846,6 +846,25 @@ commit qui touche du code déjà complexe/volumineux*.
     projet) ; la prévalence « retravail » mélange corrections et évolutions normales ; 7 dépôts ;
     âge calculé sur les seuls liens retrouvés par `git blame -w -M -C`.
 
+- **✅ 8f — extension 6C : le modèle global transfère aussi à deux dépôts data/ML (T1 OK 2/2), avec
+  le même défaut de calibration.** Mesuré le 2026-11-07 (`results/chantier8f_6c.py` →
+  `results/chantier8f_6c.json`, 22 min, pic 1,86 Go), protocole §8 8f (f7e8489), liste figée
+  `huggingface/datasets` et `pytorch/ignite`. G = configuration principale du 6A (percentile, sans
+  churn), entraîné sur les 7 dépôts d'origine avant le début de la queue de test (30 % récents) ;
+  label_v2 + détection B sans réglage ; les 7 dépôts d'origine non modifiés.
+
+  | Dépôt | Étiquetés | Risque | Pos. test | AUC G [IC95] | Précision top 10 % | Lift | Brier G / constante test |
+  |---|---|---|---|---|---|---|---|
+  | datasets | 3357 | 17,5 % | 99 | 0,784 [0,735-0,832] | 0,39 | 4,0× | 0,098 / 0,089 |
+  | ignite | 1556 | 14,8 % | 43 | 0,715 [0,618-0,805] | 0,33 | 3,5× | 0,116 / 0,084 |
+
+  Garde-fous passés pour les deux (part de risque ≥ 5 %, ≥ 40 positifs en test ; ignite à 43, juste
+  au-dessus). **T1 (AUC ≥ 0,65) : OK sur les deux**, au niveau des 7 dépôts d'origine (0,67-0,78),
+  lift 3,5-4×. **Brier de G pire que la constante « prévalence du test » dans les deux** : même
+  conclusion qu'en 6A, classement oui, probabilités non. *Lecture honnête :* le transfert n'est pas
+  limité aux bibliothèques/frameworks classiques ; mais deux dépôts, un seul tirage, ignite avec un
+  IC de ±0,09 — pas de généralisation à « tout dépôt ML ». Dépôts toujours Python uniquement.
+
 - **✅ 8e — les verdicts T1 et T2 du 6A sont stables sur 5 graines de forêt ; la variance de graine
   est petite devant le bruit de données.** Mesuré le 2026-11-07 (`results/chantier8e_seeds.py` →
   `results/chantier8e_seeds.json`, 58 min), graines 42 (déjà faite) + 0,1,2,3, mêmes dépôts,
@@ -1096,6 +1115,13 @@ commit qui touche du code déjà complexe/volumineux*.
    un fichier volontairement cassé et un fichier hors limites, et ne jamais déduire « 0 échec »
    de l'absence d'erreur rapportée.
    Installation : Semgrep dans un venv séparé, jscpd en local par npm (hors venv du projet).
+
+18. **Parseur `git log` : un nom d'auteur contenant `|` plantait `extraire_commits` (8f,
+   2026-11-07).** Trouvé sur `huggingface/datasets` (`ValueError` sur `int(ts)`), pas sur les 7
+   dépôts d'origine. Corrigé par une regex ancrée sur le timestamp numérique
+   (`fyc/git_extract.py`) ; sortie identique sur Flask (5557 commits, mêmes hash). Le format
+   `COMMIT|%H|%an|…` reste fragile pour tout champ libre : un plantage franc, pas un échec
+   silencieux, mais à garder en tête pour un nouveau dépôt.
 
 ## 8. Prochaines étapes priorisées
 
@@ -2092,3 +2118,22 @@ implémentation) :
   d'origine. **Choix de ne pas réécrire** les cellules markdown à chiffres en dur ni de passer le
   notebook sur `label_v2` sans accord : cela change le récit de l'encadrant (§7 point 10).
 - **Reste à faire :** décision de l'équipe sur ce dernier point ; poussée GitHub à la demande.
+
+### 2026-11-07 — Session 7 (suite) — Chantier 8 : clôture des points ouverts de la recherche
+- Demande de l'utilisateur : notebook **mis en pause** (refonte plus tard, après la recherche) ;
+  points 2 à 7 de mon état des lieux prioritaires, sauf SonarQube/CodeQL (point 2) qui peut attendre
+  la fin. Protocole du Chantier 8 écrit et commité avant toute mesure (`f7e8489`).
+- **Résultats (détail §6) :** 8a `results.json` v1 régénéré (0 différence) ; 8b M2bis **indéterminé**
+  (IC bootstrap [0,873 ; 0,955]) et M1 expliqué par la popularité des fichiers (réel 0,79 < nul
+  0,89) ; 8c échec silencieux de Semgrep confirmé (31/31), Δ corrigé +0,0197 sans atteindre le
+  seuil ; 8d dérive de prévalence : pas les conventions de messages, mécanisme probable = fenêtre
+  fixe de 90 j face à l'âge du code corrigé (×29, post hoc) ; 8e T1/T2 stables sur 5 graines ;
+  8f T1 OK sur deux dépôts data/ML ; 8g audit préliminaire des labels de fix : précision ≈ 0,19,
+  rappel ≈ 0,71 (annotateur unique, non indépendant, `label_humain` à remplir par l'équipe).
+- Pièges : scratchpad vidé au changement de date (Semgrep réinstallé) ; parseur `git log` et
+  auteurs avec `|` (§7 point 18).
+- Aucun résultat retouché après coup ; écart déclaré au protocole en 8b (bootstrap sur prédictions
+  hors-pli) et analyse 8d post hoc signalée comme telle.
+- **Reste à faire :** SonarQube/CodeQL (point 2, en dernier, contrainte RAM) ; remplir
+  `label_humain` ; refonte du notebook (en pause) ; poussée GitHub à la demande (commits non
+  poussés depuis `71e780f`).

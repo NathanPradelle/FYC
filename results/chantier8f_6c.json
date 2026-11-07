@@ -1,0 +1,84 @@
+{
+ "generated_at": "2026-11-07T18:43:09.838290+00:00",
+ "protocole": "CLAUDE.md §8 8f (f7e8489)",
+ "depots": {
+  "datasets": {
+   "resume": {
+    "repo": "datasets",
+    "n_commits": 4404,
+    "n_etiquetes": 3357,
+    "premier_commit": "2020-04-14",
+    "dernier_commit": "2026-11-06",
+    "part_risque": 0.1746,
+    "n_positifs": 586,
+    "n_positifs_queue_test_30pct": 99,
+    "part_touches_py": 0.7882,
+    "part_code_parse_ok_parmi_py": 0.9924,
+    "garde_fou_part_risque_ok": true,
+    "garde_fou_positifs_queue_ok": true,
+    "radon_timeouts_fichiers": 2,
+    "temps_s": 1103.7,
+    "interpretable": true
+   },
+   "G": {
+    "auc": 0.7844,
+    "ic95": [
+     0.7347,
+     0.8321
+    ],
+    "brier": 0.098,
+    "brier_const_prev_train": 0.0888,
+    "brier_const_prev_test": 0.0886,
+    "precision_top10pct": 0.39,
+    "model_constant": false
+   },
+   "n_test": 1008,
+   "n_pos_test": 99,
+   "prevalence_test": 0.0982,
+   "n_global_train": 18737,
+   "interpretable": true,
+   "T1_auc_ge_0_65": true,
+   "lift_top10": 3.97,
+   "brier_G_pire_que_constante_test": true
+  },
+  "ignite": {
+   "resume": {
+    "repo": "ignite",
+    "n_commits": 2057,
+    "n_etiquetes": 1556,
+    "premier_commit": "2017-11-24",
+    "dernier_commit": "2026-11-03",
+    "part_risque": 0.1478,
+    "n_positifs": 230,
+    "n_positifs_queue_test_30pct": 43,
+    "part_touches_py": 0.6928,
+    "part_code_parse_ok_parmi_py": 0.9935,
+    "garde_fou_part_risque_ok": true,
+    "garde_fou_positifs_queue_ok": true,
+    "radon_timeouts_fichiers": 0,
+    "temps_s": 188.8,
+    "interpretable": true
+   },
+   "G": {
+    "auc": 0.7148,
+    "ic95": [
+     0.6177,
+     0.8051
+    ],
+    "brier": 0.1162,
+    "brier_const_prev_train": 0.084,
+    "brier_const_prev_test": 0.0836,
+    "precision_top10pct": 0.3261,
+    "model_constant": false
+   },
+   "n_test": 467,
+   "n_pos_test": 43,
+   "prevalence_test": 0.0921,
+   "n_global_train": 18714,
+   "interpretable": true,
+   "T1_auc_ge_0_65": true,
+   "lift_top10": 3.54,
+   "brier_G_pire_que_constante_test": true
+  }
+ }
+}

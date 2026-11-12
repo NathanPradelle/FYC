@@ -14,3 +14,4 @@ repos/
 results/cache_6a_*.pkl
 results/cache_6a_*
 results/dataset_6a.pkl
+results/github_issues_cache.json

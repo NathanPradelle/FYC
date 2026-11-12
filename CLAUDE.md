@@ -1851,6 +1851,58 @@ implémentation) :
    - **Livrables :** `results/chantier9a_fix_strict.py`, `chantier9c_more_repos.py`,
      `chantier9d_adaptive_window.py`, `audit_kappa.py` + JSON, §6, journal §9.
 
+10. **Chantier 10 — deuxième vague d'améliorations (AJOUTÉ le 2026-11-12 à la demande de
+   l'utilisateur : « fais les nouvelles améliorations de 1 à 4 »).**
+   **PROTOCOLE PRÉ-ENREGISTRÉ v1, rédigé le 2026-11-12 AVANT toute mesure de ce chantier.** Même
+   discipline que les chantiers 8-9 (script daté → JSON daté → §6, séquentiel, garde-fou RAM).
+   - **10a — Détection de fix fondée sur autre chose que le message (Flask).** Conclusion du 9a :
+     la précision est limitée par le message. Signaux testés, **fixés maintenant**, évalués sur
+     l'audit 8g (300 commits ; mes annotations ont été faites sur le message **seul**, donc
+     indépendantes de ces signaux — moins circulaire que le 9a) : **S_test** = détecté (B) ET le
+     commit touche un fichier dont le chemin contient `test` ; **S_issue** = détecté ET la PR du
+     commit (cache GitHub) ferme ≥ 1 issue (`closingIssuesReferences`) ; **S_bug** = détecté ET
+     une issue fermée porte un label contenant `bug`, `defect`, `regression` ou `crash` ;
+     **S_bug_seul** = la PR ferme une issue labellisée comme ci-dessus, **sans** exigence sur le
+     message (teste un remplacement de la détection par mots-clés). Un seul passage GraphQL pour
+     récupérer ces champs (PR des commits audités et des 732 fix détectés). *Mesures :* précision
+     parmi les retenus (vrais bugs hors doublons de merge, sur les 100 fix audités), part des vrais
+     bugs conservés, précision/rappel de S_bug_seul sur les 300 (rappel par la formule à deux
+     échantillons avec les populations 732 / 1638), IC de Wilson ; pour les filtres, `part_risque`
+     et AUC(BASE) en CV (5×5) sous le label recalculé. *Règle d'adoption d'un filtre :* précision
+     ≥ **+0,15** en absolu sur la référence B (14/100 = 0,14 hors merges), ≥ **70 %** des vrais bugs
+     conservés (≥ 10 sur 14), `part_risque` ≥ 5 %, AUC(BASE) ne baisse pas de plus de 0,03.
+     *Règle pour S_bug_seul :* il ne remplace la détection que si précision ≥ 0,5 ET rappel ≥ celui
+     de B (≈ 0,7). Sinon B reste le défaut. **Limites déclarées d'avance :** 14 vrais bugs hors
+     merge → IC très larges ; annotateur unique ; seuls les commits ayant une PR peuvent satisfaire
+     S_issue/S_bug (55,7 % des commits de Flask) ; adoption éventuelle dite provisoire.
+   - **10b — Annotation humaine : toujours impossible pour moi.** Livrable : feuille d'annotation
+     **aveugle** `results/audit_annotation_humaine.csv` (id, sujet, corps, `label_humain` vide ; sans
+     mes étiquettes ni le groupe) pour ne pas ancrer l'annotateur, et `audit_kappa.py` étendu pour la
+     lire. Aucune mesure tant qu'elle est vide.
+   - **10c — Validation de la fenêtre adaptative sous le protocole du Chantier 1.** Sur Flask,
+     fenêtres fixe 90 j / f = 0,10 / f = 0,25 (9d, inchangé). (i) **M2bis** : ratio churn/BASE, 20
+     graines de CV **et** IC bootstrap des prédictions hors-pli (1000 tirages), règle de verdict du 8b
+     (satisfait si borne haute ≤ 0,9044 ; échoué si borne basse > 0,9044 ; indéterminé sinon).
+     (ii) **M1** n'est pas refait : il ne dépend pas de la fenêtre (événements de blame des fix,
+     pas des positifs). (iii) **Queues identiques** : pour chacun des 7 dépôts, restreindre aux
+     commits étiquetés sous les trois fenêtres, queue = 30 % chronologiques de **cette
+     intersection**, AUC(BASE) en entraînant sur les 70 % restants avec le label de chaque
+     fenêtre ; Δ = AUC(adaptatif) − AUC(fixe) par dépôt, médiane et IC bootstrap sur les dépôts
+     (10 000 tirages). *Verdict « acceptable provisoirement » si :* M2bis non « échoué » ET médiane de
+     Δ ≥ −0,03 ET Δ < −0,03 dans au plus 2 dépôts sur 7. Sinon documenté, pas d'adoption.
+     Aucune adoption comme défaut du projet sans décision de l'utilisateur.
+   - **10d — Plus de dépôts (6E).** Liste **figée maintenant**, commits lus via l'API GitHub le
+     2026-11-12 : `pallets/werkzeug` (6175, WSGI), `Textualize/rich` (4470, terminal), `marshmallow-code/
+     marshmallow` (3758, sérialisation), `sqlalchemy/alembic` (2106, migrations BD). Critères du 6A
+     (2000-10 000 commits, activité récente, domaines variés) ; écartés : `scrapy/scrapy` (11 762 >
+     10 000), `encode/starlette` (1802) et `python-attrs/attrs` (1850) < 2000, `mkdocs/mkdocs`
+     (inactif depuis 2025-10). Mêmes règles que 9c : label_v2 + B sans réglage, garde-fou
+     `part_risque` ≥ 5 % et ≥ 40 positifs en queue de test, G15 entraîné sur tous les autres dépôts
+     avant la queue de test (config principale), T1 par dépôt (AUC ≥ 0,65), médiane sur les dépôts
+     interprétables avec IC par rééchantillonnage des dépôts. Un dépôt exclu n'est pas remplacé.
+   - **Livrables :** `results/chantier10a_fix_signals.py`, `chantier10c_adaptive_check.py`,
+     `chantier10d_more_repos.py`, JSON, §6, journal §9.
+
 ## 9. Journal des sessions
 
 ### 2026-09-09 — Session 1 (Étape 0)

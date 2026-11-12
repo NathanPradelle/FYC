@@ -1976,6 +1976,48 @@ implémentation) :
    - **Livrables :** `results/chantier10a_fix_signals.py`, `chantier10c_adaptive_check.py`,
      `chantier10d_more_repos.py`, JSON, §6, journal §9.
 
+11. **Chantier 11 — améliorations sans annotation humaine (AJOUTÉ le 2026-11-12 à la demande de
+   l'utilisateur : « fais les autres améliorations, celles qui ne demandent pas de biais humain »).**
+   **PROTOCOLE PRÉ-ENREGISTRÉ v1, rédigé le 2026-11-12 AVANT toute mesure de ce chantier.** Même
+   discipline (script daté → JSON daté → §6, séquentiel, garde-fou RAM). Hors périmètre : annotation
+   humaine (équipe), décision sur la fenêtre adaptative (équipe), SonarQube/CodeQL (sur feu vert).
+   - **11a — Signaux d'issues sur des dépôts qui étiquettent leurs issues (le 10a manquait de
+     puissance sur Flask).** *Idée :* « la PR du commit ferme une issue portant un label de type bug »
+     (label posé par les mainteneurs, donc **indépendant de moi et du message**) sert de vérité
+     terrain partielle pour la détection par mots-clés, sans annotation humaine.
+     (i) **Sélection des dépôts, règle fixée maintenant :** sonde de faisabilité sur les 12 dépôts
+     interprétables du 10d — les 200 PR fusionnées les plus récentes de chacun (API GraphQL,
+     `closingIssuesReferences` + labels) ; label « bug » = nom contenant `bug`, `defect`,
+     `regression` ou `crash` (insensible à la casse). **Sont retenus les 2 dépôts** ayant la plus grande
+     part de PR fusionnées fermant une issue « bug » (≥ 1 label), parmi ceux de ≥ 2000 commits.
+     La sonde n'est pas un résultat (elle sélectionne), elle est rapportée telle quelle.
+     (ii) **Mesures, par dépôt retenu :** P = commit dont la PR associée ferme une issue « bug ».
+     Sur les commits ayant une PR : précision de B vis-à-vis de P (part des fix détectés dont la PR
+     ferme une issue bug), rappel de B vis-à-vis de P (part des commits P détectés par B), kappa de
+     Cohen B/P, IC de Wilson. Population d'estimation : **tous** les commits du dépôt (aucun
+     sous-échantillonnage). *Lecture :* P ne contient que les fix qui ferment une issue : c'est une
+     borne **inférieure** de la précision de B (un vrai fix peut ne pas lier d'issue), pas une vérité.
+     (iii) **Robustesse des conclusions au choix de détection (cf. PySZZ) :** label_v2 recalculé avec
+     fix = P seul (SZZ ligne, fenêtre 90 j) et fix = B ∪ P ; comparés à B : `part_risque`, kappa des
+     étiquettes sur les commits communs, AUC(BASE) en CV (5×5), ratio M2bis (20 graines).
+     *Règle :* les conclusions sont dites **robustes** à la détection si, pour P seul, `part_risque` ≥ 5 %,
+     |AUC(BASE)_P − AUC(BASE)_B| ≤ 0,03 et M2bis_P ≤ 0,9044. Sinon documenté tel quel.
+     *Limites d'avance :* 2 dépôts ; P omet les fix sans issue liée ; couverture PR variable ; budget
+     GraphQL (5000 points/h) → mesure possiblement répartie sur plusieurs heures, cache disque.
+   - **11b — Pourquoi certains dépôts transfèrent moins bien (ignite 0,69, requests 0,68, rich 0,71).**
+     Sur les 12 dépôts interprétables du 10d (G15) : (i) **hétérogénéité vs bruit d'échantillonnage** :
+     SE de l'AUC de chaque dépôt = (borne haute − borne basse de l'IC bootstrap)/3,92 ; statistique Q de
+     Cochran et I² contre la moyenne pondérée ; z par dépôt ; (ii) **transfert ou prévisibilité
+     intrinsèque :** AUC du modèle local seul (entraîné sur les 70 % anciens du dépôt) contre G et G+L ;
+     (iii) **décalage de domaine :** AUC d'un classifieur (forêt 100 arbres, CV 5 plis) qui distingue les
+     commits de la queue de test du dépôt de ceux du jeu d'entraînement de G (features percentile,
+     config principale) ; (iv) corrélations de Spearman (n = 12) entre AUC(G) et : décalage de domaine,
+     prévalence de test, positifs de test, part de commits touchant du `.py`. *Règles de lecture fixées
+     maintenant :* « les différences entre dépôts sont dans le bruit » si **I² < 25 %** ; sinon
+     hétérogénéité réelle, et un facteur n'est retenu que si |rho| ≥ 0,6 (n = 12 : indicatif, aucune
+     causalité affirmée). Pas de seconde recherche d'explications si rien ne passe.
+   - **Livrables :** `results/chantier11a_issue_proxy.py`, `chantier11b_heterogeneity.py`, JSON, §6, journal §9.
+
 ## 9. Journal des sessions
 
 ### 2026-09-09 — Session 1 (Étape 0)

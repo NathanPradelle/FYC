@@ -1,0 +1,70 @@
+{
+ "protocole": "CLAUDE.md \u00a78 Chantier 11a (84e34fe), sonde",
+ "generated_at": "2026-11-12T17:47:47.930126+00:00",
+ "depots": {
+  "flask": {
+   "n_pr": 200,
+   "part_ferme_issue": 0.2,
+   "part_ferme_issue_bug": 0.0
+  },
+  "requests": {
+   "n_pr": 200,
+   "part_ferme_issue": 0.09,
+   "part_ferme_issue_bug": 0.005
+  },
+  "click": {
+   "n_pr": 200,
+   "part_ferme_issue": 0.375,
+   "part_ferme_issue_bug": 0.0
+  },
+  "black": {
+   "n_pr": 200,
+   "part_ferme_issue": 0.32,
+   "part_ferme_issue_bug": 0.165
+  },
+  "tornado": {
+   "n_pr": 200,
+   "part_ferme_issue": 0.13,
+   "part_ferme_issue_bug": 0.0
+  },
+  "pydantic": {
+   "n_pr": 200,
+   "part_ferme_issue": 0.235,
+   "part_ferme_issue_bug": 0.14
+  },
+  "django-rest-framework": {
+   "n_pr": 200,
+   "part_ferme_issue": 0.095,
+   "part_ferme_issue_bug": 0.015
+  },
+  "datasets": {
+   "n_pr": 200,
+   "part_ferme_issue": 0.235,
+   "part_ferme_issue_bug": 0.01
+  },
+  "ignite": {
+   "n_pr": 200,
+   "part_ferme_issue": 0.25,
+   "part_ferme_issue_bug": 0.02
+  },
+  "poetry": {
+   "n_pr": 200,
+   "part_ferme_issue": 0.225,
+   "part_ferme_issue_bug": 0.155
+  },
+  "werkzeug": {
+   "n_pr": 200,
+   "part_ferme_issue": 0.265,
+   "part_ferme_issue_bug": 0.0
+  },
+  "rich": {
+   "n_pr": 200,
+   "part_ferme_issue": 0.31,
+   "part_ferme_issue_bug": 0.015
+  }
+ },
+ "retenus": [
+  "black",
+  "poetry"
+ ]
+}

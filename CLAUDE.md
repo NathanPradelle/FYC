@@ -992,6 +992,34 @@ commit qui touche du code déjà complexe/volumineux*.
   comme une amélioration du modèle** (dépôts différents). *Limites :* Python, 15 dépôts choisis à
   l'œil, 1 graine, queues à 28-147 positifs.
 
+- **⚠️ 11a — proxy « la PR du commit ferme une issue labellisée bug » (black, poetry) : B a une
+  précision d'au moins ≈ 0,33-0,36 et un rappel ≈ 0,42 vis-à-vis du proxy ; les conclusions ne sont
+  PAS robustes à un label fondé sur ce proxy seul.** Mesuré le 2026-11-12
+  (`results/chantier11a_issue_proxy.py` → `chantier11a_probe.json` + `chantier11a_issue_proxy.json`,
+  17 min), protocole §8 Chantier 11 (84e34fe). **Sonde** (200 PR fusionnées par dépôt, part fermant une
+  issue « bug ») : black 16,5 %, poetry 15,5 %, pydantic 14 %, tous les autres ≤ 2 % (flask 0 %) →
+  **black et poetry retenus** (pydantic non retenu : 3e). Tous les commits des deux dépôts interrogés.
+
+  | Dépôt | Couverture PR | Précision B vs P [IC95] | Rappel B vs P [IC95] | Kappa B/P |
+  |---|---|---|---|---|
+  | black | 83 % | 0,33 [0,29-0,38] | 0,43 [0,37-0,48] | 0,23 |
+  | poetry | 77 % | 0,36 [0,32-0,39] | 0,42 [0,39-0,46] | 0,22 |
+
+  **Lecture :** parmi les fix détectés par message, 33-36 % ferment une issue « bug » (borne basse de
+  la précision : un vrai fix peut ne pas lier d'issue) — ordre de grandeur supérieur aux 0,19 de
+  l'audit 8g sur Flask, sans contradiction possible à établir (dépôts et critères différents) ; B
+  retrouve seulement ≈ 42 % des commits P. L'accord B/P est faible (kappa ≈ 0,22).
+  **Robustesse du label :** fix = P seul → `part_risque` 4,9 % (black, < 5 %) / 6,0 % (poetry) ;
+  AUC(BASE) 0,749 / 0,810 contre 0,778 / 0,804 (écarts −0,029 / +0,006, OK) ; **M2bis 0,953 / 0,930 >
+  0,9044 → règle pré-enregistrée : non robuste** (les deux dépôts, plus black sous le plancher de
+  5 %). Kappa des étiquettes P seul vs B : 0,32 / 0,23 (labels très différents). Fix = B ∪ P :
+  `part_risque` 11,6 % / 17,0 %, AUC(BASE) 0,785 / 0,818, M2bis 0,846 / 0,878 (sous le seuil), kappa
+  vs B 0,85 : l'union reste proche de B. **Conclusion :** avec un proxy indépendant du message, le
+  churn devient relativement plus prédictif (M2bis plus haut) quand on ne garde que les fix liés à
+  une issue ; on ne peut pas dire si c'est la contamination par popularité ou la sélection de
+  fix plus gros/plus visibles. Détection B conservée. *Limites :* 2 dépôts choisis par sonde
+  (sélection sur la variable étudiée), P omet les fix sans issue liée, 1 graine de CV pour les AUC.
+
 - **⚠️ 11b — hétérogénéité du transfert entre dépôts : I² = 36 % (hétérogénéité modérée, non
   négligeable), mais aucun des quatre facteurs candidats n'atteint |rho| ≥ 0,6 (aucune explication
   retenue).** Mesuré le 2026-11-12 (`results/chantier11b_heterogeneity.py` →
@@ -1994,7 +2022,8 @@ implémentation) :
 
 11. **Chantier 11 — améliorations sans annotation humaine (AJOUTÉ le 2026-11-12 à la demande de
    l'utilisateur : « fais les autres améliorations, celles qui ne demandent pas de biais humain »).**
-   **PROTOCOLE PRÉ-ENREGISTRÉ v1, rédigé le 2026-11-12 AVANT toute mesure de ce chantier.** Même
+   **PROTOCOLE PRÉ-ENREGISTRÉ v1, rédigé le 2026-11-12 AVANT toute mesure de ce chantier ; MESURÉ le
+   2026-11-12 — 11a ⚠️ (proxy non robuste, B gardé), 11b ⚠️ (I² 36 %, rien d'expliqué) : §6.** Même
    discipline (script daté → JSON daté → §6, séquentiel, garde-fou RAM). Hors périmètre : annotation
    humaine (équipe), décision sur la fenêtre adaptative (équipe), SonarQube/CodeQL (sur feu vert).
    - **11a — Signaux d'issues sur des dépôts qui étiquettent leurs issues (le 10a manquait de
@@ -2475,3 +2504,12 @@ implémentation) :
 - Le scratchpad a été vidé au changement de date : `grun.sh` recréé (sans le `pkill -f` des workers).
 - **Reste à faire :** annotation humaine ; décision d'équipe sur la fenêtre adaptative ; SonarQube/
   CodeQL ; refonte du notebook (en pause) ; poussée GitHub à la demande (non poussé depuis `71e780f`).
+
+### 2026-11-12 — Session 8 (suite) — Chantier 11 : améliorations sans annotation humaine
+- Protocole commité avant mesure (`84e34fe`), scripts commités avant exécution.
+- 11b : I² = 36 % (Q p = 0,10), aucun facteur |rho| ≥ 0,6 ; mesure « décalage de domaine » saturée
+  (≈ 0,998), inutilisable, signalée.
+- 11a : sonde → black, poetry ; B précision ≥ 0,33-0,36, rappel ≈ 0,42 vs proxy issue-bug ; label fondé
+  sur P seul non robuste (M2bis 0,93-0,95). B conservé.
+- **Reste à faire :** annotation humaine ; décision d'équipe sur la fenêtre adaptative ; SonarQube/CodeQL ;
+  refonte du notebook (en pause) ; poussée GitHub à la demande (non poussé depuis `71e780f`).

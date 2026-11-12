@@ -1,0 +1,96 @@
+{
+ "protocole": "CLAUDE.md \u00a78 Chantier 11a (84e34fe)",
+ "generated_at": "2026-11-12T17:49:22.065570+00:00",
+ "depots": {
+  "black": {
+   "n_commits": 2488,
+   "part_avec_PR": 0.8331993569131833,
+   "n_B_avec_PR": 437,
+   "n_P": 341,
+   "n_B_et_P": 145,
+   "precision_B_vs_P": [
+    0.3318077803203661,
+    0.2892939687695325,
+    0.3772529269862219
+   ],
+   "rappel_B_vs_P": [
+    0.4252199413489736,
+    0.3738663761998824,
+    0.47823963421185456
+   ],
+   "kappa_B_P": 0.2305637530804104,
+   "B": {
+    "n_fix": 507,
+    "n_etiquetes": 1976,
+    "n_positifs": 187,
+    "part_risque": 0.09463562753036438,
+    "AUC_BASE_cv": 0.778179438546718,
+    "M2bis_ratio": 0.8450729684990061
+   },
+   "P_seul": {
+    "n_fix": 341,
+    "n_etiquetes": 2141,
+    "n_positifs": 104,
+    "part_risque": 0.04857543204110229,
+    "AUC_BASE_cv": 0.7493022870081695,
+    "M2bis_ratio": 0.9528261546271356,
+    "kappa_etiquettes_vs_B": 0.3185294264108528
+   },
+   "B_union_P": {
+    "n_fix": 703,
+    "n_etiquetes": 1780,
+    "n_positifs": 207,
+    "part_risque": 0.11629213483146067,
+    "AUC_BASE_cv": 0.7852290478409788,
+    "M2bis_ratio": 0.846420782062342,
+    "kappa_etiquettes_vs_B": 0.8541577302530793
+   },
+   "robuste_P_seul": false
+  },
+  "poetry": {
+   "n_commits": 3900,
+   "part_avec_PR": 0.7682051282051282,
+   "n_B_avec_PR": 709,
+   "n_P": 597,
+   "n_B_et_P": 253,
+   "precision_B_vs_P": [
+    0.35684062059238364,
+    0.32243499006108034,
+    0.3927892617222051
+   ],
+   "rappel_B_vs_P": [
+    0.423785594639866,
+    0.38475677087858234,
+    0.4637890022503088
+   ],
+   "kappa_B_P": 0.2183234786692456,
+   "B": {
+    "n_fix": 1067,
+    "n_etiquetes": 2717,
+    "n_positifs": 361,
+    "part_risque": 0.13286713286713286,
+    "AUC_BASE_cv": 0.8041453690380319,
+    "M2bis_ratio": 0.8850723406538116
+   },
+   "P_seul": {
+    "n_fix": 597,
+    "n_etiquetes": 3190,
+    "n_positifs": 190,
+    "part_risque": 0.05956112852664577,
+    "AUC_BASE_cv": 0.8100289473684212,
+    "M2bis_ratio": 0.930123695042265,
+    "kappa_etiquettes_vs_B": 0.2325274560378573
+   },
+   "B_union_P": {
+    "n_fix": 1411,
+    "n_etiquetes": 2384,
+    "n_positifs": 406,
+    "part_risque": 0.17030201342281878,
+    "AUC_BASE_cv": 0.8179382325267086,
+    "M2bis_ratio": 0.8782372307438928,
+    "kappa_etiquettes_vs_B": 0.8502771925898279
+   },
+   "robuste_P_seul": false
+  }
+ }
+}

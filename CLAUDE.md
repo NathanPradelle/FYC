@@ -992,6 +992,22 @@ commit qui touche du code déjà complexe/volumineux*.
   comme une amélioration du modèle** (dépôts différents). *Limites :* Python, 15 dépôts choisis à
   l'œil, 1 graine, queues à 28-147 positifs.
 
+- **⚠️ 11b — hétérogénéité du transfert entre dépôts : I² = 36 % (hétérogénéité modérée, non
+  négligeable), mais aucun des quatre facteurs candidats n'atteint |rho| ≥ 0,6 (aucune explication
+  retenue).** Mesuré le 2026-11-12 (`results/chantier11b_heterogeneity.py` →
+  `chantier11b_heterogeneity.json`), protocole §8 Chantier 11 (84e34fe), 12 dépôts interprétables du 10d.
+  Moyenne pondérée des AUC(G15) 0,764 ; **Q = 17,2 pour 11 ddl (p = 0,10), I² = 36 %** : au-dessus du
+  seuil pré-enregistré de 25 % (« différences dans le bruit »), donc règle → hétérogénéité réelle
+  possible, mais Q n'est pas significatif (p = 0,10) : **verdict honnête = indéterminé-penchant-bruit**.
+  Écarts z par dépôt tous |z| < 1,6 (ignite −1,53 le plus bas, datasets +1,19). Spearman (n = 12) entre
+  AUC(G) et : décalage de domaine ρ = 0,13, prévalence de test 0,06, positifs de test 0,08, part de
+  commits touchant du `.py` −0,05 : **aucun retenu, pas de seconde recherche** (règle).
+  **⚠️ Le « décalage de domaine » est inutilisable :** l'AUC du classifieur test-vs-entraînement vaut
+  0,995–0,999 partout (saturé) ; il distingue trivialement les deux jeux (probablement via des
+  features liées à l'époque/au dépôt), donc ne différencie pas les dépôts — mesure mal conçue, non
+  corrigée après coup. Lecture : requests/ignite/rich sont plus bas, mais l'écart est comparable au
+  bruit d'échantillonnage (SE 0,02–0,05). AUC local pré-test comparable à G (G−L de −0,05 à +0,02).
+
 - **✅ 8f — extension 6C : le modèle global transfère aussi à deux dépôts data/ML (T1 OK 2/2), avec
   le même défaut de calibration.** Mesuré le 2026-11-07 (`results/chantier8f_6c.py` →
   `results/chantier8f_6c.json`, 22 min, pic 1,86 Go), protocole §8 8f (f7e8489), liste figée

@@ -23,7 +23,7 @@ import requests
 from joblib import Parallel, delayed
 
 from fyc import features, git_extract, labeling
-from fyc.github_signals import GITHUB_GRAPHQL_URL, _load_token
+from fyc.github_signals import GITHUB_GRAPHQL_URL, _load_token, fetch_commit_pr_signals
 
 OUT = HERE / "chantier10a_fix_signals.json"
 ISSUES_CACHE = HERE / "github_issues_cache.json"
@@ -66,11 +66,16 @@ def wil(k, n, z=1.96):
 
 
 def main():
-    gh = json.loads((HERE / "github_cache.json").read_text())
     commits = git_extract.extraire_commits(common.REPO_DIR)
     labeling.tag_fixes(commits, fix_predicate=common.FIX_PREDICATE)
     for c in commits:
         c["is_fix_B"] = c["is_fix"]
+    # Le cache GitHub du Chantier 4 ne couvre que les commits NON-fix etiquetes (9 des 732 fix) :
+    # on complete pour les fix detectes et les commits audites (erreur de couverture trouvee au 1er essai).
+    need = [c["hash"] for c in commits if c["is_fix_B"] or c["hash"][:10] in {r["hash"][:10] for r in
+            csv.DictReader(open(HERE / "audit_fix_labels.csv", encoding="utf-8"))}]
+    fetch_commit_pr_signals(need)
+    gh = json.loads((HERE / "github_cache.json").read_text())
     by10 = {c["hash"][:10]: c for c in commits}
     audit = list(csv.DictReader(open(HERE / "audit_fix_labels.csv", encoding="utf-8")))
     prs = {c["hash"]: (gh.get(c["hash"]) or {}).get("pr_number") for c in commits
@@ -123,9 +128,11 @@ def main():
         bpc, _ = labeling.blame_line_fixes(commits, common.REPO_DIR)
         est = labeling.make_est_risque_v2(bpc, fenetre_jours=common.FENETRE_JOURS)
         base = features.build_base_features(commits, est)
-        bs = Parallel(n_jobs=3)(delayed(a9.cv_aucs)(base, features.BASE_COLS, s) for s in range(5))
-        out["variantes"][name].update({"n_fix": int(sum(c["is_fix"] for c in commits)), "n_etiquetes": len(base),
-                                       "part_risque": float(base["risky"].mean()), "AUC_BASE_cv": float(np.mean(bs))})
+        npos = int(base["risky"].sum())
+        # < 25 positifs : AUC en CV non evaluable (une classe unique dans un pli) -> None, rapporte tel quel
+        bs = Parallel(n_jobs=3)(delayed(a9.cv_aucs)(base, features.BASE_COLS, s) for s in range(5)) if npos >= 25 else [float("nan")]
+        out["variantes"][name].update({"n_positifs": npos, "n_fix": int(sum(c["is_fix"] for c in commits)), "n_etiquetes": len(base),
+                                       "part_risque": float(base["risky"].mean()), "AUC_BASE_cv": (None if npos < 25 else float(np.mean(bs)))})
         print(name, "label", json.dumps({k: out["variantes"][name][k] for k in ("n_fix", "part_risque", "AUC_BASE_cv")}), flush=True)
     for c in commits:
         c["is_fix"] = c["is_fix_B"]
@@ -138,7 +145,7 @@ def main():
         v = out["variantes"][n]
         r = {"precision_ge_B_plus_0_15": v["precision_ic95"][0] is not None and v["precision_ic95"][0] - len(real) / 100 >= 0.15,
              "vrais_bugs_ge_70pct": v["part_vrais_bugs_conserves"] >= 0.7, "part_risque_ge_5pct": v["part_risque"] >= 0.05,
-             "AUC_BASE_pas_de_chute_gt_0_03": bref - v["AUC_BASE_cv"] <= 0.03}
+             "AUC_BASE_pas_de_chute_gt_0_03": v["AUC_BASE_cv"] is not None and bref - v["AUC_BASE_cv"] <= 0.03}
         v["regle_adoption"] = r; v["adoptable"] = bool(all(r.values()))
     v = out["variantes"]["S_bug_seul"]
     v["regle_remplacement"] = {"precision_ge_0_5": (v["precision_estimee"] or 0) >= 0.5,

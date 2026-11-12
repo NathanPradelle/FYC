@@ -1,0 +1,98 @@
+{
+ "protocole": "CLAUDE.md \u00a78 Chantier 10a (75cb0ab)",
+ "generated_at": "2026-11-12T16:08:28.999806+00:00",
+ "N_detectes": 732,
+ "N_non_detectes_py": 1638,
+ "couverture_PR_detectes": 0.5956284153005464,
+ "reference_B": {
+  "precision_hors_merge": 0.14,
+  "vrais_bugs": 14,
+  "AUC_BASE_cv": 0.7870255330319539
+ },
+ "variantes": {
+  "S_test": {
+   "retenus_audit": 25,
+   "vrais_bugs_conserves": 6,
+   "part_vrais_bugs_conserves": 0.42857142857142855,
+   "precision_ic95": [
+    0.24,
+    0.11496157730326725,
+    0.43430059955238565
+   ],
+   "n_positifs": 154,
+   "n_fix": 213,
+   "n_etiquetes": 3611,
+   "part_risque": 0.042647466075879256,
+   "AUC_BASE_cv": 0.830801975516256,
+   "regle_adoption": {
+    "precision_ge_B_plus_0_15": false,
+    "vrais_bugs_ge_70pct": false,
+    "part_risque_ge_5pct": false,
+    "AUC_BASE_pas_de_chute_gt_0_03": true
+   },
+   "adoptable": false
+  },
+  "S_issue": {
+   "retenus_audit": 12,
+   "vrais_bugs_conserves": 3,
+   "part_vrais_bugs_conserves": 0.21428571428571427,
+   "precision_ic95": [
+    0.25,
+    0.08894003962896138,
+    0.53231033912066
+   ],
+   "n_positifs": 36,
+   "n_fix": 80,
+   "n_etiquetes": 3764,
+   "part_risque": 0.009564293304994687,
+   "AUC_BASE_cv": 0.8046572168857107,
+   "regle_adoption": {
+    "precision_ge_B_plus_0_15": false,
+    "vrais_bugs_ge_70pct": false,
+    "part_risque_ge_5pct": false,
+    "AUC_BASE_pas_de_chute_gt_0_03": true
+   },
+   "adoptable": false
+  },
+  "S_bug": {
+   "retenus_audit": 0,
+   "vrais_bugs_conserves": 0,
+   "part_vrais_bugs_conserves": 0.0,
+   "precision_ic95": [
+    null,
+    null,
+    null
+   ],
+   "n_positifs": 1,
+   "n_fix": 8,
+   "n_etiquetes": 3819,
+   "part_risque": 0.0002618486514794449,
+   "AUC_BASE_cv": null,
+   "regle_adoption": {
+    "precision_ge_B_plus_0_15": false,
+    "vrais_bugs_ge_70pct": false,
+    "part_risque_ge_5pct": false,
+    "AUC_BASE_pas_de_chute_gt_0_03": false
+   },
+   "adoptable": false
+  },
+  "S_bug_seul": {
+   "selectionnes_audit": 0,
+   "precision_estimee": null,
+   "rappel_estime": 0.0,
+   "n_selectionnes_estime": 0.0,
+   "rappel_B_reference": 0.6412614980289093,
+   "n_positifs": 1,
+   "n_fix": 8,
+   "n_etiquetes": 3819,
+   "part_risque": 0.0002618486514794449,
+   "AUC_BASE_cv": null,
+   "regle_remplacement": {
+    "precision_ge_0_5": false,
+    "rappel_ge_celui_de_B": false,
+    "part_risque_ge_5pct": false
+   },
+   "remplacement_ok": false
+  }
+ }
+}

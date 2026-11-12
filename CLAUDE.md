@@ -922,6 +922,76 @@ commit qui touche du code déjà complexe/volumineux*.
   - *Limites :* f choisi à deux valeurs seulement ; 7 dépôts ; prévalence par tranche d'effectif
     égal (les tranches de fin sont raccourcies par l'exclusion des commits non observables).
 
+- **❌ 10a — aucun signal de fix hors message n'est exploitable sur Flask (aucun filtre adopté, B reste
+  le défaut) ; ce test manque surtout de puissance.** Mesuré le 2026-11-12
+  (`results/chantier10a_fix_signals.py` → `chantier10a_fix_signals.json`), protocole §8 Chantier 10
+  (75cb0ab). Mes annotations d'audit portent sur le message seul : indépendantes de ces signaux.
+
+  | Signal | Retenus (audit, sur 100 fix) | Vrais bugs hors merge conservés (/14) | Précision | part_risque | Verdict |
+  |---|---|---|---|---|---|
+  | B (référence) | 100 | 14 | 0,14 | 9,7 % | — |
+  | S_test (touche un fichier de test) | 25 | 6 (43 %) | 0,24 [0,11-0,43] | 4,3 % | ❌ (< 70 % conservés, < 5 %, gain < +0,15) |
+  | S_issue (la PR ferme une issue) | 12 | 3 (21 %) | 0,25 [0,09-0,53] | 1,0 % | ❌ |
+  | S_bug (issue fermée avec label bug…) | 0 | 0 | — | 0 % | ❌ (8 fix en tout) |
+  | S_bug_seul (sans message) | 0 | — | — | 0 % | ❌ remplacement impossible |
+
+  **Pourquoi : la couverture.** Seules 59,6 % des fix détectés ont une PR retrouvée ; sur 436 PR
+  interrogées, 74 ferment une issue et seules 5 issues portent un label « bug » (Flask étiquette
+  peu : `typing` 11, `docs` 11, `bug` 5). Le signal existe sans doute mais est trop rare ici pour être
+  testé ; un dépôt qui étiquette ses issues serait un meilleur terrain (non testé). *Piège
+  rencontré :* le cache GitHub du Chantier 4 ne couvrait que 9 des 732 fix (il ne contient que les
+  commits non-fix étiquetés) ; première mesure invalide (couverture 1 %), refaite après avoir
+  complété les PR des fix. *AUC(BASE)* (S_test 0,831 ; S_issue 0,805 contre 0,787) n'est pas
+  interprétable : positifs trop peu nombreux (§6 9a, même piège que C/D du Chantier 1). *Limites :*
+  14 vrais bugs ; annotateur unique ; Flask seul.
+
+- **⚠️ 10c — la fenêtre adaptative passe M2bis (f = 0,25) et la comparaison à queues identiques :
+  « acceptable provisoirement », pas adoptée.** Mesuré le 2026-11-12
+  (`results/chantier10c_adaptive_check.py` → `chantier10c_adaptive_check.json`, 5 min), protocole §8
+  Chantier 10 (75cb0ab). M1 non refait (indépendant de la fenêtre).
+  - **M2bis Flask** (ratio churn/BASE ; 20 graines ; IC bootstrap des prédictions hors-pli) :
+    fixe 90 j **0,912** [0,871-0,952] → *indéterminé* (reproduit le 8b) ; f = 0,10 **0,883**
+    [0,855-0,928] → *indéterminé* ; **f = 0,25 0,856 [0,826-0,892] → *satisfait*** (borne haute
+    sous 0,9044). La fenêtre qui grandit avec l'âge ramène M2bis sous le seuil, ce que 90 j fixes
+    ne fait pas (avec la détection B).
+  - **Queues identiques (commits communs aux 3 fenêtres, 30 % récents, 7 dépôts) :** Δ AUC(BASE)
+    adaptatif − fixe, médiane **+0,012** (f = 0,10, IC dépôts [−0,009 ; +0,079]) et **+0,011**
+    (f = 0,25, [+0,005 ; +0,088]) ; par dépôt (f = 0,25) : flask +0,088, requests +0,120, click
+    +0,067, tornado +0,006, pydantic +0,011, DRF +0,005, **black −0,049** (seul dépôt sous −0,03).
+    *Verdict pré-enregistré :* « acceptable provisoirement » pour les deux fenêtres.
+  - **Lecture honnête :** (1) la fenêtre adaptative ne dégrade pas le classement par le modèle et
+    rend le critère M2bis satisfait ; (2) l'AUC monte surtout dans les dépôts jeunes (flask,
+    requests, click), cohérent avec une étiquette moins dominée par la dérive ; (3) **ne prouve pas
+    que l'étiquette est meilleure** — les labels diffèrent, un Δ d'AUC entre deux étiquettes n'est
+    pas une validation ; (4) M3 (bascules) non refait ; (5) adoption comme défaut = décision de
+    l'équipe, qui changerait tous les chiffres du projet. *Limites :* 2 valeurs de f, détection B,
+    1 graine pour les queues.
+
+- **✅ 10d — extension 6E : le transfert tient sur 12 dépôts interprétables (médiane AUC 0,769, IC 95 %
+  sur les dépôts [0,723 ; 0,784], 870 positifs de test) ; 3 dépôts exclus par les garde-fous.**
+  Mesuré le 2026-11-12 (`results/chantier10d_more_repos.py` → `chantier10d_more_repos.json`,
+  42 min, pic 1,2 Go), protocole §8 Chantier 10 (75cb0ab), liste figée avant mesure. G15 entraîné
+  sur tous les autres dépôts avant la queue de test.
+
+  | Dépôt | Pos. test | AUC G15 [IC95] | Lift | Statut |
+  |---|---|---|---|---|
+  | flask / requests / click / black | 44 / 51 / 70 / 44 | 0,773 / 0,676 / 0,741 / 0,799 | 4,1 / 2,9 / 2,6 / 3,9× | ✅ |
+  | tornado / pydantic / DRF | 56 / 147 / 80 | 0,766 / 0,773 / 0,765 | 3,2 / 3,3 / 3,8× | ✅ |
+  | datasets / ignite / poetry | 99 / 43 / 80 | 0,793 / 0,690 / 0,798 | 4,0 / 3,1 / 3,3× | ✅ |
+  | **werkzeug** (nouveau) | 55 | **0,776** [0,707-0,841] | 3,8× | ✅ |
+  | **rich** (nouveau) | 101 | **0,705** [0,648-0,763] | 2,7× | ✅ |
+  | *marshmallow* (nouveau) | 28 | *0,744* | — | exclu (< 40 positifs) |
+  | *alembic* (nouveau) | 28 | *0,804* | — | exclu (< 40 positifs) |
+  | *fastapi* | 59 | *0,900* | — | exclu (part de risque 2,9 %) |
+
+  **T1 OK pour les 12 dépôts interprétables et pour la médiane** (borne basse 0,723 > 0,5). Les
+  exclus (marshmallow, alembic, fastapi) ne sont **ni remplacés ni utilisés** ; leurs AUC sont
+  rapportées mais non interprétables. Lecture : l'IC de la médiane est de ±0,03 ; 12 dépôts, 4
+  domaines ; le plus faible reste requests (0,676), puis rich (0,705) et ignite (0,690). Le gain
+  d'entraînement par rapport à G11 (0,755 → 0,769) vient surtout de plus de données ; **à ne pas lire
+  comme une amélioration du modèle** (dépôts différents). *Limites :* Python, 15 dépôts choisis à
+  l'œil, 1 graine, queues à 28-147 positifs.
+
 - **✅ 8f — extension 6C : le modèle global transfère aussi à deux dépôts data/ML (T1 OK 2/2), avec
   le même défaut de calibration.** Mesuré le 2026-11-07 (`results/chantier8f_6c.py` →
   `results/chantier8f_6c.json`, 22 min, pic 1,86 Go), protocole §8 8f (f7e8489), liste figée
@@ -1853,7 +1923,10 @@ implémentation) :
 
 10. **Chantier 10 — deuxième vague d'améliorations (AJOUTÉ le 2026-11-12 à la demande de
    l'utilisateur : « fais les nouvelles améliorations de 1 à 4 »).**
-   **PROTOCOLE PRÉ-ENREGISTRÉ v1, rédigé le 2026-11-12 AVANT toute mesure de ce chantier.** Même
+   **PROTOCOLE PRÉ-ENREGISTRÉ v1, rédigé le 2026-11-12 AVANT toute mesure de ce chantier ; MESURÉ le
+   2026-11-12 — 10a ❌ (aucun signal exploitable sur Flask), 10b feuille aveugle prête (annotation à
+   faire par l'équipe), 10c ⚠️ (fenêtre adaptative acceptable provisoirement), 10d ✅ (12 dépôts,
+   médiane 0,769) : détail en §6.** Même
    discipline que les chantiers 8-9 (script daté → JSON daté → §6, séquentiel, garde-fou RAM).
    - **10a — Détection de fix fondée sur autre chose que le message (Flask).** Conclusion du 9a :
      la précision est limitée par le message. Signaux testés, **fixés maintenant**, évalués sur
@@ -2329,3 +2402,18 @@ implémentation) :
 - 9b : `label_humain` reste à remplir par l'équipe ; `results/audit_kappa.py` prêt.
 - **Reste à faire :** annotation humaine ; SonarQube/CodeQL (non fait) ; refonte du notebook (en
   pause) ; poussée GitHub à la demande.
+
+### 2026-11-12 — Session 8 — Chantier 10 : deuxième vague d'améliorations
+- Protocole écrit et commité avant mesure (`75cb0ab`), scripts commités avant exécution.
+- 10a : S_test / S_issue / S_bug / S_bug_seul : aucun filtre adopté ; la couverture des issues
+  labellisées sur Flask est trop faible pour tester. **Erreur trouvée en route :** le cache GitHub du
+  Chantier 4 ne couvrait que 9 des 732 fix → première mesure invalide, refaite après complétion.
+- 10b : feuille aveugle `results/audit_annotation_humaine.csv` + `audit_kappa.py` étendu ; **l'annotation
+  humaine reste à faire par l'équipe**.
+- 10c : fenêtre adaptative f = 0,25 → M2bis satisfait (0,856), Δ AUC à queues identiques +0,011 ;
+  « acceptable provisoirement », non adoptée (décision d'équipe).
+- 10d : 4 dépôts de plus (liste figée avant mesure) ; 2 exclus par le garde-fou (28 positifs) ; 12 dépôts
+  interprétables, médiane 0,769.
+- Le scratchpad a été vidé au changement de date : `grun.sh` recréé (sans le `pkill -f` des workers).
+- **Reste à faire :** annotation humaine ; décision d'équipe sur la fenêtre adaptative ; SonarQube/
+  CodeQL ; refonte du notebook (en pause) ; poussée GitHub à la demande (non poussé depuis `71e780f`).
